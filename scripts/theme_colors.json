@@ -1,0 +1,55 @@
+{
+  "minima": {
+    "repo": "jekyll/minima",
+    "branch": "master",
+    "commit": "d4d779a",
+    "files": [
+      "_sass/minima/initialize.scss",
+      "_sass/minima/skins/classic.scss"
+    ],
+    "mappings": {
+      "std-primary": "$brand-color",
+      "std-secondary": "$grey-color",
+      "std-bg-primary": "$background-color",
+      "std-bg-secondary": "$code-background-color",
+      "std-text-primary": "$text-color",
+      "std-text-secondary": "$grey-color-dark",
+      "std-text-muted": "$grey-color-light",
+      "std-border": "$border-color-01",
+      "std-link": "$link-base-color",
+      "std-link-hover": "$link-hover-color",
+      "std-success": "$brand-color",
+      "std-warning": "$grey-color",
+      "std-error": "$text-color"
+    }
+  },
+  "cayman": {
+    "repo": "pages-themes/cayman",
+    "branch": "master",
+    "files": [
+      "_sass/jekyll-theme-cayman.scss",
+      "_sass/variables.scss"
+    ],
+    "mappings": {
+      "std-primary": "$section-headings-color",
+      "std-secondary": "$body-text-color",
+      "std-bg-primary": "$body-bg-color",
+      "std-text-primary": "$body-text-color",
+      "std-link": "$body-link-color",
+      "std-border": "$border-color"
+    }
+  },
+  "hydejack": {
+    "repo": "hydecorp/hydejack",
+    "branch": "master",
+    "files": [
+      "_sass/my-inline.scss"
+    ],
+    "mappings": {
+      "std-primary": "$accent-color",
+      "std-bg-primary": "$body-bg",
+      "std-text-primary": "$text-color",
+      "std-link": "$accent-color"
+    }
+  }
+}

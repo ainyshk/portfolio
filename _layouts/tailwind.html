@@ -1,0 +1,75 @@
+---
+layout: opencs 
+---
+
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+{%- if page.infoGraph -%}
+  {% assign info = site.data[page.infoGraph] %}
+  {%- include tailwind/infograph.html -%}
+{%- endif -%}
+
+<script>
+  tailwind.config = {
+    darkMode: 'class', // Enable dark mode
+  };
+</script>
+
+<style>
+  /* Custom Styling for Light and Dark Themes */
+  body.dark {
+    background-color: #121212;
+    color: white;
+  }
+  body.light {
+    background-color: white;
+    color: black;
+  }
+
+  /* Position and z-index for the theme toggle button */
+  #theme-toggle {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+    border-radius: 50%;
+  }
+</style>
+
+<!-- Tailwind-styled content -->
+<div>
+  <div class="container">
+    <!-- Theme Toggle Button -->
+    <div class="flex justify-end p-1">
+      <button id="theme-toggle" class="bg-gray-600 text-white px-4 py-2 rounded-full">🌙 Dark Mode</button>
+    </div>
+
+    {{ content }}
+  </div>
+
+  <script>
+    // Theme Toggle Logic
+    const toggleButton = document.getElementById("theme-toggle");
+    const body = document.body;
+
+    function setTheme(theme) {
+      body.classList.remove('light', 'dark');
+      body.classList.add(theme);
+      console.log(`Theme set to: ${theme}`);
+      console.log(`Body classes: ${body.className}`);
+      localStorage.setItem("theme", theme);
+      toggleButton.innerHTML = theme === "dark" ? "☀️ Light Mode" : "🌙 Dark Mode";
+    }
+
+    // Load saved theme
+    const savedTheme = localStorage.getItem("theme") || "light";
+    setTheme(savedTheme);
+
+    // Toggle theme on button click
+    toggleButton.addEventListener("click", () => {
+      const newTheme = body.classList.contains("dark") ? "light" : "dark";
+      setTheme(newTheme);
+    });
+  </script>
+</div>

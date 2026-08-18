@@ -1,0 +1,31 @@
+// OAuth verification styles for Google sign-in flow
+// This file contains styles for the OAuth verification step in the signup process
+
+@import "../../materials/main.scss";
+
+// OAuth status message styles
+.oauth-error {
+    background-color: #dc2626;
+    color: white;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+}
+
+.oauth-success {
+    background-color: #16a34a;
+    color: white;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+}
+
+// Secondary button style (used for "Back to Form" button)
+.secondary {
+    background-color: #6b7280 !important;
+    color: white;
+
+    &:hover {
+        background-color: #5a6272 !important;
+    }
+}

@@ -1,0 +1,117 @@
+Title: "Website Development: Projects & Personalization"
+Description: "After setting up your tools, the next focus is on building your personal site, exploring creative coding projects, learning about persistent data, and collaborating through GitHub and VSCode. This is where your developer identity starts to take shape and you explore what’s possible."
+Topics:
+ - title: "Introduction to Markdown"
+   image: "/webdev/markdown.png"
+   link: "/web-dev/intro-to-markdown"
+   alt: "Learn how to write clean, readable content using Markdown syntax."
+   keyPoints:
+     - "Master headings, lists, links, and images"
+     - "Use code blocks and blockquotes"
+     - "Create tables and checklists for better organization"
+   subtitle: "Write Clear Documentation"
+   description: "Get started with Markdown to create well-structured text documents for web pages, READMEs, and notes."
+
+
+ - title: "Build Your Personal Page"
+   image: "/webdev/aboutme.png"
+   link: "/web-dev/aboutme"
+   alt: "GitHub Pages About Me"
+   subtitle: "Personal Site"
+   keyPoints:
+     - "Set up About Me site"
+     - "Link to tools & class"
+     - "Use GitHub Pages"
+   description: "Create a personal about page using GitHub Pages. This will be your space to share who you are and start your development journey."
+
+
+ - title: "VSCode & Collaboration"
+   image: "/webdev/liveshare.png"
+   link: "/web-dev/collaboration"
+   alt: "VSCode Live Share"
+   subtitle: "Pair Programming"
+   keyPoints:
+     - "Use VSCode Live Share"
+     - "Pair program with others"
+     - "Track commit history"
+   description: "Collaborate with classmates in real time using VSCode Live Share. Learn to track changes, push updates, and work together like real dev teams."
+
+
+ - title: "Creative Code Projects"
+   image: "/webdev/games.png"
+   link: "/web-dev/projects"
+   alt: "Snake and Turtle Game"
+   subtitle: "Interactive Fun"
+   keyPoints:
+     - "Edit Python/JS games"
+     - "Customize visuals"
+     - "Practice creativity"
+   description: "Collaborate with classmates in real time using VSCode Live Share. Learn to track changes, push updates, and work together like real dev teams."
+
+  
+ - title: "Python/Flask Starter"
+   image: "/webdev/flask.png"
+   link: "/web-dev/flask-starter"
+   alt: "Flask Server Project"
+   subtitle: "Backend & Databases"
+   keyPoints:
+     - "Clone a Flask starter repo"
+     - "Run local server with VSCode"
+     - "Explore SQLite user data"
+   description: "Explort Python Flask to build a simple backend server. Learn how to set up a local development .env, intialize and interact with SQLite databases."
+
+ - title: "Java/Spring Starter"
+   image: "/webdev/spring.png"
+   link: "/web-dev/spring-intro"
+   alt: "Spring Server Project"
+   subtitle: "Backend & Databases"
+   keyPoints:
+     - "Clone a Spring starter repo"
+     - "Run local server with VSCode"
+     - "Explore SQLite user data"
+   description: "Explore Java Spring to build a simple backend server. Learn how to set up a local development .env, initialize and interact with SQLite databases."
+
+ - title: "Data Storage"
+   image: "/webdev/datastorage.png"
+   link: "/web-dev/data-storage"
+   alt: "Learn how websites store information using databases like SQLite."
+   keyPoints:
+     - "Explore relational and non-relational databases"
+     - "Understand how Flask and Spring connect to databases"
+     - "Set up and query a basic database"
+   subtitle: "Store Information"
+   description: "Learn about how web apps store data. Explore types of databases and how backend frameworks like Flask and Spring interact with them."
+
+
+ - title: "Data Retrieval"
+   image: "/webdev/dataretrieval.png"
+   link: "/web-dev/data-retrieval"
+   alt: "Learn to fetch and display data dynamically from the backend to the frontend."
+   keyPoints:
+     - "Integrate backend storage with frontend interfaces"
+     - "Use APIs to send and receive data"
+     - "Build dynamic web pages using retrieved data"
+   subtitle: "Build Functional Websites"
+   description: "Learn how full-stack applications retrieve and display data. Understand how to build endpoints, query your database, and present results on your site."
+
+ - title: "Python with Flask"
+   image: "/webdev/pyflask.png"
+   link: "/web-dev/data-storage/python-flask"
+   alt: "Set up data storage using Python and Flask"
+   keyPoints:
+     - "Run Flask locally"
+     - "Connect to SQLite"
+     - "Build simple data endpoints"
+   subtitle: "Lightweight and Flexible"
+   description: "A beginner-friendly setup that introduces routing, templating, and database integration using SQLite."
+
+ - title: "Java with Spring Boot"
+   image: "/webdev/spring.png"
+   link: "/web-dev/data-storage/java-spring"
+   alt: "Set up data storage using Java and Spring Boot"
+   keyPoints:
+     - "Run Spring Boot locally"
+     - "Use H2 or PostgreSQL"
+     - "Create simple REST endpoints"
+   subtitle: "Powerful and Scalable"
+   description: "A robust Java framework for building APIs and connecting to production-ready databases like PostgreSQL."

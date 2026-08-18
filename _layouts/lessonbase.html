@@ -1,0 +1,238 @@
+---
+layout: opencs
+---
+
+{% if page.wide %}
+<style>
+  .wrapper {
+    max-width: 100% !important;
+    padding: 0 1rem;
+  }
+</style>
+{% endif %}
+
+<div class="lesson-container">
+  <!-- Sidebar -->
+  {% if page.sidebar != false %}
+  <aside class="lesson-sidebar">
+    {% if page.sidebar_title %}
+      <h3>{{ page.sidebar_title }}</h3>
+    {% endif %}
+
+    <!-- Lesson Links -->
+    {% if page.lesson_links %}
+    <h4>Lessons</h4>
+    <ul>
+      {% for link in page.lesson_links %}
+        <li><a href="{{ site.baseurl }}{{ link.url }}">{{ link.text }}</a></li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+    <!-- Time Tracker -->
+    {% if page.enable_timer %}
+    <h4>⏱️ Study Time</h4>
+    <div class="time-display"><span id="total-time">0:00</span></div>
+    <div id="timer-status" class="timer-status">Active</div>
+    {% endif %}
+
+    <!-- Progress -->
+    {% if page.enable_progress %}
+    <h4>📊 Your Progress</h4>
+    <div class="progress-bar"><div class="progress-fill" id="lesson-progress"></div></div>
+    <p id="progress-text">0% complete</p>
+    <button id="reset-progress" class="btn small-btn">Reset Progress</button>
+    {% endif %}
+
+    <!-- Badges -->
+    {% if page.enable_badges %}
+    <h4>🏅 Your Badges</h4>
+    <p id="badges">No badges yet...</p>
+    {% endif %}
+  </aside>
+  {% endif %}
+
+  <!-- Main Content -->
+  <main class="lesson-content">
+    <h1>{{ page.title }}</h1>
+    <div class="post-content">
+      {{ content }}
+    </div>
+
+    <!-- Progress Configuration (hidden data for JavaScript) -->
+    {% if page.enable_progress %}
+    <script id="progress-config" type="application/json">
+    {
+      "totalLessons": {{ page.progress_total | default: 6 | jsonify }}
+    }
+    </script>
+    {% endif %}
+
+    <!-- Badge Configuration (hidden data for JavaScript) -->
+    {% if page.enable_badges %}
+    <script id="badge-config" type="application/json">
+    {
+      "lessonBadges": {{ page.lesson_badges | default: '[]' | jsonify }},
+      "lessonKey": {{ page.lesson_key | default: '' | jsonify }}
+    }
+    </script>
+    {% endif %}
+
+    <!-- Flashcards Section -->
+    {% if page.enable_flashcards %}
+    {% assign flashcard_file = page.flashcards | default: "flashcards" %}
+    {% assign cards = site.data[flashcard_file].cards %}
+    
+    <hr>
+    <div class="flashcards-section">
+      <h3>🗂️ Flashcards</h3>
+      
+      {% if cards %}
+      <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; margin-bottom: 1rem; overflow: hidden;">
+        <div style="height: 100%; background: linear-gradient(135deg, #6C63FF 0%, #536DFE 100%); transition: width 0.3s ease; width: 0%;" id="flashcard-progress"></div>
+      </div>
+      
+      <div class="flashcard-deck">
+        {% for card in cards %}
+          {% assign index = forloop.index %}
+          {% assign total = forloop.length %}
+          
+          {% if card.term and card.definition %}
+            {% assign front = card.term %}
+            {% assign back = card.definition %}
+          {% else %}
+            {% assign front = card | split: "|" | first %}
+            {% assign back = card | split: "|" | last %}
+          {% endif %}
+          
+          <div class="flashcard-container {% if index > 1 %}hidden{% endif %}" id="card-{{ index }}" data-index="{{ index }}" data-total="{{ total }}">
+            <div class="flashcard-inner">
+              <div class="flashcard-front">
+                <div class="card-counter">{{ index }}/{{ total }}</div>
+                <h3>{{ front }}</h3>
+                <button class="btn" onclick="flipCard('card-{{ index }}')">Flip Card</button>
+              </div>
+              <div class="flashcard-back">
+                <div class="card-counter">{{ index }}/{{ total }}</div>
+                <h4>Answer:</h4>
+                <p>{{ back }}</p>
+                <button class="btn" onclick="flipCard('card-{{ index }}')">Flip Back</button>
+              </div>
+            </div>
+            <div class="card-status" id="status-{{ index }}"></div>
+          </div>
+        {% endfor %}
+      </div>
+      
+      <div class="flashcard-controls">
+        <button class="btn" id="prev-btn" onclick="navigateCards('prev')" disabled>⬅ Previous</button>
+        
+        <div class="flashcard-actions">
+          <button class="btn know-btn" onclick="markCard('know')">✓</button>
+          <button class="btn review-btn" onclick="markCard('review')">↻</button>
+        </div>
+        
+        <button class="btn" id="next-btn" onclick="navigateCards('next')">Next ➡</button>
+      </div>
+      
+      {% else %}
+      <div class="no-flashcards">
+        <h4>No flashcards found.</h4>
+        <p>Please check your flashcards.yml file.</p>
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    {% if page.enable_sandbox %}
+    <hr>
+    <div class="sandbox">
+      <h3>🖥️ Try It Yourself</h3>
+      <textarea id="sandbox-code">{{ page.sandbox_code | default: "// Type your code here" }}</textarea>
+      <button id="run-sandbox">Run Code</button>
+      <pre id="sandbox-output"></pre>
+    </div>
+    {% endif %}
+
+    {% if page.enable_blackboard %}
+    <hr>
+    <div class="blackboard">
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.js" integrity="sha512-hOJ0mwaJavqi11j0XoBN1PtOJ3ykPdP6lp9n29WVVVVZxgx9LO7kMwyyhaznGJ+kbZrDN1jFZMt2G9bxkOHWFQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+      <canvas id="blackboard-canvas"></canvas>
+      <p class="blackboard-description">Press 'w' for white, press `r` for red, press `b` for blue, and press `g` for green. Press `c` to clear blackboard. </p>
+    </div>
+    {% endif %}
+  
+    {% if page.enable_demo %}
+    <!-- Note: utilizes script tags in the HTML file as cannot dynamically use information from frontmatter in lessonbase.js -->
+    <hr>
+    <div class="demo">
+      <label class="demo-label">
+        <input type="checkbox" id="demo-toggle"> Show code
+      </label>
+      <div id="demo-canvas-wrapper">
+        <canvas id="demo-canvas"></canvas>
+        <!-- Make sure you put the normal JS code in the "demo_runtime_code" field in the frontmatter. -->
+        <script>
+          // Will need const canvas = document.getElementById("demo-canvas"); to interact with the canvas
+          {{ page.demo_runtime_code }}
+        </script>
+      </div>
+      <!-- Instead of writing '<' or '>' for brackets, use '&lt;' and '&gt;' else the HTML will actually be run instead of displayed. -->
+      <pre id="demo-code" style="display:none; max-width:820px; margin:8px auto; overflow:auto;">
+        <code>
+          <!-- Need to use multiline YAML content in the frontmatter for the javascript -->
+          {{ page.demo_display_code }}
+        </code>
+      </pre>
+    </div>
+    {% endif %}
+
+    {% if page.enable_quiz %}
+    <hr>
+    <div class="lesson-quiz">
+      <h3>📝 Quick Check</h3>
+      <p>{{ page.quiz_prompt | default: "What did you learn?" }}</p>
+      <textarea id="reflection-box"></textarea>
+      <button id="save-reflection">Save</button>
+      <p id="reflection-status"></p>
+    </div>
+    {% endif %}
+    
+    {% if page.enable_ai_grading %}
+      <!-- Keep your hard-coded API key meta exactly as you want -->
+      <meta name="gemini-api-key" content="AIzaSyDM-_Gj6GQTXHcym9cP_syUeopcF25x47o">
+
+      <!-- Minimal config for the script -->
+      <script id="lesson-config" type="application/json">
+      {
+        "title": {{ page.title | jsonify }},
+        "model": {{ page.gemini_model | default: "gemini-1.5-flash" | jsonify }}
+      }
+      </script>
+
+      <!-- AI grader (client-only) -->
+      <script type="module" src="{{ '/assets/js/solitaire/ai-grader.js' | relative_url }}"></script>
+    {% endif %}
+
+    {% if page.resources %}
+    <hr>
+    <div class="resources">
+      <h3>📚 Resources</h3>
+      <ul>
+        {% for r in page.resources %}
+          <li><a href="{{ r.url }}" target="_blank">{{ r.text }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    {% if page.prev_url or page.next_url %}
+    <div class="lesson-nav">
+      {% if page.prev_url %}<a href="{{ page.prev_url }}" class="btn">⬅ Previous</a>{% endif %}
+      {% if page.next_url %}<a href="{{ page.next_url }}" class="btn">Next ➡</a>{% endif %}
+    </div>
+    {% endif %}
+  </main>
+<!-- Load your shared scripts & styles -->
+<script src="{{ '/assets/js/lessonbase.js' | relative_url }}"></script>

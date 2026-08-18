@@ -1,0 +1,78 @@
+@import "../../materials/main.scss";
+
+$login-container-bg: #1e1e1e !default;
+$login-container-border-radius: 15px !default;
+$login-container-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !default;
+$login-container-padding: 20px !default;
+$login-container-gap: 20px !default;
+$login-form-group-margin: 1.5rem !default;
+
+.login-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: $login-container-gap;
+  flex-wrap: nowrap;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: calc(#{$login-container-gap} * 0.75);
+  }
+}
+
+.login-card,
+.signup-card {
+  background-color: var(--bg-1);
+  border-radius: $login-container-border-radius;
+  box-shadow: $login-container-shadow;
+  padding: $login-container-padding;
+  color: $white1;
+  overflow: hidden;
+  flex: 1 1 calc(50% - #{$login-container-gap});
+  max-width: 45%;
+  box-sizing: border-box;
+  
+  @media (max-width: 768px) {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+  
+  h1 {
+    margin-bottom: 20px;
+    color: inherit;
+  }
+  
+  hr {
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    margin: 20px 0;
+  }
+}
+
+.form-group {
+  position: relative;
+  margin-bottom: $login-form-group-margin;
+  
+  input, textarea, select {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  @media (max-width: 480px) {
+    margin-bottom: calc(#{$login-form-group-margin} * 0.75);
+  }
+}
+
+.form-group select {
+  color: $white1;
+  border-radius: $border-size;
+  border: 1px solid rgba(72, 72, 81, 0.63);
+  filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.3));
+  padding: 15px;
+  transition: all 0.3s ease;
+  background-color: #121212;
+  
+  option[disabled], &:invalid {
+    color: #757575;
+  }
+}

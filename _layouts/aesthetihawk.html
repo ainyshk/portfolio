@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>{{ page.title }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <!-- User preferences CSS (must come after Tailwind to override) and JS -->
+    <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+    <script src="{{ site.baseurl }}/assets/js/user-preferences.js"></script>
+    <!--Keyboard Shortcuts (Alt+Shift+key navigation)-->
+    <script>window.baseurl = "{{ site.baseurl }}";</script>
+    <script src="{{ site.baseurl }}/assets/js/keyboard-shortcuts.js" defer></script>
+</head>
+
+
+<body class="min-h-screen flex flex-col flex-auto flex-shrink-0 transition-colors user-theme-root">
+    <!-- navbar -->
+    {%- include aesthetihawk/header.html -%}
+
+    <div class="min-h-screen flex flex-col flex-auto flex-shrink-0 antialiased mt-[53px] theme-inner">
+
+        <!-- Sidebar -->
+        <div class="fixed left-0 top-[53px] w-64 h-full border-r flex flex-col lesson-sidebar">
+
+            <!-- welcome section 
+            <div class="p-6 flex flex-col items-center bg-neutral-800">
+                <h2 class="text-lg font-semibold text-center mb-6" id="sidebarWelcome">Welcome. Please log in.</h2>
+            </div>
+            -->
+
+            <!-- Scrollable menu section -->
+            <div class="overflow-y-auto flex-grow">
+                <!-- sidebar menu -->
+                {%- include aesthetihawk/sidebar.html -%}
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="ml-64 p-8 lesson-main">
+            <div class="flex justify-between items-center mb-8">
+                <h1 class="text-2xl font-bold">{{page.title}}</h1>
+            </div>
+
+            {{ content }}
+        </div>
+    </div>
+</body>
+
+</html>
+
+
+<!-- set active sidebar tab -->
+<script type="module">
+    // tmport handlelogout from external file and attach to window for onclick usage
+    import { handleLogout } from '{{site.baseurl}}/assets/js/api/logout.js';
+    window.handleLogout = handleLogout;
+</script>

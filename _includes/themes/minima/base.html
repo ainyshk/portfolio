@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang | default: 'en' }}">
+
+
+    {%- include head.html -%}
+
+    <body>
+        {%- include themes/minima/header.html -%}
+
+        {% if page.microblog %}
+          <div class="micro-actions-wrapper">
+            {% include microblog_foundation.html %}
+            {% include inbox_foundation.html %}
+          </div>
+        {% endif %}
+
+        {% if page.feedback  %}
+          {% include feedback_foundation.html %}
+        {% endif %}
+
+        {% if page.admin %}
+          {% include admin_foundation.html %}
+        {% endif %}
+
+        <main class="page-content" aria-label="Content">
+            <div class="wrapper">
+                                <div class="opencs_root">
+                                    {{ content }}
+                                </div>
+            </div>
+        </main>
+
+        {%- include themes/minima/footer.html -%}
+
+        {%- include mermaid.html -%}
+    </body>
+</html>

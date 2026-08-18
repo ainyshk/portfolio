@@ -1,0 +1,33 @@
+cards:
+  - term: Flashcards (Static)
+    definition: Displays pre-loaded flashcards with definitions for review.
+  - term: Flashcards (Student)
+    definition: Allows students to create and study their own flashcards, with CRUD functionality.
+  - term: Video Player
+    definition: Embeds YouTube videos responsively and provides playback controls.
+  - term: Code Prompt (Popcorn Hack)
+    definition: Lets students write and run Python/JavaScript code in real-time with instant feedback.
+  - term: AI Comprehension Checker
+    definition: Generates practice questions from lesson content with multiple difficulty levels and provides feedback.
+  - term: Feedback Poll
+    definition: Collects thumbs-up/thumbs-down feedback and allows students to leave comments.
+  - term: Live Whiteboard
+    definition: Enables a shared whiteboard session for live collaboration and drawing with board code entry.
+  - term: Multiplayer Quiz Game
+    definition: A real-time competitive quiz game with a live leaderboard and time-based challenges.
+  - term: Interactive Sidebar
+    definition: Provides tools for dictionary lookups, notes, highlighting, and text-to-speech within the lesson content.
+  - term: Text-to-Speech
+    definition: Reads selected text aloud using an external API, supporting auditory learning.
+  - term: Highlighting
+    definition: Enables students to highlight text and associate notes with it for better study organization.
+  - term: Feedback Data Visualization
+    definition: Displays real-time feedback collected through the poll system, integrated with Google Sheets.
+  - term: Multiplayer Quiz Backend
+    definition: Uses Flask and Socket.IO to handle real-time multiplayer quiz interactions and store quiz data.
+  - term: Spaced Repetition
+    definition: A technique used in the flashcard system to optimize review intervals based on retention.
+  - term: Dynamic Content Loading
+    definition: Loads interactive features dynamically through `include` statements based on lesson requirements.
+  - term: Responsive Design
+    definition: The system ensures that all interactive components (video, quizzes, code prompts) adapt to screen size.

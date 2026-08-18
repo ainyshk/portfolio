@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <title>{{ page.title }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+</head>
+
+
+<body class="min-h-screen flex flex-col flex-auto flex-shrink-0 bg-neutral-800 text-neutral-100 transition-colors">
+    <!-- navbar -->
+    {%- include aesthetihawkc/header.html -%}
+
+    <div
+        class="min-h-screen flex flex-col flex-auto flex-shrink-0 antialiased text-neutral-50 mt-[53px] bg-neutral-900">
+
+        <!-- Sidebar -->
+        <div class="fixed left-0 top-[53px] w-64 h-full bg-neutral-800 border-r  border-neutral-700 flex flex-col">
+
+            <!-- welcome section 
+            <div class="p-6 flex flex-col items-center bg-neutral-800">
+                <h2 class="text-lg font-semibold text-center mb-6" id="sidebarWelcome">Welcome. Please log in.</h2>
+            </div>
+            -->
+
+            <!-- Scrollable menu section -->
+            <div class="overflow-y-auto flex-grow">
+                <!-- sidebar menu -->
+                {%- include aesthetihawkc/sidebar.html -%}
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="ml-64 p-8 bg-neutral-900">
+            <div class="flex justify-between items-center mb-8">
+                <h1 class="text-2xl font-bold">{{page.title}}</h1>
+            </div>
+
+            {{ content }}
+        </div>
+    </div>
+</body>
+
+</html>
+
+
+<!-- set active sidebar tab -->
+<script type="module">
+    // tmport handlelogout from external file and attach to window for onclick usage
+    import { handleLogout } from '{{site.baseurl}}/assets/js/api/logout.js';
+    window.handleLogout = handleLogout;
+</script>

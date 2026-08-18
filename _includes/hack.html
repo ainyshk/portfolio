@@ -1,0 +1,158 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-MU1TwzYFQTT1V9Lb/3PKZwrKkzHh8n9TkIbO8H+Bp6zyDf3RYRjQBSszSmAsct/SNVOVguY5qW57mxpH2H5lhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<div class="section-container p-3 mb-4 animate-in" style="background: linear-gradient(125deg, #0F2027 0%, #203A43 50%, #2C5364 100%); border-radius: 16px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15); position: relative; overflow: hidden; animation-delay: 0.15s;">
+  <!-- Decorative background elements -->
+  <div style="position: absolute; width: 200px; height: 200px; background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 70%); top: -100px; right: -50px; border-radius: 50%;"></div>
+  <div style="position: absolute; width: 150px; height: 150px; background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 70%); bottom: -50px; left: -50px; border-radius: 50%;"></div>
+  
+  <!-- Futuristic header -->
+  <h2 class="section-title" style="color: white; font-weight: 700; display: flex; align-items: center; position: relative; z-index: 1; letter-spacing: 0.5px; text-shadow: 0 2px 3px rgba(0,0,0,0.2);">
+    <span class="icon-circle pulse-glow" style="background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border: 2px solid rgba(79, 209, 197, 0.3); border-radius: 50%; width: 44px; height: 44px; display: flex; justify-content: center; align-items: center; margin-right: 12px; box-shadow: 0 0 15px rgba(79, 209, 197, 0.5); animation: pulse-glow 2s infinite ease-in-out;">🍿</span> 
+    <span style="background: linear-gradient(90deg, #fff, #4FD1C5); -webkit-background-clip: text; background-clip: text; color: transparent;">Popcorn Hack</span>
+  </h2>
+  
+  <!-- Content section with glass morphism -->
+  <div class="section-content p-3 mt-3" style="background: rgba(255,255,255,0.9); backdrop-filter: blur(12px); border-radius: 12px; border: 1px solid rgba(255,255,255,0.3); box-shadow: 0 4px 20px rgba(0,0,0,0.08); transition: all 0.3s ease;">
+    <h3 style="color: #2c3e50; font-size: 1.2rem; font-weight: 600; border-left: 4px solid #4FD1C5; padding-left: 10px;">{{ page.hack_prompt }}</h3>
+    
+    <!-- Language selector positioned at the top right -->
+    <div style="display: flex; justify-content: flex-end; margin-bottom: 15px;">
+      <div style="display: flex; align-items: center; background: rgba(255,255,255,0.7); backdrop-filter: blur(8px); padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(79, 209, 197, 0.2); box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+        <label for="languageSelect" style="color: #2c3e50; font-weight: 600; margin-right: 10px; font-size: 0.95rem; display: flex; align-items: center;">
+          <i class="fas fa-code" style="margin-right: 6px; color: #4FD1C5;"></i>Language:
+        </label>
+        <select id="languageSelect" style="background: white; border: 2px solid #e0e6ed; border-radius: 6px; padding: 6px 32px 6px 12px; font-weight: 500; color: #2c3e50; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.05); background-image: url('data:image/svg+xml,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;%234FD1C5&quot; stroke-width=&quot;2&quot;><polyline points=&quot;6,9 12,15 18,9&quot;></polyline></svg>'); background-repeat: no-repeat; background-position: right 8px center; background-size: 16px; appearance: none;" onmouseover="this.style.borderColor='#4FD1C5'; this.style.transform='translateY(-1px)'" onmouseout="this.style.borderColor='#e0e6ed'; this.style.transform='translateY(0)'" onfocus="this.style.borderColor='#4FD1C5'; this.style.boxShadow='0 0 0 2px rgba(79, 209, 197, 0.25)'; this.style.outline='none'" onblur="this.style.borderColor='#e0e6ed'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.05)'">
+          <option value="javascript">JavaScript</option>
+          <option value="python">Python</option>
+        </select>
+      </div>
+    </div>
+    
+    <!-- Enhanced textarea with animation -->
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"></script>
+    <textarea id="hackResponse" class="form-control custom-input" rows="4" style="margin-top: 0; margin-bottom: 15px; border: 2px solid #e0e6ed; border-radius: 10px; resize: vertical; background-color: rgba(240,245,250,0.8); color: #2c3e50; transition: all 0.3s ease; box-shadow: inset 0 2px 5px rgba(0,0,0,0.05); width: 100%;" onfocus="this.style.borderColor='#4FD1C5'; this.style.boxShadow='0 0 0 2px rgba(79, 209, 197, 0.25)'; this.style.backgroundColor='rgba(255, 255, 255, 0.95)'; this.style.color='#2c3e50'; this.style.outline='none'" onblur="this.style.borderColor='#e0e6ed'; this.style.boxShadow='inset 0 2px 5px rgba(0,0,0,0.05)'; this.style.backgroundColor='rgba(240,245,250,0.8)'"></textarea>
+    
+    <!-- Button container with improved styling - Now includes all three buttons -->
+    <div style="display: flex; gap: 12px; margin-bottom: 15px;">
+      <button onclick="saveResponse()" class="btn btn-primary" style="background: linear-gradient(135deg, #4FD1C5 0%, #3490dc 100%); color: white; border: none; border-radius: 8px; padding: 10px 18px; font-weight: 500; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(79, 209, 197, 0.4); position: relative; overflow: hidden; cursor: pointer;" onmouseover="this.style.transform='translateY(-2px)'; this.style.filter='brightness(110%)'" onmouseout="this.style.transform='translateY(0)'; this.style.filter='brightness(100%)'">
+        <span style="position: relative; z-index: 2;"><i class="fas fa-save mr-2"></i> Save Response</span>
+      </button>
+      
+      <button onclick="clearResponse()" class="btn btn-secondary" style="background: rgba(240,242,245,0.85); color: #4a5568; border: none; border-radius: 8px; padding: 10px 18px; font-weight: 500; transition: all 0.3s ease; backdrop-filter: blur(5px); box-shadow: 0 4px 15px rgba(0,0,0,0.05); cursor: pointer;" onmouseover="this.style.transform='translateY(-2px)'; this.style.filter='brightness(110%)'" onmouseout="this.style.transform='translateY(0)'; this.style.filter='brightness(100%)'">
+        <i class="fas fa-trash-alt mr-2"></i> Clear
+      </button>
+      
+      <button onclick="runCode()" class="btn btn-success" style="background: linear-gradient(135deg, #38a169 0%, #2d8f5c 100%); color: white; border: none; border-radius: 8px; padding: 10px 18px; font-weight: 500; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(56, 161, 105, 0.4); position: relative; overflow: hidden; display: flex; align-items: center; gap: 10px; cursor: pointer;" onmouseover="this.style.transform='translateY(-2px)'; this.style.filter='brightness(110%)'" onmouseout="this.style.transform='translateY(0)'; this.style.filter='brightness(100%)'">
+        <!-- Sleek white play icon -->
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+        <span style="position: relative; z-index: 2;">Run Code</span>
+      </button>
+      
+    </div>
+
+    <!-- Status message with improved styling -->
+    <div id="saveStatus" class="status-message" style="display: none; color: #4FD1C5; margin-top: 12px; background: rgba(79, 209, 197, 0.1); padding: 10px 14px; border-radius: 8px; font-weight: 500; border-left: 3px solid #4FD1C5; opacity: 0; transform: translateY(10px); transition: all 0.5s ease-in-out;">
+      <i class="fas fa-check-circle"></i> Response saved successfully!
+    </div>
+    
+    <!-- Output box -->
+    <pre id="output" style="margin-top: 15px; background: #1a202c; color: #e2e8f0; padding: 12px; border-radius: 8px; font-size: 0.95rem; overflow-x: auto;"></pre>
+  </div>
+</div>
+
+<script>
+// JavaScript functionality
+let pyodide;
+
+async function main() {
+  pyodide = await loadPyodide();
+}
+
+main();
+
+function saveResponse() {
+  const response = document.getElementById('hackResponse').value;
+  if (response.trim()) {
+    // Save logic would go here (localStorage, API call, etc.)
+    showStatus();
+  }
+}
+
+function clearResponse() {
+  document.getElementById('hackResponse').value = '';
+  document.getElementById('output').textContent = '';
+}
+
+function showStatus() {
+  const status = document.getElementById('saveStatus');
+  status.style.display = 'block';
+  // Trigger fade in animation
+  setTimeout(() => {
+    status.style.opacity = '1';
+    status.style.transform = 'translateY(0)';
+  }, 10);
+  
+  setTimeout(() => {
+    status.style.opacity = '0';
+    status.style.transform = 'translateY(10px)';
+    setTimeout(() => {
+      status.style.display = 'none';
+    }, 500);
+  }, 3000);
+}
+
+async function runCode() {
+  const code = document.getElementById('hackResponse').value;
+  const language = document.getElementById('languageSelect').value;
+  const output = document.getElementById('output');
+  
+  if (!code.trim()) {
+    output.textContent = 'Please enter some code to run.';
+    return;
+  }
+  
+  try {
+    if (language === 'javascript') {
+      // Capture console.log output
+      const originalLog = console.log;
+      let logOutput = '';
+      console.log = (...args) => {
+        logOutput += args.join(' ') + '\n';
+      };
+      
+      // Execute the code
+      const result = eval(code);
+      
+      // Restore original console.log
+      console.log = originalLog;
+      
+      // Display output
+      output.textContent = logOutput + (result !== undefined ? result : '');
+      
+    } else if (language === 'python') {
+      if (!pyodide) {
+        output.textContent = 'Python environment is loading... Please try again in a moment.';
+        return;
+      }
+      
+      // Redirect Python stdout
+      pyodide.runPython(`
+        import sys
+        from io import StringIO
+        sys.stdout = StringIO()
+      `);
+      
+      // Run the Python code
+      pyodide.runPython(code);
+      
+      // Get the output
+      const pythonOutput = pyodide.runPython("sys.stdout.getvalue()");
+      output.textContent = pythonOutput || 'Code executed successfully (no output)';
+    }
+  } catch (error) {
+    output.textContent = `Error: ${error.message}`;
+  }
+}
+</script>

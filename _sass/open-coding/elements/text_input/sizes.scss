@@ -1,0 +1,34 @@
+@import "common.scss";
+
+input.smallInput {
+    @extend input;
+    font-size: 0.8em;
+}
+
+input.mediumInput {
+    @extend input;
+    font-size: 1.1em;
+}
+
+input.largeInput {
+    @extend input;
+    font-size: 1.5em;
+}
+
+textarea.smallInput {
+    @extend input;
+    font-size: 0.8em;
+    height: 8em;
+}
+
+textarea.mediumInput {
+    @extend input;
+    font-size: 1.1em;
+    height: 12em;
+}
+
+textarea.largeInput {
+    @extend input;
+    font-size: 1.5em;
+    height: 24em;
+}

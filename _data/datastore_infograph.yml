@@ -1,0 +1,25 @@
+Title: "Data Storage Setup Options"
+Description: "Choose your backend framework and follow a guided setup to begin working with databases and APIs"
+
+Topics:
+  - title: "Python with Flask"
+    image: "/webdev/pyflask.png"
+    link: "/web-dev/data-storage/python-flask"
+    alt: "Set up data storage using Python and Flask"
+    keyPoints:
+      - "Run Flask locally"
+      - "Connect to SQLite"
+      - "Build simple data endpoints"
+    subtitle: "Lightweight and Flexible"
+    description: "A beginner-friendly setup that introduces routing, templating, and database integration using SQLite."
+
+  - title: "Java with Spring Boot"
+    image: "/webdev/spring.png"
+    link: "/web-dev/data-storage/java-spring"
+    alt: "Set up data storage using Java and Spring Boot"
+    keyPoints:
+      - "Run Spring Boot locally"
+      - "Use H2 or PostgreSQL"
+      - "Create simple REST endpoints"
+    subtitle: "Powerful and Scalable"
+    description: "A robust Java framework for building APIs and connecting to production-ready databases like PostgreSQL."

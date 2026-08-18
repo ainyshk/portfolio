@@ -1,0 +1,21 @@
+@import "common.scss";
+@import "../../materials/main.scss";
+
+// for the various styles, like a gradient styled input
+input.gradientInput {
+    @extend input;
+    background-image: $gradient1;
+}
+
+.inputIconGroup>ion-icon {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    /* Adjust based on desired spacing */
+    transform: translateY(-50%);
+    font-size: 1.5rem;
+    /* Adjust the size of the icon */
+    color: rgba(255, 255, 255, 0.4);
+    pointer-events: none;
+    /* Ensure the icon does not interfere with input focus */
+}

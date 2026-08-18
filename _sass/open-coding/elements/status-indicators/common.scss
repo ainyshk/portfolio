@@ -1,0 +1,115 @@
+@import "../../materials/main.scss";
+
+$status-indicator-border-radius: 10px !default;
+$status-indicator-gap: 15px !default;
+$status-indicator-padding: 15px !default;
+$status-indicator-item-padding: 8px 12px !default;
+$status-indicator-item-border-radius: 8px !default;
+
+$status-indicator-pending-bg: rgba(255, 193, 7, 0.2) !default;
+$status-indicator-pending-border: rgba(255, 193, 7, 0.3) !default;
+$status-indicator-pending-color: #ffc107 !default;
+
+$status-indicator-success-bg: rgba(40, 167, 69, 0.2) !default;
+$status-indicator-success-border: rgba(40, 167, 69, 0.3) !default;
+$status-indicator-success-color: #28a745 !default;
+
+$status-indicator-error-bg: rgba(220, 53, 69, 0.2) !default;
+$status-indicator-error-border: rgba(220, 53, 69, 0.3) !default;
+$status-indicator-error-color: #dc3545 !default;
+
+$status-indicator-base-bg: rgba(255, 255, 255, 0.05) !default;
+$status-indicator-base-border: rgba(255, 255, 255, 0.1) !default;
+
+$status-indicator-icon-size: 16px !default;
+$status-indicator-text-size: 14px !default;
+$status-indicator-text-weight: 500 !default;
+
+$status-indicator-mobile: 480px !default;
+$status-indicator-tablet: 768px !default;
+
+@mixin status-indicator-state($bg-color, $border-color, $text-color: null) {
+  background: $bg-color;
+  border: 1px solid $border-color;
+  
+  @if $text-color {
+    color: $text-color;
+  }
+}
+
+@mixin status-indicator-responsive-flex() {
+  display: flex;
+  gap: $status-indicator-gap;
+  
+  @media (max-width: $status-indicator-mobile) {
+    flex-direction: column;
+    gap: calc(#{$status-indicator-gap} * 0.5);
+  }
+}
+
+.backend-status {
+  @include status-indicator-responsive-flex();
+  margin: $status-indicator-gap 0;
+  padding: $status-indicator-padding;
+  background: $status-indicator-base-bg;
+  border-radius: $status-indicator-border-radius;
+  border: 1px solid $status-indicator-base-border;
+  
+  @media (max-width: $status-indicator-tablet) {
+    padding: calc(#{$status-indicator-padding} * 0.75);
+  }
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: $status-indicator-item-padding;
+  border-radius: $status-indicator-item-border-radius;
+  background: $status-indicator-base-bg;
+  transition: all 0.3s ease;
+  flex: 1;
+  justify-content: center;
+  
+  @media (max-width: $status-indicator-tablet) {
+    padding: 6px 10px;
+    gap: 6px;
+  }
+  
+  @media (max-width: $status-indicator-mobile) {
+    justify-content: flex-start;
+    min-height: 44px;
+  }
+}
+
+.status-icon {
+  font-size: $status-indicator-icon-size;
+  min-width: $status-indicator-icon-size;
+  text-align: center;
+}
+
+.status-text {
+  font-size: $status-indicator-text-size;
+  font-weight: $status-indicator-text-weight;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  
+  @media (max-width: $status-indicator-mobile) {
+    white-space: normal;
+    word-break: break-word;
+  }
+}
+
+.overall-status {
+  margin-top: 10px;
+  padding: 10px;
+  text-align: center;
+  border-radius: $status-indicator-item-border-radius;
+  font-weight: $status-indicator-text-weight;
+  transition: all 0.3s ease;
+  
+  &.hidden {
+    display: none;
+  }
+}

@@ -1,0 +1,1046 @@
+<div id="sidebar" style="position: fixed; top: 50%; left: 24px; transform: translateY(-50%); width: 68px; background: rgba(255, 255, 255, 0.95); border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 20px; display: flex; flex-direction: column; padding: 16px 0; gap: 6px; z-index: 1000; box-shadow: 0 24px 48px rgba(0, 0, 0, 0.15), 0 12px 24px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8); transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;" onmouseenter="this.style.width='200px'; this.style.padding='16px 12px'; this.style.background='rgba(255, 255, 255, 0.98)';" onmouseleave="this.style.width='68px'; this.style.padding='16px 0'; this.style.background='rgba(255, 255, 255, 0.95)';">
+    <div class="sidebar-button" id="dictionary-button" data-tooltip="Dictionary" style="display: flex; align-items: center; width: 52px; height: 52px; margin: 0 auto; background: rgba(0, 0, 0, 0.04); border: 1px solid rgba(0, 0, 0, 0.08); border-radius: 14px; cursor: pointer; transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1); position: relative; overflow: hidden;" onmouseenter="this.style.transform='translateY(-3px) scale(1.05)'; this.style.boxShadow='0 12px 28px rgba(102, 126, 234, 0.4), 0 6px 16px rgba(0, 0, 0, 0.3)'; this.style.borderColor='rgba(102, 126, 234, 0.6)'; this.querySelector('.icon').style.transform='scale(1.15)'; this.querySelector('.icon').style.filter='brightness(1.4) drop-shadow(0 0 8px rgba(255, 255, 255, 0.5))'; this.querySelector('.label').style.color='#ffffff'; this.querySelector('.label').style.textShadow='0 0 8px rgba(255, 255, 255, 0.3)'; this.style.background='linear-gradient(135deg, #667eea, #764ba2)';" onmouseleave="this.style.transform=''; this.style.boxShadow=''; this.style.borderColor='rgba(0, 0, 0, 0.08)'; this.querySelector('.icon').style.transform=''; this.querySelector('.icon').style.filter='brightness(1.2) contrast(1.1)'; this.querySelector('.label').style.color='#1e293b'; this.querySelector('.label').style.textShadow=''; this.style.background='rgba(0, 0, 0, 0.04)';">
+        <span class="icon" style="font-size: 20px; display: flex; align-items: center; justify-content: center; width: 52px; height: 52px; flex-shrink: 0; transition: all 0.35s ease; user-select: none; position: relative; z-index: 2; filter: brightness(1.2) contrast(1.1);">📚</span>
+        <span class="label" style="font-size: 14px; font-weight: 600; color: #1e293b; white-space: nowrap; opacity: 0; transform: translateX(-15px); transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1); position: relative; z-index: 2;">Dictionary</span>
+    </div>
+  
+    <div class="sidebar-separator" style="width: 60%; height: 2px; background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.15), transparent); margin: 6px auto; border-radius: 1px; transition: all 0.3s ease;"></div>
+  
+    <div class="sidebar-button" id="notes-button" data-tooltip="Notes" style="display: flex; align-items: center; width: 52px; height: 52px; margin: 0 auto; background: rgba(0, 0, 0, 0.04); border: 1px solid rgba(0, 0, 0, 0.08); border-radius: 14px; cursor: pointer; transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1); position: relative; overflow: hidden;" onmouseenter="this.style.transform='translateY(-3px) scale(1.05)'; this.style.boxShadow='0 12px 28px rgba(102, 126, 234, 0.4), 0 6px 16px rgba(0, 0, 0, 0.3)'; this.style.borderColor='rgba(102, 126, 234, 0.6)'; this.querySelector('.icon').style.transform='scale(1.15)'; this.querySelector('.icon').style.filter='brightness(1.4) drop-shadow(0 0 8px rgba(255, 255, 255, 0.5))'; this.querySelector('.label').style.color='#ffffff'; this.querySelector('.label').style.textShadow='0 0 8px rgba(255, 255, 255, 0.3)'; this.style.background='linear-gradient(135deg, #667eea, #764ba2)';" onmouseleave="this.style.transform=''; this.style.boxShadow=''; this.style.borderColor='rgba(0, 0, 0, 0.08)'; this.querySelector('.icon').style.transform=''; this.querySelector('.icon').style.filter='brightness(1.2) contrast(1.1)'; this.querySelector('.label').style.color='#1e293b'; this.querySelector('.label').style.textShadow=''; this.style.background='rgba(0, 0, 0, 0.04)';">
+        <span class="icon" style="font-size: 20px; display: flex; align-items: center; justify-content: center; width: 52px; height: 52px; flex-shrink: 0; transition: all 0.35s ease; user-select: none; position: relative; z-index: 2; filter: brightness(1.2) contrast(1.1);">📝</span>
+        <span class="label" style="font-size: 14px; font-weight: 600; color: #1e293b; white-space: nowrap; opacity: 0; transform: translateX(-15px); transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1); position: relative; z-index: 2;">Notes</span>
+    </div>
+    <div class="sidebar-separator" style="width: 60%; height: 2px; background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.15), transparent); margin: 6px auto; border-radius: 1px; transition: all 0.3s ease;"></div>
+    <div class="sidebar-button" id="tts-button" data-tooltip="Read Selected Text" style="display: flex; align-items: center; width: 52px; height: 52px; margin: 0 auto; background: rgba(0, 0, 0, 0.04); border: 1px solid rgba(0, 0, 0, 0.08); border-radius: 14px; cursor: pointer; transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1); position: relative; overflow: hidden;" onmouseenter="this.style.transform='translateY(-3px) scale(1.05)'; this.style.boxShadow='0 12px 28px rgba(102, 126, 234, 0.4), 0 6px 16px rgba(0, 0, 0, 0.3)'; this.style.borderColor='rgba(102, 126, 234, 0.6)'; this.querySelector('.icon').style.transform='scale(1.15)'; this.querySelector('.icon').style.filter='brightness(1.4) drop-shadow(0 0 8px rgba(255, 255, 255, 0.5))'; this.querySelector('.label').style.color='#ffffff'; this.querySelector('.label').style.textShadow='0 0 8px rgba(255, 255, 255, 0.3)'; this.style.background='linear-gradient(135deg, #667eea, #764ba2)';" onmouseleave="this.style.transform=''; this.style.boxShadow=''; this.style.borderColor='rgba(0, 0, 0, 0.08)'; this.querySelector('.icon').style.transform=''; this.querySelector('.icon').style.filter='brightness(1.2) contrast(1.1)'; this.querySelector('.label').style.color='#1e293b'; this.querySelector('.label').style.textShadow=''; this.style.background='rgba(0, 0, 0, 0.04)';">
+        <span class="icon" style="font-size: 20px; display: flex; align-items: center; justify-content: center; width: 52px; height: 52px; flex-shrink: 0; transition: all 0.35s ease; user-select: none; position: relative; z-index: 2; filter: brightness(1.2) contrast(1.1);">🔊</span>
+        <span class="label" style="font-size: 14px; font-weight: 600; color: #1e293b; white-space: nowrap; opacity: 0; transform: translateX(-15px); transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1); position: relative; z-index: 2;">Read Text</span>
+    </div>
+    <div class="sidebar-separator" style="width: 60%; height: 2px; background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.15), transparent); margin: 6px auto; border-radius: 1px; transition: all 0.3s ease;"></div>
+    <div class="sidebar-separator" style="width: 60%; height: 2px; background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.15), transparent); margin: 6px auto; border-radius: 1px; transition: all 0.3s ease;"></div>
+    <div class="sidebar-button" id="highlight-button" data-tooltip="Highlight" style="display: flex; align-items: center; width: 52px; height: 52px; margin: 0 auto; background: rgba(0, 0, 0, 0.04); border: 1px solid rgba(0, 0, 0, 0.08); border-radius: 14px; cursor: pointer; transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1); position: relative; overflow: hidden;" onmouseenter="this.style.transform='translateY(-3px) scale(1.05)'; this.style.boxShadow='0 12px 28px rgba(102, 126, 234, 0.4), 0 6px 16px rgba(0, 0, 0, 0.3)'; this.style.borderColor='rgba(102, 126, 234, 0.6)'; this.querySelector('.icon').style.transform='scale(1.15)'; this.querySelector('.icon').style.filter='brightness(1.4) drop-shadow(0 0 8px rgba(255, 255, 255, 0.5))'; this.querySelector('.label').style.color='#ffffff'; this.querySelector('.label').style.textShadow='0 0 8px rgba(255, 255, 255, 0.3)'; this.style.background='linear-gradient(135deg, #667eea, #764ba2)';" onmouseleave="this.style.transform=''; this.style.boxShadow=''; this.style.borderColor='rgba(0, 0, 0, 0.08)'; this.querySelector('.icon').style.transform=''; this.querySelector('.icon').style.filter='brightness(1.2) contrast(1.1)'; this.querySelector('.label').style.color='#1e293b'; this.querySelector('.label').style.textShadow=''; this.style.background='rgba(0, 0, 0, 0.04)';">
+        <span class="icon" style="font-size: 20px; display: flex; align-items: center; justify-content: center; width: 52px; height: 52px; flex-shrink: 0; transition: all 0.35s ease; user-select: none; position: relative; z-index: 2; filter: brightness(1.2) contrast(1.1);">🎨</span>
+        <span class="label" style="font-size: 14px; font-weight: 600; color: #1e293b; white-space: nowrap; opacity: 0; transform: translateX(-15px); transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1); position: relative; z-index: 2;">Highlight</span>
+    </div>
+    <input type="color" id="highlight-color" value="#FFFF00" style="margin: 8px auto; width: 40px; height: 30px; border: none; border-radius: 5px; cursor: pointer; opacity: 0; transition: opacity 0.3s ease;">
+  </div>
+  
+  <div id="dictionary-modal" style="display: none; position: fixed; right: 0; top: 0; height: 100vh; width: 420px; background: rgba(255, 255, 255, 0.9); border-left: 1px solid rgba(0, 0, 0, 0.1); box-shadow: -12px 0 40px rgba(0, 0, 0, 0.2), -4px 0 20px rgba(0, 0, 0, 0.1); z-index: 1100; animation: slideIn 0.4s cubic-bezier(0.23, 1, 0.32, 1);">
+    <div style="height: 100%; display: flex; flex-direction: column; position: relative;">
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 28px 28px 20px; border-bottom: 1px solid rgba(0, 0, 0, 0.08);">
+            <h3 class="no_toc" style="color: #1e293b; font-size: 22px; font-weight: 700; background: linear-gradient(135deg, #667eea, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin: 0;">Dictionary Lookup</h3>
+            <button id="close-dict" style="background: rgba(0, 0, 0, 0.05); border: 1px solid rgba(0, 0, 0, 0.1); color: #475569; font-size: 16px; width: 40px; height: 40px; border-radius: 10px; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center;" onmouseenter="this.style.background='rgba(239, 68, 68, 0.15)'; this.style.borderColor='rgba(239, 68, 68, 0.3)'; this.style.color='#f87171'; this.style.transform='scale(1.05)';" onmouseleave="this.style.background='rgba(0, 0, 0, 0.05)'; this.style.borderColor='rgba(0, 0, 0, 0.1)'; this.style.color='#475569'; this.style.transform='';">✖</button>
+        </div>
+        <div style="flex: 1; padding: 28px; overflow-y: auto;">
+            <div style="display: flex; gap: 12px; margin-bottom: 32px; position: relative;">
+                <input type="text" id="dict-input" placeholder="Enter a word..." style="flex: 1; padding: 16px 20px; font-size: 16px; background: rgba(0, 0, 0, 0.05); border: 2px solid rgba(0, 0, 0, 0.1); border-radius: 16px; color: #1e293b; transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1); font-weight: 500;" onfocus="this.style.borderColor='rgba(102, 126, 234, 0.6)'; this.style.background='rgba(0, 0, 0, 0.08)'; this.style.boxShadow='0 0 0 4px rgba(102, 126, 234, 0.15), 0 8px 25px rgba(102, 126, 234, 0.2)'; this.style.transform='translateY(-2px)';" onblur="this.style.borderColor='rgba(0, 0, 0, 0.1)'; this.style.background='rgba(0, 0, 0, 0.05)'; this.style.boxShadow=''; this.style.transform='';" />
+                <button id="search-dict" style="padding: 16px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; border-radius: 16px; color: white; font-weight: 600; font-size: 15px; cursor: pointer; transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1); box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3); position: relative; overflow: hidden; white-space: nowrap;" onmouseenter="this.style.transform='translateY(-3px) scale(1.02)'; this.style.boxShadow='0 12px 30px rgba(102, 126, 234, 0.4)'; this.style.background='linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%)';" onmouseleave="this.style.transform=''; this.style.boxShadow='0 4px 15px rgba(102, 126, 234, 0.3)'; this.style.background='linear-gradient(135deg, #667eea 0%, #764ba2 100%)';" onmousedown="this.style.transform='translateY(-1px) scale(1.01)';">Search</button>
+            </div>
+            <div id="dict-result" style="color: #1e293b; line-height: 1.7; font-size: 15px; background: rgba(0, 0, 0, 0.02); border-radius: 16px; padding: 24px; border: 1px solid rgba(0, 0, 0, 0.05); min-height: 120px;"></div>
+        </div>
+    </div>
+  </div>
+  
+  <div id="notes-sidebar" style="display: none; position: fixed; right: 0; top: 0; height: 100vh; width: 380px; background: rgba(255, 255, 255, 0.9); border-left: 1px solid rgba(0, 0, 0, 0.1); box-shadow: -12px 0 40px rgba(0, 0, 0, 0.2), -4px 0 20px rgba(0, 0, 0, 0.1); z-index: 1100; animation: slideIn 0.4s cubic-bezier(0.23, 1, 0.32, 1);">
+      <div style="height: 100%; display: flex; flex-direction: column; position: relative;">
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 28px 28px 20px; border-bottom: 1px solid rgba(0, 0, 0, 0.08);">
+              <h3 class="no_toc" style="color: #1e293b; font-size: 22px; font-weight: 700; background: linear-gradient(135deg, #667eea, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin: 0;">Your Notes</h3>
+              <button id="close-notes-sidebar" style="background: rgba(0, 0, 0, 0.05); border: 1px solid rgba(0, 0, 0, 0.1); color: #475569; font-size: 16px; width: 40px; height: 40px; border-radius: 10px; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center;" onmouseenter="this.style.background='rgba(239, 68, 68, 0.15)'; this.style.borderColor='rgba(239, 68, 68, 0.3)'; this.style.color='#f87171'; this.style.transform='scale(1.05)';" onmouseleave="this.style.background='rgba(0, 0, 0, 0.05)'; this.style.borderColor='rgba(0, 0, 0, 0.1)'; this.style.color='#475569'; this.style.transform='';">✖</button>
+          </div>
+          <div style="flex: 1; padding: 28px; overflow-y: auto; display: flex; flex-direction: column;">
+              <div class="notes-list" id="notes-list-container" style="flex-grow: 1; margin-bottom: 20px; overflow-y: auto; padding-right: 10px;">
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 10px; padding-top: 20px; border-top: 1px solid rgba(0, 0, 0, 0.08); background: rgba(255, 255, 255, 0.95); padding-bottom: 0px; margin-top: auto;">
+                  <textarea id="new-note-text" placeholder="Add a new note..." rows="3" style="width: 100%; padding: 12px 15px; font-size: 15px; background: rgba(0, 0, 0, 0.05); border: 2px solid rgba(0, 0, 0, 0.1); border-radius: 12px; color: #1e293b; resize: vertical; min-height: 80px; font-weight: 500; font-family: inherit;" onfocus="this.style.borderColor='rgba(102, 126, 234, 0.6)'; this.style.background='rgba(0, 0, 0, 0.08)'; this.style.boxShadow='0 0 0 4px rgba(102, 126, 234, 0.15)';" onblur="this.style.borderColor='rgba(0, 0, 0, 0.1)'; this.style.background='rgba(0, 0, 0, 0.05)'; this.style.boxShadow='';"></textarea>
+                  <button id="add-note-btn" style="width: 100%; padding: 12px 20px; font-size: 15px; border-radius: 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; color: white; font-weight: 600; cursor: pointer; transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1); box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);" onmouseenter="this.style.transform='translateY(-3px) scale(1.02)'; this.style.boxShadow='0 12px 30px rgba(102, 126, 234, 0.4)'; this.style.background='linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%)';" onmouseleave="this.style.transform=''; this.style.boxShadow='0 4px 15px rgba(102, 126, 234, 0.3)'; this.style.background='linear-gradient(135deg, #667eea 0%, #764ba2 100%)';">Add Note</button>
+                  <button id="update-note-btn" style="display: none; width: 100%; padding: 12px 20px; font-size: 15px; border-radius: 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; color: white; font-weight: 600; cursor: pointer; transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1); box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);" onmouseenter="this.style.transform='translateY(-3px) scale(1.02)'; this.style.boxShadow='0 12px 30px rgba(102, 126, 234, 0.4)'; this.style.background='linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%)';" onmouseleave="this.style.transform=''; this.style.boxShadow='0 4px 15px rgba(102, 126, 234, 0.3)'; this.style.background='linear-gradient(135deg, #667eea 0%, #764ba2 100%)';">Update Note</button>
+                  <button id="cancel-edit-note-btn" style="display: none; width: 100%; padding: 12px 20px; font-size: 15px; border-radius: 12px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: #475569; cursor: pointer; transition: all 0.3s ease;" onmouseenter="this.style.background='rgba(239, 68, 68, 0.15)'; this.style.borderColor='rgba(239, 68, 68, 0.3)'; this.style.color='#f87171';" onmouseleave="this.style.background='rgba(255, 255, 255, 0.05)'; this.style.borderColor='rgba(255, 255, 255, 0.1)'; this.style.color='#475569';">Cancel</button>
+              </div>
+          </div>
+      </div>
+  </div>
+  
+  <div id="highlight-note-popover" style="position: absolute; background: #2d3748; color: #1e293b; padding: 10px 15px; border-radius: 10px; font-size: 13px; max-width: 250px; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); z-index: 1002; opacity: 0; visibility: hidden; transition: opacity 0.2s ease, transform 0.2s ease; transform: translateY(10px); pointer-events: none; line-height: 1.4;"></div>
+  <style>
+  @keyframes slideIn {
+      from {
+          transform: translateX(100%);
+          opacity: 0;
+      }
+      to {
+          transform: translateX(0);
+          opacity: 1;
+      }
+  }
+  body {
+    background-image: none !important;
+  }
+  #sidebar:hover .sidebar-button {
+      width: 100% !important;
+      gap: 12px;
+  }
+  
+  #sidebar:hover .icon {
+      width: 20px !important;
+      height: 20px !important;
+      margin-left: 16px !important;
+  }
+  
+  #sidebar:hover .label {
+      opacity: 1 !important;
+      transform: translateX(0) !important;
+  }
+  
+  #sidebar:hover .sidebar-separator {
+      width: 80% !important;
+      background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.6), transparent) !important;
+  }
+  
+  .sidebar-button::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      left: calc(100% + 12px);
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.9);
+      color: white;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 500;
+      white-space: nowrap;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      pointer-events: none;
+      z-index: 1001;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  }
+  
+  #sidebar:not(:hover) .sidebar-button:hover::after {
+      opacity: 1;
+      visibility: visible;
+  }
+  
+  #sidebar:hover .sidebar-button::after {
+      opacity: 0 !important;
+      visibility: hidden !important;
+  }
+  
+  #dict-result h4 {
+      color: #f8fafc !important;
+      font-size: 28px !important;
+      margin-bottom: 20px !important;
+      font-weight: 800 !important;
+      background: linear-gradient(135deg, #667eea, #a78bfa, #ec4899);
+      -webkit-background-clip: text !important;
+      -webkit-text-fill-color: transparent !important;
+      background-clip: text !important;
+      text-transform: capitalize !important;
+  }
+  
+  #dict-result b {
+      color: #a78bfa !important;
+      font-size: 17px !important;
+      font-weight: 700 !important;
+      display: inline-block !important;
+      margin: 16px 0 8px 0 !important;
+      padding: 6px 12px !important;
+      background: rgba(167, 139, 250, 0.1) !important;
+      border-radius: 8px !important;
+      border-left: 3px solid #a78bfa !important;
+  }
+  
+  #dict-result i {
+      color: #374151 !important;
+      font-style: italic !important;
+      margin-left: 8px !important;
+      padding: 4px 8px !important;
+      background: rgba(55, 65, 81, 0.05) !important;
+      border-radius: 6px !important;
+      font-size: 14px !important;
+  }
+  /* --- Highlight Specific Styles --- */
+  .user-highlight {
+      position: relative;
+      display: inline; /* Keep inline to flow with text */
+      line-height: inherit;
+      background-color: var(--highlight-color, yellow);
+      padding: 0 2px;
+      border-radius: 3px;
+      transition: background-color 0.2s ease;
+      vertical-align: baseline;
+  }
+
+  .highlight-trash-icon {
+      position: absolute;
+      right: 0px; /* Positioned relative to the highlight span's right edge */
+      top: -8px; /* Move it slightly outside to the top */
+      transform: scale(0.9); /* Slightly smaller initial scale */
+      opacity: 0; /* Hidden by default */
+      font-size: 10px; /* Smaller icon size */
+      color: rgba(0, 0, 0, 0.7); /* Darker color for visibility */
+      background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white background */
+      border-radius: 50%;
+      padding: 2px 4px; /* Padding around the 'x' */
+      cursor: pointer;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      pointer-events: none; /* Prevents icon from blocking text selection when hidden */
+      z-index: 10; /* Make sure it's on top of other content */
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2); /* Subtle shadow */
+      border: 1px solid rgba(0, 0, 0, 0.1); /* Add a subtle border */
+      display: flex; /* Use flex to center the 'x' inside the circle */
+      align-items: center;
+      justify-content: center;
+      width: 18px; /* Fixed width/height for circular icon */
+      height: 18px;
+  }
+
+  .highlight-note-icon { /* NEW: Note icon style */
+      position: absolute;
+      right: 22px; /* Positioned to the left of the trash icon (trash width + small gap) */
+      top: -8px;
+      transform: scale(0.9);
+      opacity: 0;
+      font-size: 10px;
+      color: rgba(0, 0, 0, 0.7);
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 50%;
+      padding: 2px 4px;
+      cursor: pointer;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      pointer-events: none;
+      z-index: 10;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+  }
+
+
+  .user-highlight:hover .highlight-trash-icon,
+  .user-highlight:hover .highlight-note-icon { /* Show both icons on hover */
+      opacity: 1; /* Show on hover */
+      pointer-events: auto; /* Allow clicking when visible */
+      transform: scale(1.1); /* Slight pop effect on hover */
+  }
+
+  .highlight-trash-icon:hover {
+      background-color: rgba(239, 68, 68, 0.9); /* Tomato color on hover */
+      color: white;
+      transform: scale(1.2); /* Even more pop on direct hover */
+  }
+
+  .highlight-note-icon:hover { /* NEW: Note icon hover style */
+      background-color: rgba(102, 126, 234, 0.9); /* Blue color on hover */
+      color: white;
+      transform: scale(1.2);
+  }
+
+  /* --- Highlighting Button Active Style --- */
+  .highlighting {
+      border-color: rgba(102, 126, 234, 0.6);
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+  }
+  #highlight-color::-webkit-color-swatch-wrapper {
+      padding: 0;
+  }
+  #highlight-color::-webkit-color-swatch {
+      border: none;
+      border-radius: 5px;
+  }
+
+
+  /* --- NEW: Notes Panel (Sidebar) Specific Styles --- */
+  .notes-panel {
+      /* Reuses .modal-overlay styles for basic positioning and animation */
+      /* Overrides specific for a panel vs a modal-like overlay */
+      display: none; /* Hidden by default, toggled by JS */
+  }
+
+  .notes-panel-header {
+      /* Reuses .modal-header styles */
+      padding: 28px 28px 20px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .notes-panel-body {
+      /* Reuses .modal-body styles */
+      flex: 1;
+      padding: 28px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+  }
+
+  .notes-list {
+      flex-grow: 1; /* Allows notes list to expand and take available space */
+      margin-bottom: 20px;
+      /* max-height: 50vh;  No longer needed as flex-grow handles sizing */
+      overflow-y: auto;
+      padding-right: 10px; /* For scrollbar spacing */
+  }
+
+  .notes-list::-webkit-scrollbar {
+      width: 8px;
+  }
+  .notes-list::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+  }
+  .notes-list::-webkit-scrollbar-thumb {
+      background: rgba(102, 126, 234, 0.4);
+      border-radius: 10px;
+  }
+  .notes-list::-webkit-scrollbar-thumb:hover {
+      background: rgba(102, 126, 234, 0.6);
+  }
+
+  .note-item {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 12px;
+      color: #1e293b; /* Changed to black */
+      font-size: 14px;
+      position: relative;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .note-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  .note-item p {
+      margin-bottom: 8px;
+      line-height: 1.5;
+      color: #1e293b; /* Changed to black */
+  }
+
+  .note-item .note-context {
+      font-size: 13px;
+      color: #1e293b; /* Changed to black */
+      font-style: italic;
+      margin-top: 5px;
+      padding: 5px 8px;
+      background: rgba(167, 139, 250, 0.1);
+      border-radius: 8px;
+      border-left: 3px solid #a78bfa;
+      display: block; /* Ensures it takes its own line */
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      cursor: pointer; /* Indicate clickable */
+  }
+
+  .note-item .note-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 10px;
+  }
+
+  .note-item .delete-note-btn,
+  .note-item .edit-note-btn {
+      background: rgba(0, 0, 0, 0.05); /* Changed to black-ish for consistency */
+      border: 1px solid rgba(0, 0, 0, 0.1); /* Changed to black-ish for consistency */
+      color: #475569; /* Darker text color */
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+  }
+
+  .note-item .delete-note-btn:hover {
+      background: rgba(239, 68, 68, 0.15);
+      border-color: rgba(239, 68, 68, 0.3);
+      color: #f87171;
+  }
+
+  .note-item .edit-note-btn:hover {
+      background: rgba(102, 126, 234, 0.15);
+      border-color: rgba(102, 126, 234, 0.3);
+      color: #667eea;
+  }
+
+  .note-input-area {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(0, 0, 0, 0.08); /* Changed to black-ish for consistency */
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.95); /* Adjusted for lighter background */
+      padding-bottom: 0px;
+      margin-top: auto;
+  }
+
+  #new-note-text {
+      width: 100%;
+      padding: 12px 15px;
+      font-size: 15px;
+      background: rgba(0, 0, 0, 0.05);
+      border: 2px solid rgba(0, 0, 0, 0.1);
+      border-radius: 12px;
+      color: #1e293b; /* Changed to black */
+      resize: vertical;
+      min-height: 80px;
+      font-weight: 500;
+  }
+
+  #new-note-text:focus {
+      outline: none;
+      border-color: rgba(102, 126, 234, 0.6);
+      background: rgba(0, 0, 0, 0.08);
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
+  }
+
+  #new-note-text::placeholder {
+      color: rgba(71, 85, 105, 0.7); /* Darker placeholder */
+  }
+
+  .note-input-area .search-btn,
+  .note-input-area .close-btn {
+      width: 100%;
+      padding: 12px 20px;
+      font-size: 15px;
+      border-radius: 12px;
+  }
+
+  /* NEW: Popover for notes on highlight hover */
+  .note-popover {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.95); /* Lighter background for popover */
+      color: #1e293b; /* Changed to black */
+      padding: 10px 15px;
+      border-radius: 10px;
+      font-size: 13px;
+      max-width: 250px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(0, 0, 0, 0.1); /* Changed to black-ish for consistency */
+      z-index: 1002; /* Above sidebar */
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      transform: translateY(10px);
+      pointer-events: none; /* Do not block interaction with content below */
+      line-height: 1.4;
+  }
+
+  .note-popover.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+      const ttsButton = document.getElementById('tts-button');
+      // Ensure lessonContent is available, otherwise the TTS and Highlight features won't work
+      const lessonContent = document.getElementById('lesson-content'); // IMPORTANT: This ID must match your main content div
+
+      // --- TEXT-TO-SPEECH (TTS) ---
+      ttsButton.addEventListener('mousedown', () => {
+          const selection = window.getSelection();
+
+          if (!selection || selection.rangeCount === 0) {
+              alert('Please select some text in the lesson to read.');
+              return;
+          }
+          if (!lessonContent) {
+              console.warn('Lesson content area (ID "lesson-content") not found. TTS feature might not work as expected.');
+              alert('Lesson content area not found. Cannot read text.');
+              return;
+          }
+
+          let selectedText = '';
+          let isSelectionInLessonContent = false;
+          for (let i = 0; i < selection.rangeCount; i++) {
+              const range = selection.getRangeAt(i);
+              // Check if any part of the selection range is within the lesson content
+              if (lessonContent.contains(range.startContainer) || lessonContent.contains(range.endContainer)) {
+                  selectedText += selection.toString();
+                  isSelectionInLessonContent = true;
+                  break;
+              }
+          }
+
+          selectedText = selectedText.trim();
+
+          if (!selectedText || !isSelectionInLessonContent) {
+              alert('Please select text within the lesson content.');
+              return;
+          }
+
+          const API_KEY = '56c7e2a8367048b8ae6c5278adb13c46'; // Replace with your actual VoiceRSS API Key
+          const ttsUrl = `https://api.voicerss.org/?key=${API_KEY}&hl=en-us&src=${encodeURIComponent(selectedText)}&c=MP3&f=44khz_16bit_stereo`;
+
+          let audio = document.getElementById('tts-audio');
+          if (!audio) {
+              audio = document.createElement('audio');
+              audio.id = 'tts-audio';
+              document.body.appendChild(audio);
+          }
+          audio.src = ttsUrl;
+          audio.play().catch(err => {
+              console.error('Failed to play TTS audio:', err);
+              alert('Failed to play TTS audio. Make sure you have selected text and your API key is valid, or check console for errors: ' + err.message);
+          });
+      });
+
+      // --- DICTIONARY ---
+      const dictionaryButton = document.getElementById('dictionary-button');
+      const dictionaryModal = document.getElementById('dictionary-modal');
+      const closeDictBtn = document.getElementById('close-dict');
+      const searchDictBtn = document.getElementById('search-dict');
+      const dictInput = document.getElementById('dict-input');
+      const dictResult = document.getElementById('dict-result');
+
+      dictionaryButton.addEventListener('click', () => {
+          dictionaryModal.style.display = 'block';
+          dictInput.focus();
+      });
+
+      closeDictBtn.addEventListener('click', () => {
+          dictionaryModal.style.display = 'none';
+          dictInput.value = '';
+          dictResult.innerHTML = '';
+      });
+
+      function searchDictionary() {
+          const word = dictInput.value.trim();
+          if (!word) {
+              alert('Please enter a word to look up.');
+              return;
+          }
+          dictResult.innerHTML = '<em>Loading...</em>';
+          fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word)}`)
+              .then(res => {
+                  if (!res.ok) throw new Error('Word not found');
+                  return res.json();
+              })
+              .then(data => {
+                  const meanings = data[0].meanings;
+                  let html = `<h4 class="no_toc">${data[0].word}</h4>`;
+                  meanings.forEach(meaning => {
+                      html += `<b>${meaning.partOfSpeech}</b><br/>`;
+                      meaning.definitions.forEach((def, i) => {
+                          html += `${i + 1}. ${def.definition}<br/>`;
+                          if (def.example) html += `<i style="color:#94a3b8;">Example: ${def.example}</i><br/>`;
+                      });
+                      html += '<br/>';
+                  });
+                  dictResult.innerHTML = html;
+              })
+              .catch(() => {
+                  dictResult.innerHTML = '<span style="color:#ef4444;">No definition found. Try another word.</span>';
+              });
+      }
+
+      searchDictBtn.addEventListener('click', searchDictionary);
+      dictInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+              e.preventDefault();
+              searchDictionary();
+          }
+      });
+
+      // --- HIGHLIGHT FEATURE ---
+      const highlightButton = document.getElementById('highlight-button');
+      const highlightColor = document.getElementById('highlight-color');
+
+      let isHighlighting = false;
+
+      // Handler function for highlight deletion
+      function handleHighlightDelete(e) {
+          e.stopPropagation(); // Prevent text selection on icon click
+          const parentHighlight = e.target.closest('.user-highlight');
+          if (parentHighlight) {
+              const highlightIdToDelete = parentHighlight.dataset.highlightId;
+
+              const contentFragment = document.createDocumentFragment();
+              // Move all child nodes of the highlight span into the fragment, except the trash and note icon
+              Array.from(parentHighlight.childNodes).forEach(child => {
+                  if (!child.classList || (!child.classList.contains('highlight-trash-icon') && !child.classList.contains('highlight-note-icon'))) {
+                      contentFragment.appendChild(child);
+                  }
+              });
+              // Replace the highlight span with its former content
+              parentHighlight.replaceWith(contentFragment);
+
+              // Also delete any associated note
+              if (highlightIdToDelete) {
+                  notesData = notesData.filter(note => note.highlightId !== highlightIdToDelete);
+                  saveNotes();
+                  renderNotesList(); // Update the notes list in the panel
+              }
+
+              saveHighlights(); // Save updated content
+          }
+      }
+
+      // New function to attach event listeners to trash icons (for new and loaded highlights)
+      function attachHighlightDeleteListeners() {
+          lessonContent.querySelectorAll('.user-highlight .highlight-trash-icon').forEach(icon => {
+              // Remove any existing listeners to prevent duplicates if called multiple times
+              icon.removeEventListener('click', handleHighlightDelete);
+              // Add the new listener
+              icon.addEventListener('click', handleHighlightDelete);
+          });
+      }
+
+      highlightButton.addEventListener('click', () => {
+          isHighlighting = !isHighlighting;
+          if (isHighlighting) {
+              highlightColor.style.opacity = 1; // Show color picker
+              highlightButton.classList.add('highlighting'); // Add class for visual feedback
+              lessonContent.style.cursor = 'crosshair'; // Change cursor when highlighting is active
+          } else {
+              highlightColor.style.opacity = 0; // Hide color picker
+              highlightButton.classList.remove('highlighting'); // Remove highlighting class
+              lessonContent.style.cursor = 'default'; // Reset cursor
+          }
+      });
+
+      /**
+       * Wraps a given text node (or a portion of it) with a highlight span.
+       * Handles splitting text nodes if the highlight doesn't cover the whole node.
+       * @param {Text} textNode - The text node to wrap.
+       * @param {number} startOffset - The starting offset within the textNode.
+       * @param {number} endOffset - The ending offset within the textNode.
+       * @param {string} color - The highlight color.
+       * @returns {HTMLElement} The created highlight span.
+       */
+      function wrapTextNodeInHighlight(textNode, startOffset, endOffset, color) {
+          let nodeToWrap = textNode;
+
+          // If the highlight doesn't start at the beginning of the text node
+          if (startOffset > 0) {
+              nodeToWrap = textNode.splitText(startOffset);
+              // Adjust endOffset relative to the new node if it was within the original node
+              endOffset = endOffset - startOffset;
+          }
+
+          // If the highlight doesn't end at the end of the (possibly split) text node
+          if (endOffset < nodeToWrap.length) {
+              nodeToWrap.splitText(endOffset);
+          }
+
+          const highlightSpan = document.createElement('span');
+          highlightSpan.style.backgroundColor = color;
+          highlightSpan.classList.add('user-highlight');
+          highlightSpan.dataset.highlightId = `highlight-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`; // Unique ID for notes
+
+          const trashIcon = document.createElement('span');
+          trashIcon.classList.add('highlight-trash-icon');
+          trashIcon.innerHTML = '✖';
+          trashIcon.title = 'Remove highlight';
+
+          const noteIcon = document.createElement('span'); // NEW: Note icon
+          noteIcon.classList.add('highlight-note-icon');
+          noteIcon.innerHTML = '📝';
+          noteIcon.title = 'Add/Edit Note';
+
+          // Append the text node content first, then the icons
+          highlightSpan.appendChild(nodeToWrap.cloneNode(true));
+          highlightSpan.appendChild(trashIcon);
+          highlightSpan.appendChild(noteIcon); // Add note icon
+
+          nodeToWrap.parentNode.replaceChild(highlightSpan, nodeToWrap);
+          return highlightSpan;
+      }
+
+      /**
+       * Highlights the current selection, handling cross-tag selections gracefully.
+       */
+      function highlightSelectionInContext() {
+          const selection = window.getSelection();
+          if (!selection || selection.rangeCount === 0 || selection.isCollapsed) {
+              return;
+          }
+
+          const range = selection.getRangeAt(0);
+          const color = highlightColor.value;
+
+          // Ensure selection is within the lesson content
+          if (!lessonContent.contains(range.commonAncestorContainer)) {
+              return;
+          }
+
+          const nodesToProcess = [];
+
+          // Create a TreeWalker starting from the common ancestor, showing only text nodes
+          const walker = document.createTreeWalker(
+              range.commonAncestorContainer,
+              NodeFilter.SHOW_TEXT,
+              null, // No custom filter, accept all text nodes
+              false
+          );
+
+          // Iterate through all text nodes within the range
+          let currentNode = walker.currentNode;
+          while (currentNode) {
+              // Check if the current text node intersects with the selection range
+              // AND if it contains actual visible text (not just whitespace)
+              if (range.intersectsNode(currentNode) && currentNode.textContent.trim().length > 0) {
+                  nodesToProcess.push(currentNode);
+              }
+              currentNode = walker.nextNode();
+          }
+
+          // Handle highlighting
+          let firstHighlightSpan = null; // To store the first created highlight span for potential note attachment
+          nodesToProcess.forEach(textNode => {
+              let startOffset = 0;
+              let endOffset = textNode.length;
+
+              // If the text node is the start container, adjust startOffset
+              if (textNode === range.startContainer) {
+                  startOffset = range.startOffset;
+              }
+              // If the text node is the end container, adjust endOffset
+              if (textNode === range.endContainer) {
+                  endOffset = range.endOffset;
+              }
+
+              // Only wrap if there's actual text selected within this node
+              if (endOffset > startOffset) {
+                  const highlightSpan = wrapTextNodeInHighlight(textNode, startOffset, endOffset, color);
+                  if (!firstHighlightSpan) {
+                      firstHighlightSpan = highlightSpan; // Capture the first one
+                  }
+              }
+          });
+
+          // After highlighting, re-attach event listeners for trash and note icons
+          attachHighlightDeleteListeners();
+          attachHighlightNoteListeners(); // Call the new function for note icons
+          saveHighlights(); // Save the new highlights to local storage
+
+          // Clear the selection after highlighting
+          selection.removeAllRanges();
+          isHighlighting = false; // Turn off highlighting mode after use
+          highlightColor.style.opacity = 0;
+          highlightButton.classList.remove('highlighting');
+          lessonContent.style.cursor = 'default';
+      }
+
+      lessonContent.addEventListener('mouseup', () => {
+          if (isHighlighting) {
+              highlightSelectionInContext();
+          }
+      });
+
+      // --- NOTES FEATURE (NEW SIDEBAR IMPLEMENTATION) ---
+      const notesButton = document.getElementById('notes-button');
+      const notesSidebar = document.getElementById('notes-sidebar'); // Reference to the new sidebar
+      const closeNotesSidebarBtn = document.getElementById('close-notes-sidebar'); // New close button for the sidebar
+      const notesListContainer = document.getElementById('notes-list-container');
+      const newNoteText = document.getElementById('new-note-text');
+      const addNoteBtn = document.getElementById('add-note-btn');
+      const updateNoteBtn = document.getElementById('update-note-btn');
+      const cancelEditNoteBtn = document.getElementById('cancel-edit-note-btn');
+      const highlightNotePopover = document.getElementById('highlight-note-popover');
+
+      let notesData = []; // Array to store note objects
+      let editingNoteId = null; // To track which note is being edited
+      let currentHighlightIdForNote = null; // To link a new note to a specific highlight
+
+      // --- Local Storage Functions ---
+      function saveNotes() {
+          localStorage.setItem('userNotes', JSON.stringify(notesData));
+      }
+
+      function loadNotes() {
+          const storedNotes = localStorage.getItem('userNotes');
+          if (storedNotes) {
+              notesData = JSON.parse(storedNotes);
+              renderNotesList();
+          }
+      }
+
+      function saveHighlights() {
+          // This saves the entire innerHTML of lessonContent after highlights are applied.
+          // This is a simple approach but can have side effects if lessonContent changes outside of highlights.
+          localStorage.setItem('lessonHighlights', lessonContent.innerHTML);
+      }
+
+      function loadHighlights() {
+          const storedHighlights = localStorage.getItem('lessonHighlights');
+          if (storedHighlights && lessonContent) {
+              // Temporarily store current scroll position
+              const scrollPosition = window.scrollY;
+
+              // Create a temporary div to avoid re-rendering issues and potential script execution
+              const tempDiv = document.createElement('div');
+              tempDiv.innerHTML = storedHighlights;
+
+              // Replace content
+              lessonContent.innerHTML = tempDiv.innerHTML;
+
+              // Reattach event listeners to newly loaded highlight elements
+              attachHighlightDeleteListeners();
+              attachHighlightNoteListeners();
+
+              // Restore scroll position
+              window.scrollTo(0, scrollPosition);
+          }
+      }
+
+      // --- Render Notes List ---
+      function renderNotesList() {
+          notesListContainer.innerHTML = ''; // Clear current list
+          notesData.forEach(note => {
+              const noteItem = document.createElement('div');
+              noteItem.classList.add('note-item');
+              noteItem.dataset.noteId = note.id;
+
+              const noteText = document.createElement('p');
+              noteText.textContent = note.text;
+              noteItem.appendChild(noteText);
+
+              if (note.highlightedText && note.highlightId) {
+                  const noteContext = document.createElement('span');
+                  noteContext.classList.add('note-context');
+                  noteContext.textContent = `Context: "${note.highlightedText}"`;
+                  noteContext.title = `Go to highlight for: "${note.highlightedText}"`; // Add a tooltip
+                  noteContext.addEventListener('click', () => {
+                      // Scroll to the associated highlight
+                      const targetHighlight = lessonContent.querySelector(`[data-highlight-id="${note.highlightId}"]`);
+                      if (targetHighlight) {
+                          targetHighlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                          // Optionally, briefly animate or highlight the scrolled-to item
+                          targetHighlight.style.transition = 'outline 0.3s ease-in-out';
+                          targetHighlight.style.outline = '2px solid #a78bfa';
+                          setTimeout(() => {
+                              targetHighlight.style.outline = 'none';
+                          }, 1500);
+                      } else {
+                          alert('Associated highlight not found in the content.');
+                      }
+                      notesSidebar.style.display = 'none'; // Close notes panel after navigating
+                  });
+                  noteItem.appendChild(noteContext);
+              }
+
+              const actionsDiv = document.createElement('div');
+              actionsDiv.classList.add('note-actions');
+
+              const editBtn = document.createElement('button');
+              editBtn.classList.add('edit-note-btn');
+              editBtn.textContent = 'Edit';
+              editBtn.addEventListener('click', () => editNote(note.id));
+              actionsDiv.appendChild(editBtn);
+
+              const deleteBtn = document.createElement('button');
+              deleteBtn.classList.add('delete-note-btn');
+              deleteBtn.textContent = 'Delete';
+              deleteBtn.addEventListener('click', () => deleteNote(note.id));
+              actionsDiv.appendChild(deleteBtn);
+
+              noteItem.appendChild(actionsDiv);
+              notesListContainer.appendChild(noteItem);
+          });
+      }
+
+      // --- Add/Update Note Logic ---
+      addNoteBtn.addEventListener('click', () => {
+          const noteText = newNoteText.value.trim();
+          if (!noteText) {
+              alert('Please enter some text for your note.');
+              return;
+          }
+
+          const newNote = {
+              id: Date.now().toString(), // Unique ID for the note
+              text: noteText,
+              timestamp: new Date().toISOString(),
+              highlightId: currentHighlightIdForNote || null, // Link to highlight if available
+              highlightedText: currentHighlightIdForNote ? getHighlightedTextById(currentHighlightIdForNote) : null
+          };
+
+          notesData.push(newNote);
+          saveNotes();
+          renderNotesList();
+          newNoteText.value = ''; // Clear textarea
+          currentHighlightIdForNote = null; // Reset highlight link
+          highlightNotePopover.classList.remove('show'); // Hide popover after adding
+      });
+
+      updateNoteBtn.addEventListener('click', () => {
+          const noteText = newNoteText.value.trim();
+          if (!noteText) {
+              alert('Please enter some text for your note.');
+              return;
+          }
+
+          notesData = notesData.map(note =>
+              note.id === editingNoteId ? { ...note, text: noteText, timestamp: new Date().toISOString() } : note
+          );
+          saveNotes();
+          renderNotesList();
+          resetNoteForm();
+      });
+
+      cancelEditNoteBtn.addEventListener('click', resetNoteForm);
+
+      function editNote(id) {
+          const noteToEdit = notesData.find(note => note.id === id);
+          if (noteToEdit) {
+              newNoteText.value = noteToEdit.text;
+              editingNoteId = noteToEdit.id;
+              addNoteBtn.style.display = 'none';
+              updateNoteBtn.style.display = 'inline-block';
+              cancelEditNoteBtn.style.display = 'inline-block';
+              newNoteText.focus();
+              notesSidebar.style.display = 'block'; // Ensure notes sidebar is open when editing
+          }
+      }
+
+      function deleteNote(id) {
+          if (confirm('Are you sure you want to delete this note?')) {
+              notesData = notesData.filter(note => note.id !== id);
+              saveNotes();
+              renderNotesList();
+              resetNoteForm();
+          }
+      }
+
+      function resetNoteForm() {
+          newNoteText.value = '';
+          editingNoteId = null;
+          addNoteBtn.style.display = 'inline-block';
+          updateNoteBtn.style.display = 'none';
+          cancelEditNoteBtn.style.display = 'none';
+          currentHighlightIdForNote = null; // Also reset highlight link
+      }
+
+      // Helper to get highlighted text by ID (for notes context)
+      function getHighlightedTextById(highlightId) {
+          const highlightElement = lessonContent.querySelector(`[data-highlight-id="${highlightId}"]`);
+          if (highlightElement) {
+              // Clone the element to remove the icons before getting textContent
+              const clonedElement = highlightElement.cloneNode(true);
+              clonedElement.querySelectorAll('.highlight-trash-icon, .highlight-note-icon').forEach(icon => icon.remove());
+              return clonedElement.textContent.trim();
+          }
+          return '';
+      }
+
+      // --- Highlight Note Icon Logic ---
+      function attachHighlightNoteListeners() {
+          lessonContent.querySelectorAll('.user-highlight .highlight-note-icon').forEach(icon => {
+              // Remove existing listeners to prevent duplicates
+              icon.removeEventListener('click', handleHighlightNoteClick);
+              icon.removeEventListener('mouseenter', handleHighlightNoteHover);
+              icon.removeEventListener('mouseleave', handleHighlightNoteLeave);
+
+              // Add new listeners
+              icon.addEventListener('click', handleHighlightNoteClick);
+              icon.addEventListener('mouseenter', handleHighlightNoteHover);
+              icon.addEventListener('mouseleave', handleHighlightNoteLeave);
+          });
+      }
+
+      function handleHighlightNoteClick(e) {
+          e.stopPropagation(); // Prevent text selection
+          const parentHighlight = e.target.closest('.user-highlight');
+          if (parentHighlight) {
+              const highlightId = parentHighlight.dataset.highlightId;
+              const existingNote = notesData.find(note => note.highlightId === highlightId);
+
+              // Open notes sidebar
+              notesSidebar.style.display = 'block';
+
+              if (existingNote) {
+                  // If a note already exists for this highlight, populate form for editing
+                  editNote(existingNote.id);
+              } else {
+                  // If no note, prepare to add a new one linked to this highlight
+                  resetNoteForm(); // Clear any previous editing state
+                  currentHighlightIdForNote = highlightId;
+                  const highlightedText = getHighlightedTextById(highlightId);
+                  newNoteText.value = `Note for: "${highlightedText}"\n\n`; // Pre-fill for context
+                  newNoteText.focus();
+              }
+          }
+          highlightNotePopover.classList.remove('show'); // Hide popover
+      }
+
+      function handleHighlightNoteHover(e) {
+          const parentHighlight = e.target.closest('.user-highlight');
+          if (!parentHighlight) return;
+
+          const highlightId = parentHighlight.dataset.highlightId;
+          const existingNote = notesData.find(note => note.highlightId === highlightId);
+
+          if (existingNote) {
+              highlightNotePopover.textContent = existingNote.text;
+              const iconRect = e.target.getBoundingClientRect();
+              const sidebarRect = notesSidebar.getBoundingClientRect(); // Get sidebar position
+
+              // Position popover relative to the icon, but keep it within the viewport
+              let popoverX = iconRect.left + window.scrollX - highlightNotePopover.offsetWidth / 2 + iconRect.width / 2;
+              let popoverY = iconRect.top + window.scrollY - highlightNotePopover.offsetHeight - 10; // 10px above icon
+
+              // Adjust if it goes off screen to the left
+              if (popoverX < 0) {
+                  popoverX = 5; // Small margin from left edge
+              }
+              // Adjust if it goes off screen to the right (considering the notes sidebar)
+              // Ensure popover does not overlap with the notes sidebar when it's open
+              if (notesSidebar.style.display === 'block') {
+                  const maxRight = sidebarRect.left - 10; // 10px from sidebar's left edge
+                  if (popoverX + highlightNotePopover.offsetWidth > maxRight) {
+                      popoverX = maxRight - highlightNotePopover.offsetWidth;
+                  }
+              } else {
+                  // If sidebar is not open, just check against viewport width
+                  if (popoverX + highlightNotePopover.offsetWidth > window.innerWidth) {
+                      popoverX = window.innerWidth - highlightNotePopover.offsetWidth - 5;
+                  }
+              }
+
+
+              // Adjust if it goes off screen to the top
+              if (popoverY < window.scrollY) {
+                  popoverY = iconRect.bottom + window.scrollY + 10; // 10px below icon
+              }
+
+              highlightNotePopover.style.left = `${popoverX}px`;
+              highlightNotePopover.style.top = `${popoverY}px`;
+              highlightNotePopover.classList.add('show');
+          }
+      }
+
+      function handleHighlightNoteLeave() {
+          highlightNotePopover.classList.remove('show');
+      }
+
+      // --- Notes Sidebar Toggle ---
+      notesButton.addEventListener('click', () => {
+          notesSidebar.style.display = notesSidebar.style.display === 'block' ? 'none' : 'block';
+          if (notesSidebar.style.display === 'block') {
+              renderNotesList(); // Re-render notes every time it's opened to ensure fresh data
+          }
+      });
+
+      closeNotesSidebarBtn.addEventListener('click', () => {
+          notesSidebar.style.display = 'none';
+          resetNoteForm(); // Clear form when closing
+      });
+
+      // Initial loads
+      loadHighlights(); // Load highlights first
+      loadNotes(); // Then load notes, which will render them
+      attachHighlightDeleteListeners(); // Ensure listeners are attached on page load
+      attachHighlightNoteListeners(); // Ensure note icon listeners are attached on page load
+  });
+</script>

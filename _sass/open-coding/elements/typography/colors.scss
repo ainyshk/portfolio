@@ -1,0 +1,21 @@
+@import "../../materials/main.scss";
+
+h1, h2, h3, h4 {
+    color: $white1 !important;
+}
+
+p {
+    color: $white3 !important;
+}
+
+a {
+    color: $lightBlue1 !important;
+
+    &:hover {
+        color: $white2 !important;
+    }
+}
+
+li, ul, ol {
+    color: $white3 !important;
+}

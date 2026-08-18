@@ -1,0 +1,489 @@
+{% assign game_file = page.game | default: "game_questions" %}
+{% assign questions = site.data[game_file].questions %}
+
+
+<!-- Quiz Game HTML -->
+<div style="max-width: 800px; margin: 2rem auto; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">
+  <!-- Progress Bar -->
+  <div style="width: 100%; height: 8px; background: rgba(255, 255, 255, 0.1); border-radius: 4px; margin-bottom: 1.5rem; overflow: hidden;">
+    <div id="quiz-progress" style="height: 100%; background: linear-gradient(135deg, #6C63FF 0%, #536DFE 100%); transition: width 0.3s ease; width: 0%;"></div>
+  </div>
+  
+  <!-- Login Screen -->
+  <div id="quiz-login" style="background: rgba(30, 41, 59, 0.8); backdrop-filter: blur(10px); border-radius: 16px; color: #f8fafc; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.1); overflow: hidden; padding: 2rem;">
+    <div style="text-align: center; margin-bottom: 3rem;">
+      <h2 style="margin-bottom: 0.5rem;">Join Quiz Game</h2>
+      <p style="color: #94a3b8;">Test your knowledge</p>
+    </div>
+    
+    <div style="margin-bottom: 1.5rem;">
+      <div style="display: flex; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.1);">
+        <span style="background-color: rgba(30, 41, 59, 0.5); color: #cbd5e1; border: none; padding: 0.75rem 1rem; display: flex; align-items: center;">
+          <i class="fas fa-user"></i>
+        </span>
+        <input type="text" id="playerName" placeholder="Your Name" style="background-color: rgba(30, 41, 59, 0.5); border: none; color: #f8fafc; padding: 0.75rem 1rem; width: 100%;" onkeyup="this.style.color = this.value ? '#f8fafc' : '#64748b'">
+      </div>
+    </div>
+    
+    <div style="margin-bottom: 1.5rem;">
+      <div style="display: flex; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.1);">
+        <span style="background-color: rgba(30, 41, 59, 0.5); color: #cbd5e1; border: none; padding: 0.75rem 1rem; display: flex; align-items: center;">
+          <i class="fas fa-gamepad"></i>
+        </span>
+        <select id="difficultyLevel" style="background-color: rgba(30, 41, 59, 0.5); border: none; color: #f8fafc; padding: 0.75rem 1rem; width: 100%;">
+          <option value="easy">Easy (15 seconds per question)</option>
+          <option value="medium" selected>Medium (10 seconds per question)</option>
+          <option value="hard">Hard (5 seconds per question)</option>
+        </select>
+      </div>
+    </div>
+    
+    <button id="startQuizBtn" style="cursor: pointer; font-weight: 600; padding: 1rem 2rem; font-size: 1.1rem; border-radius: 8px; border: none; transition: all 0.3s ease; background: linear-gradient(135deg, #6C63FF 0%, #536DFE 100%); color: white; width: 100%;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 15px rgba(108, 99, 255, 0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+      Start Quiz
+    </button>
+
+    <button id="viewLeaderboardBtn" style="cursor: pointer; font-weight: 600; padding: 1rem 2rem; font-size: 1.1rem; border-radius: 8px; border: none; transition: all 0.3s ease; background: rgba(45, 55, 72, 0.5); color: #f8fafc; width: 100%; margin-top: 1rem;" onmouseover="this.style.background='rgba(45, 55, 72, 0.8)'" onmouseout="this.style.background='rgba(45, 55, 72, 0.5)'">
+      View Leaderboard
+    </button>
+
+    <div id="live-leaderboard" style="margin-top: 1rem; display: none;"></div>
+
+    <div style="text-align: center; margin-top: 1rem;">
+      <p style="font-size: 0.85rem; color: #94a3b8;">
+        <i class="fas fa-info-circle"></i>
+        Answer quickly for higher scores!
+      </p>
+    </div>
+  </div>
+  
+  <!-- Active Quiz -->
+  <div id="active-quiz" style="background: rgba(30, 41, 59, 0.8); backdrop-filter: blur(10px); border-radius: 16px; color: #f8fafc; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.1); overflow: hidden; padding: 2rem; display: none;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+      <h3 id="quiz-title">Python Functions Quiz</h3>
+      <div>
+        <span id="question-counter" style="background: rgba(108, 99, 255, 0.2); color: #6c63ff; padding: 0.4rem 0.8rem; border-radius: 20px; font-weight: 500; font-size: 0.9rem;">Question 1/10</span>
+      </div>
+    </div>
+    
+    <div style="position: relative; width: 80px; height: 80px; margin: 0 auto 2rem;">
+      <div id="countdown" style="width: 100%; height: 100%; border-radius: 50%; background: rgba(108, 99, 255, 0.2); display: flex; justify-content: center; align-items: center; font-size: 1.8rem; font-weight: 700; color: #f8fafc;">10</div>
+    </div>
+    
+    <div style="text-center; margin-bottom: 3rem;">
+      <h3 id="question-text"></h3>
+    </div>
+    
+    <div id="options-container">
+      <!-- Options will be generated here -->
+    </div>
+    
+    <div id="question-feedback" style="margin-top: 1rem; font-size: 0.9rem; color: #94a3b8; text-align: center;"></div>
+  </div>
+  
+  <!-- Results Screen -->
+  <div id="quiz-results" style="background: rgba(30, 41, 59, 0.8); backdrop-filter: blur(10px); border-radius: 16px; color: #f8fafc; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.1); overflow: hidden; padding: 2rem; display: none;">
+    <div style="text-align: center; margin-bottom: 3rem;">
+      <h2 style="margin-bottom: 0.5rem;">Quiz Completed!</h2>
+      <p id="results-summary" style="color: #94a3b8;">You scored 0 points</p>
+    </div>
+    
+    <div style="display: flex; justify-content: space-between; margin-bottom: 2rem;">
+      <div style="background: rgba(45, 55, 72, 0.5); border-radius: 8px; padding: 1rem; text-align: center; flex: 1; margin: 0 0.5rem;">
+        <div id="stats-correct" style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;">0</div>
+        <div style="font-size: 0.9rem; color: #94a3b8;">Correct</div>
+      </div>
+      <div style="background: rgba(45, 55, 72, 0.5); border-radius: 8px; padding: 1rem; text-align: center; flex: 1; margin: 0 0.5rem;">
+        <div id="stats-wrong" style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;">0</div>
+        <div style="font-size: 0.9rem; color: #94a3b8;">Wrong</div>
+      </div>
+      <div style="background: rgba(45, 55, 72, 0.5); border-radius: 8px; padding: 1rem; text-align: center; flex: 1; margin: 0 0.5rem;">
+        <div id="stats-points" style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;">0</div>
+        <div style="font-size: 0.9rem; color: #94a3b8;">Points</div>
+      </div>
+    </div>
+    
+    <div style="text-align: center;">
+      <h3 style="margin-bottom: 1rem;">Leaderboard</h3>
+    </div>
+    
+    <div id="leaderboard-container" style="margin-top: 1.5rem;">
+      <!-- Leaderboard items will be generated here -->
+    </div>
+    
+    <div style="text-align: center; margin-top: 3rem;">
+      <button id="play-again-btn" style="cursor: pointer; font-weight: 600; padding: 0.75rem 1.5rem; border-radius: 8px; border: none; transition: all 0.3s ease; background: linear-gradient(135deg, #6C63FF 0%, #536DFE 100%); color: white;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 15px rgba(108, 99, 255, 0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+        Play Again
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+function updateLeaderboardUI(serverLeaderboard) {
+  const leaderboardContainer = document.getElementById('leaderboard-container');
+  leaderboardContainer.innerHTML = '';
+
+  serverLeaderboard.forEach((player, index) => {
+    const item = document.createElement('div');
+    item.style.cssText = 'display: flex; align-items: center; background: rgba(45, 55, 72, 0.5); border-radius: 8px; padding: 1rem; margin-bottom: 0.75rem; animation: fadeIn 0.5s ease-in-out; animation-delay: ' + (index * 0.1) + 's;';
+    
+    let rankStyle = 'background: rgba(108, 99, 255, 0.2); color: #6c63ff;';
+    if (index === 0) rankStyle = 'background: rgba(255, 211, 42, 0.2); color: #ffd32a;';
+    else if (index === 1) rankStyle = 'background: rgba(192, 192, 192, 0.2); color: #c0c0c0;';
+    else if (index === 2) rankStyle = 'background: rgba(205, 127, 50, 0.2); color: #cd7f32;';
+    
+    item.innerHTML = `
+      <div style="${rankStyle} font-weight: 600; width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-right: 1rem;">${index + 1}</div>
+      <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+        <div style="font-weight: 700;">${player.name}</div>
+        <div>${player.score} pts</div>
+      </div>
+    `;
+    leaderboardContainer.appendChild(item);
+  });
+}
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.min.js"></script>
+<script>
+  const socket = io("https://flask.opencodingsociety.com");
+
+  socket.on("connect", () => {
+    console.log("Connected to game server");
+  });
+
+  // Send player join
+  document.getElementById("startQuizBtn").addEventListener("click", () => {
+    const playerName = document.getElementById("playerName").value.trim();
+    if (playerName) {
+      socket.emit("player_join", { name: playerName });
+    }
+  });
+
+  // Receive broadcast of new player
+  socket.on("player_joined", (data) => {
+    console.log(`${data.name} joined the game`);
+  });
+
+  // Receive leaderboard update
+  socket.on("leaderboard_update", (data) => {
+    console.log("Updated leaderboard", data);
+    updateLeaderboardUI(data);
+  });
+</script>
+
+<!-- Quiz Game Script -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const quizQuestions = [
+        {% for q in questions %}
+          {
+            question: {{ q.question | jsonify }},
+            options: {{ q.options | jsonify }},
+            correctAnswer: {{ q.correct_answer | jsonify }}
+          }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ];
+  
+      if (!quizQuestions.length) {
+        alert('No quiz questions available.');
+        return;
+      }
+  
+      let currentQuestionIndex = 0;
+      let score = 0;
+      let correctAnswers = 0;
+      let wrongAnswers = 0;
+      let timer;
+      let timeLeft;
+      let timerDuration;
+      let playerName = '';
+
+      function emitGameEnd(score) {
+        socket.emit("player_score", { name: playerName, score: score });
+      }
+
+      const leaderboardBtn = document.getElementById("viewLeaderboardBtn");
+      const leaderboardDiv = document.getElementById("live-leaderboard");
+      let leaderboardVisible = false;
+
+      leaderboardBtn.addEventListener("click", () => {
+        leaderboardVisible = !leaderboardVisible;
+
+        if (leaderboardVisible) {
+          socket.emit("get_leaderboard");
+          leaderboardBtn.textContent = "HIDE LEADERBOARD";
+          leaderboardDiv.style.display = "block";
+        } else {
+          leaderboardBtn.textContent = "VIEW LEADERBOARD";
+          leaderboardDiv.style.display = "none";
+        }
+      });
+
+      socket.on("leaderboard_update", (data) => {
+        leaderboardDiv.innerHTML = ""; // Clear previous content
+
+        if (data.length === 0) {
+          leaderboardDiv.innerHTML = "<p style='color: #94a3b8;'>No players yet.</p>";
+          return;
+        }
+
+        data.forEach((player, index) => {
+          const item = document.createElement("div");
+          item.style.cssText = 'display: flex; align-items: center; background: rgba(45, 55, 72, 0.5); border-radius: 8px; padding: 1rem; margin-bottom: 0.75rem; animation: fadeIn 0.5s ease-in-out;';
+          
+          let rankStyle = 'background: rgba(108, 99, 255, 0.2); color: #6c63ff;';
+          if (index === 0) rankStyle = 'background: rgba(255, 211, 42, 0.2); color: #ffd32a;';
+          else if (index === 1) rankStyle = 'background: rgba(192, 192, 192, 0.2); color: #c0c0c0;';
+          else if (index === 2) rankStyle = 'background: rgba(205, 127, 50, 0.2); color: #cd7f32;';
+          
+          item.innerHTML = `
+            <div style="${rankStyle} font-weight: 600; width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-right: 1rem;">${index + 1}</div>
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+              <div style="font-weight: 700;">${player.name}</div>
+              <div>${player.score} pts</div>
+            </div>
+          `;
+          leaderboardDiv.appendChild(item);
+        });
+      });
+
+      let leaderboard = JSON.parse(localStorage.getItem('quizLeaderboard')) || [];
+  
+      const quizLoginEl = document.getElementById('quiz-login');
+      const activeQuizEl = document.getElementById('active-quiz');
+      const quizResultsEl = document.getElementById('quiz-results');
+      const playerNameInput = document.getElementById('playerName');
+      const difficultyLevelSelect = document.getElementById('difficultyLevel');
+      const startQuizBtn = document.getElementById('startQuizBtn');
+      const questionCounterEl = document.getElementById('question-counter');
+      const questionTextEl = document.getElementById('question-text');
+      const optionsContainerEl = document.getElementById('options-container');
+      const countdownEl = document.getElementById('countdown');
+      const questionFeedbackEl = document.getElementById('question-feedback');
+      const progressBarEl = document.getElementById('quiz-progress');
+      const playAgainBtn = document.getElementById('play-again-btn');
+      const resultsEl = {
+        summary: document.getElementById('results-summary'),
+        correct: document.getElementById('stats-correct'),
+        wrong: document.getElementById('stats-wrong'),
+        points: document.getElementById('stats-points')
+      };
+  
+      function initQuiz() {
+        playerName = playerNameInput.value.trim() || 'Anonymous';
+  
+        const difficulty = difficultyLevelSelect.value;
+        timerDuration = difficulty === 'easy' ? 15 : difficulty === 'medium' ? 10 : 5;
+  
+        currentQuestionIndex = 0;
+        score = 0;
+        correctAnswers = 0;
+        wrongAnswers = 0;
+  
+        quizLoginEl.style.display = 'none';
+        activeQuizEl.style.display = 'block';
+  
+        loadQuestion();
+      }
+  
+      function loadQuestion() {
+        const progress = (currentQuestionIndex / quizQuestions.length) * 100;
+        progressBarEl.style.width = `${progress}%`;
+  
+        if (currentQuestionIndex >= quizQuestions.length) {
+          endQuiz();
+          return;
+        }
+  
+        const currentQuestion = quizQuestions[currentQuestionIndex];
+        questionCounterEl.textContent = `Question ${currentQuestionIndex + 1}/${quizQuestions.length}`;
+        questionTextEl.textContent = currentQuestion.question;
+        optionsContainerEl.innerHTML = '';
+        questionFeedbackEl.innerHTML = '';
+  
+        const optionLetters = ['A', 'B', 'C', 'D'];
+        currentQuestion.options.forEach((option, index) => {
+          const optionEl = document.createElement('div');
+          optionEl.style.cssText = 'background: rgba(45, 55, 72, 0.5); border-radius: 8px; padding: 1rem; margin-bottom: 1rem; cursor: pointer; transition: all 0.2s ease; border: 1px solid rgba(255, 255, 255, 0.05); animation: fadeIn 0.5s ease-in-out;';
+          optionEl.dataset.option = optionLetters[index];
+          optionEl.dataset.value = option;
+
+          optionEl.addEventListener('mouseenter', () => {
+            optionEl.style.background = 'rgba(45, 55, 72, 0.8)';
+            optionEl.style.transform = 'translateY(-2px)';
+          });
+          
+          optionEl.addEventListener('mouseleave', () => {
+            if (!optionEl.classList.contains('selected')) {
+              optionEl.style.background = 'rgba(45, 55, 72, 0.5)';
+              optionEl.style.transform = 'translateY(0)';
+            }
+          });
+  
+          optionEl.innerHTML = `
+            <div style="display: flex; align-items: center;">
+              <div style="background: rgba(108, 99, 255, 0.2); color: #6c63ff; font-weight: 600; width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center;">${optionLetters[index]}</div>
+              <div style="margin-left: 1rem;">${option}</div>
+            </div>
+          `;
+  
+          optionEl.addEventListener('click', () => selectOption(optionEl, option));
+          optionsContainerEl.appendChild(optionEl);
+        });
+  
+        startTimer();
+      }
+  
+      function startTimer() {
+        timeLeft = timerDuration;
+        countdownEl.textContent = timeLeft;
+        countdownEl.style.cssText = 'width: 100%; height: 100%; border-radius: 50%; background: rgba(108, 99, 255, 0.2); display: flex; justify-content: center; align-items: center; font-size: 1.8rem; font-weight: 700; color: #f8fafc;';
+  
+        if (timer) clearInterval(timer);
+  
+        timer = setInterval(() => {
+          timeLeft--;
+          countdownEl.textContent = timeLeft;
+  
+          if (timeLeft <= 3) {
+            countdownEl.style.background = 'rgba(255, 71, 87, 0.2)';
+            countdownEl.style.color = '#ff4757';
+          } else if (timeLeft <= 5) {
+            countdownEl.style.background = 'rgba(255, 171, 0, 0.2)';
+            countdownEl.style.color = '#ffab00';
+          }
+  
+          if (timeLeft <= 0) {
+            clearInterval(timer);
+            timeUp();
+          }
+        }, 1000);
+      }
+  
+      function timeUp() {
+        document.querySelectorAll('[data-option]').forEach(option => {
+          option.style.pointerEvents = 'none';
+          if (option.dataset.value === quizQuestions[currentQuestionIndex].correctAnswer) {
+            option.style.background = 'rgba(0, 230, 118, 0.2)';
+            option.style.border = '1px solid #00e676';
+          }
+        });
+  
+        questionFeedbackEl.innerHTML = `<span style="color: #ff4757;">Time's up! The correct answer was: ${quizQuestions[currentQuestionIndex].correctAnswer}</span>`;
+        wrongAnswers++;
+  
+        setTimeout(() => {
+          currentQuestionIndex++;
+          loadQuestion();
+        }, 2000);
+      }
+  
+      function selectOption(optionEl, selectedAnswer) {
+        clearInterval(timer);
+        document.querySelectorAll('[data-option]').forEach(option => option.style.pointerEvents = 'none');
+  
+        const currentQuestion = quizQuestions[currentQuestionIndex];
+        const isCorrect = selectedAnswer === currentQuestion.correctAnswer;
+        optionEl.style.background = 'rgba(108, 99, 255, 0.2)';
+        optionEl.style.border = '1px solid #6c63ff';
+        optionEl.classList.add('selected');
+  
+        setTimeout(() => {
+          if (isCorrect) {
+            optionEl.style.background = 'rgba(0, 230, 118, 0.2)';
+            optionEl.style.border = '1px solid #00e676';
+            const points = Math.max(50, 100 + (timeLeft * 10));
+            score += points;
+            correctAnswers++;
+            questionFeedbackEl.innerHTML = `<span style="color: #00e676;">Correct! +${points} points</span>`;
+          } else {
+            optionEl.style.background = 'rgba(255, 71, 87, 0.2)';
+            optionEl.style.border = '1px solid #ff4757';
+            wrongAnswers++;
+            document.querySelectorAll('[data-option]').forEach(option => {
+              if (option.dataset.value === currentQuestion.correctAnswer) {
+                option.style.background = 'rgba(0, 230, 118, 0.2)';
+                option.style.border = '1px solid #00e676';
+              }
+            });
+            questionFeedbackEl.innerHTML = `<span style="color: #ff4757;">Wrong! The correct answer was: ${currentQuestion.correctAnswer}</span>`;
+          }
+  
+          setTimeout(() => {
+            currentQuestionIndex++;
+            loadQuestion();
+          }, 2000);
+        }, 500);
+      }
+  
+      function endQuiz() {
+        activeQuizEl.style.display = 'none';
+        quizResultsEl.style.display = 'block';
+  
+        resultsEl.summary.textContent = `You scored ${score} points`;
+        resultsEl.correct.textContent = correctAnswers;
+        resultsEl.wrong.textContent = wrongAnswers;
+        resultsEl.points.textContent = score;
+  
+        emitGameEnd(score);
+      }
+
+      startQuizBtn.addEventListener('click', () => {
+        if (playerNameInput.value.trim()) {
+          initQuiz();
+        } else {
+          alert('Please enter your name to start the quiz');
+        }
+      });
+  
+      playAgainBtn.addEventListener('click', () => {
+        quizResultsEl.style.display = 'none';
+        quizLoginEl.style.display = 'block';
+      });
+    });
+</script>
+
+<style>
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .quiz-container {
+    padding: 1rem !important;
+  }
+  
+  .quiz-login, .active-quiz, .quiz-results {
+    padding: 1.5rem !important;
+  }
+  
+  .btn-lg {
+    padding: 0.75rem 1rem !important;
+  }
+  
+  .countdown-container {
+    width: 60px !important;
+    height: 60px !important;
+  }
+  
+  .countdown-circle {
+    font-size: 1.4rem !important;
+  }
+  
+  .quiz-stats {
+    flex-direction: column !important;
+  }
+  
+  .stats-item {
+    margin: 0.5rem 0 !important;
+  }
+}
+</style>

@@ -1,0 +1,752 @@
+---
+layout: bootstrap
+title: Grade Predictor
+search_exclude: true
+description: AP CSP Grade in Class Predictor
+hide: true
+permalink: /grade-predictor
+---
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Grade Predictor - Dark Mode</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  <style>
+    /* Dark mode theme */
+    body {
+      background-color: #0d1117;
+      color: #e6edf3;
+    }
+
+    .container {
+      background-color: #0d1117;
+    }
+
+    h2, h5, h6 {
+      color: #f0f6fc;
+    }
+
+    p {
+      color: #8b949e;
+    }
+
+    #grade-ring-container {
+      position: relative;
+      width: 150px;
+      height: 150px;
+      margin: 0 auto;
+    }
+
+    #percentage-label {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #f0f6fc;
+    }
+
+    svg circle.bg {
+      stroke: #30363d;
+    }
+    
+    .chart-container {
+      height: 400px;
+      margin-top: 2rem;
+      width: 100%;
+    }
+    
+    .card {
+      margin-bottom: 2rem;
+      box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.3);
+      border-radius: 0.5rem;
+      border: 1px solid #30363d;
+      background-color: #161b22;
+    }
+    
+    .card-header {
+      border-top-left-radius: 0.5rem !important;
+      border-top-right-radius: 0.5rem !important;
+      background-color: #21262d !important;
+      border-bottom: 1px solid #30363d;
+      color: #f0f6fc;
+    }
+
+    .card-body {
+      background-color: #161b22;
+      color: #e6edf3;
+    }
+    
+    .level-marker {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      border-bottom: 1px dashed rgba(255,255,255,0.2);
+      z-index: 0;
+    }
+    
+    .level-label {
+      position: absolute;
+      left: -60px;
+      transform: translateY(-50%);
+      font-weight: bold;
+      font-size: 0.85rem;
+      color: #8b949e;
+    }
+    
+    .chart-y-labels {
+      position: relative;
+      height: 100%;
+      margin-right: 20px;
+      width: 70px;
+    }
+    
+    .chart-with-labels {
+      display: flex;
+      height: 400px;
+      position: relative;
+      margin-top: 20px;
+      padding-right: 15px;
+    }
+    
+    /* Dark mode table styles */
+    .table {
+      color: #e6edf3;
+      background-color: #161b22;
+    }
+
+    .table th {
+      background-color: #21262d;
+      color: #f0f6fc;
+      border-color: #30363d;
+    }
+
+    .table td {
+      border-color: #30363d;
+      background-color: #161b22;
+    }
+
+    .table-light {
+      background-color: #21262d !important;
+      color: #f0f6fc !important;
+    }
+
+    .table-active {
+      background-color: #21262d !important;
+      color: #f0f6fc !important;
+    }
+
+    .table-bordered {
+      border-color: #30363d;
+    }
+
+    .table th, .table td {
+      vertical-align: middle;
+    }
+    
+    /* Form controls dark mode */
+    .form-select {
+      background-color: #21262d;
+      color: #e6edf3;
+      border-color: #30363d;
+    }
+
+    .form-select:focus {
+      background-color: #21262d;
+      color: #e6edf3;
+      border-color: #58a6ff;
+      box-shadow: 0 0 0 0.25rem rgba(88, 166, 255, 0.25);
+    }
+
+    .form-select option {
+      background-color: #21262d;
+      color: #e6edf3;
+    }
+
+    .form-check-input {
+      background-color: #21262d;
+      border-color: #30363d;
+    }
+
+    .form-check-input:checked {
+      background-color: #238636;
+      border-color: #238636;
+    }
+
+    .form-check-input:focus {
+      border-color: #58a6ff;
+      box-shadow: 0 0 0 0.25rem rgba(88, 166, 255, 0.25);
+    }
+
+    /* Button styles */
+    .btn-primary {
+      background-color: #238636;
+      border-color: #238636;
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background-color: #2ea043;
+      border-color: #2ea043;
+    }
+
+    .btn-primary:focus {
+      box-shadow: 0 0 0 0.25rem rgba(35, 134, 54, 0.5);
+    }
+
+    .btn-outline-secondary {
+      color: #8b949e;
+      border-color: #30363d;
+    }
+
+    .btn-outline-secondary:hover {
+      background-color: #30363d;
+      border-color: #30363d;
+      color: #f0f6fc;
+    }
+
+    /* Badge styles */
+    .badge.bg-primary {
+      background-color: #238636 !important;
+    }
+
+    .badge.bg-success {
+      background-color: #238636 !important;
+    }
+
+    .badge.bg-info {
+      background-color: #1f6feb !important;
+    }
+
+    .badge.bg-warning {
+      background-color: #bf8700 !important;
+      color: #ffffff !important;
+    }
+
+    .badge.bg-danger {
+      background-color: #da3633 !important;
+    }
+    
+    .progress-ring-title {
+      margin-bottom: 1rem;
+      font-weight: 600;
+      color: #f0f6fc;
+    }
+    
+    .chart-area {
+      flex-grow: 1;
+      position: relative;
+    }
+    
+    .chart-legend {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+      padding: 0 15px;
+    }
+    
+    .legend-item {
+      display: flex;
+      align-items: center;
+      margin-right: 15px;
+      color: #e6edf3;
+    }
+    
+    .legend-color {
+      width: 12px;
+      height: 12px;
+      margin-right: 5px;
+      border-radius: 50%;
+    }
+
+    /* Text colors */
+    .text-muted {
+      color: #8b949e !important;
+    }
+
+    .fw-bold {
+      color: #f0f6fc;
+    }
+
+    .small {
+      color: #8b949e;
+    }
+
+    /* Scrollbar styling for dark mode */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #161b22;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #30363d;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #484f58;
+    }
+  </style>
+</head>
+<body>
+  <div class="container mt-5 mb-5">
+    <h2 class="text-center mb-4">Grade in Class Predictor Self-Assessment Quiz</h2>
+    <p class="text-center">Rate yourself in each of the following categories on a scale of 1-5:<br>
+      1 = Needs Improvement, 2 = Developing, 3 = Satisfactory, 4 = Proficient, 5 = Exemplary</p>
+
+    <div class="card shadow">
+      <div class="card-body">
+        <form id="grade-predictor-form">
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead class="table-light">
+                <tr>
+                  <th>Skill</th>
+                  <th>Mastered</th>
+                  <th>Rating (1-5)</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Skills from the provided table -->
+                <tr>
+                  <td>Attendance</td>
+                  <td><input type="checkbox" class="form-check-input mastery-checkbox" data-skill="Attendance" /></td>
+                  <td>
+                    <select class="form-select skill-rating" data-skill="Attendance">
+                      <option value="1">1 - Needs Improvement</option>
+                      <option value="2">2 - Developing</option>
+                      <option value="3" selected>3 - Satisfactory</option>
+                      <option value="4">4 - Proficient</option>
+                      <option value="5">5 - Exemplary</option>
+                    </select>
+                  </td>
+                  <td>Regular attendance and punctuality to class</td>
+                </tr>
+                <tr>
+                  <td>Work Habits</td>
+                  <td><input type="checkbox" class="form-check-input mastery-checkbox" data-skill="Work Habits" /></td>
+                  <td>
+                    <select class="form-select skill-rating" data-skill="Work Habits">
+                      <option value="1">1 - Needs Improvement</option>
+                      <option value="2">2 - Developing</option>
+                      <option value="3" selected>3 - Satisfactory</option>
+                      <option value="4">4 - Proficient</option>
+                      <option value="5">5 - Exemplary</option>
+                    </select>
+                  </td>
+                  <td>Consistency in completing assignments and staying focused</td>
+                </tr>
+                <tr>
+                  <td>Behavior</td>
+                  <td><input type="checkbox" class="form-check-input mastery-checkbox" data-skill="Behavior" /></td>
+                  <td>
+                    <select class="form-select skill-rating" data-skill="Behavior">
+                      <option value="1">1 - Needs Improvement</option>
+                      <option value="2">2 - Developing</option>
+                      <option value="3" selected>3 - Satisfactory</option>
+                      <option value="4">4 - Proficient</option>
+                      <option value="5">5 - Exemplary</option>
+                    </select>
+                  </td>
+                  <td>Appropriate conduct and participation in class</td>
+                </tr>
+                <tr>
+                  <td>Timeliness</td>
+                  <td><input type="checkbox" class="form-check-input mastery-checkbox" data-skill="Timeliness" /></td>
+                  <td>
+                    <select class="form-select skill-rating" data-skill="Timeliness">
+                      <option value="1">1 - Needs Improvement</option>
+                      <option value="2">2 - Developing</option>
+                      <option value="3" selected>3 - Satisfactory</option>
+                      <option value="4">4 - Proficient</option>
+                      <option value="5">5 - Exemplary</option>
+                    </select>
+                  </td>
+                  <td>Submitting work by deadlines</td>
+                </tr>
+                <tr>
+                  <td>Tech Sense</td>
+                  <td><input type="checkbox" class="form-check-input mastery-checkbox" data-skill="Tech Sense" /></td>
+                  <td>
+                    <select class="form-select skill-rating" data-skill="Tech Sense">
+                      <option value="1">1 - Needs Improvement</option>
+                      <option value="2">2 - Developing</option>
+                      <option value="3" selected>3 - Satisfactory</option>
+                      <option value="4">4 - Proficient</option>
+                      <option value="5">5 - Exemplary</option>
+                    </select>
+                  </td>
+                  <td>Understanding and applying technical concepts</td>
+                </tr>
+                <tr>
+                  <td>Tech Talk</td>
+                  <td><input type="checkbox" class="form-check-input mastery-checkbox" data-skill="Tech Talk" /></td>
+                  <td>
+                    <select class="form-select skill-rating" data-skill="Tech Talk">
+                      <option value="1">1 - Needs Improvement</option>
+                      <option value="2">2 - Developing</option>
+                      <option value="3" selected>3 - Satisfactory</option>
+                      <option value="4">4 - Proficient</option>
+                      <option value="5">5 - Exemplary</option>
+                    </select>
+                  </td>
+                  <td>Using appropriate technical vocabulary</td>
+                </tr>
+                <tr>
+                  <td>Tech Growth</td>
+                  <td><input type="checkbox" class="form-check-input mastery-checkbox" data-skill="Tech Growth" /></td>
+                  <td>
+                    <select class="form-select skill-rating" data-skill="Tech Growth">
+                      <option value="1">1 - Needs Improvement</option>
+                      <option value="2">2 - Developing</option>
+                      <option value="3" selected>3 - Satisfactory</option>
+                      <option value="4">4 - Proficient</option>
+                      <option value="5">5 - Exemplary</option>
+                    </select>
+                  </td>
+                  <td>Improvement in technical skills over time</td>
+                </tr>
+                <tr>
+                  <td>Advocacy</td>
+                  <td><input type="checkbox" class="form-check-input mastery-checkbox" data-skill="Advocacy" /></td>
+                  <td>
+                    <select class="form-select skill-rating" data-skill="Advocacy">
+                      <option value="1">1 - Needs Improvement</option>
+                      <option value="2">2 - Developing</option>
+                      <option value="3" selected>3 - Satisfactory</option>
+                      <option value="4">4 - Proficient</option>
+                      <option value="5">5 - Exemplary</option>
+                    </select>
+                  </td>
+                  <td>Self-advocacy and seeking help when needed</td>
+                </tr>
+                <tr>
+                  <td>Communication & Collaboration</td>
+                  <td><input type="checkbox" class="form-check-input mastery-checkbox" data-skill="Communication & Collaboration" /></td>
+                  <td>
+                    <select class="form-select skill-rating" data-skill="Communication & Collaboration">
+                      <option value="1">1 - Needs Improvement</option>
+                      <option value="2">2 - Developing</option>
+                      <option value="3" selected>3 - Satisfactory</option>
+                      <option value="4">4 - Proficient</option>
+                      <option value="5">5 - Exemplary</option>
+                    </select>
+                  </td>
+                  <td>Working effectively with others and communicating ideas</td>
+                </tr>
+                <tr>
+                  <td>Integrity</td>
+                  <td><input type="checkbox" class="form-check-input mastery-checkbox" data-skill="Integrity" /></td>
+                  <td>
+                    <select class="form-select skill-rating" data-skill="Integrity">
+                      <option value="1">1 - Needs Improvement</option>
+                      <option value="2">2 - Developing</option>
+                      <option value="3" selected>3 - Satisfactory</option>
+                      <option value="4">4 - Proficient</option>
+                      <option value="5">5 - Exemplary</option>
+                    </select>
+                  </td>
+                  <td>Academic honesty and ethical behavior</td>
+                </tr>
+                <tr>
+                  <td>Leadership</td>
+                  <td><input type="checkbox" class="form-check-input mastery-checkbox" data-skill="Leadership" /></td>
+                  <td>
+                    <select class="form-select skill-rating" data-skill="Leadership">
+                      <option value="1">1 - Needs Improvement</option>
+                      <option value="2">2 - Developing</option>
+                      <option value="3" selected>3 - Satisfactory</option>
+                      <option value="4">4 - Proficient</option>
+                      <option value="5">5 - Exemplary</option>
+                    </select>
+                  </td>
+                  <td>Taking initiative and guiding others</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="text-center mt-4">
+            <button type="button" class="btn btn-primary" id="calculate-btn">Calculate Grade</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="results-card" class="card shadow mt-5" style="display: none;">
+      <div class="card-header bg-light">
+        <h5 class="mb-0">Your Results</h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-4 text-center mb-4">
+            <h5 class="progress-ring-title">Predicted Grade</h5>
+            <div id="grade-ring-container">
+              <svg width="150" height="150">
+                <circle class="bg" cx="75" cy="75" r="65" stroke-width="15" fill="none" />
+                <circle id="progress-ring" cx="75" cy="75" r="65" stroke="#238636" stroke-width="15" fill="none"
+                        stroke-linecap="round" stroke-dasharray="408" stroke-dashoffset="408"
+                        transform="rotate(-90 75 75)" />
+              </svg>
+              <div id="percentage-label">0%</div>
+            </div>
+            <div class="mt-3">
+              <h6>Letter Grade: <span id="letter-grade" class="badge bg-primary">-</span></h6>
+              <p id="grade-feedback" class="small text-muted mt-2"></p>
+            </div>
+          </div>
+          
+          <div class="col-md-8">
+            <h5 class="mb-3">Skills Summary</h5>
+            <div class="mb-3">
+              <span class="fw-bold">Overall Rating: </span><span id="avg-rating">0.0</span> out of 5.0
+            </div>
+            <div class="table-responsive">
+              <table class="table table-sm table-bordered">
+                <thead class="table-light">
+                  <tr>
+                    <th>Skill</th>
+                    <th>Mastered</th>
+                    <th>Rating</th>
+                    <th>Ratio</th>
+                  </tr>
+                </thead>
+                <tbody id="skills-breakdown">
+                  <!-- Will be populated by JavaScript -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        
+        <div class="text-center mt-4">
+          <button type="button" class="btn btn-outline-secondary" id="reset-btn">Start Over</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script type="module">
+    import { pythonURI, fetchOptions } from '{{site.baseurl}}/assets/js/api/config.js';
+  
+  document.addEventListener('DOMContentLoaded', () => {
+    const calculateBtn = document.getElementById('calculate-btn');
+    const resetBtn = document.getElementById('reset-btn');
+    const resultsCard = document.getElementById('results-card');
+    const progressRing = document.getElementById('progress-ring');
+    const percentLabel = document.getElementById('percentage-label');
+    const gradeFeedback = document.getElementById('grade-feedback');
+    const avgRating = document.getElementById('avg-rating');
+    const letterGrade = document.getElementById('letter-grade');
+    const skillsBreakdown = document.getElementById('skills-breakdown');
+    const chartYLabels = document.querySelector('.chart-y-labels');
+
+    const circumference = 2 * Math.PI * 65;
+    progressRing.style.strokeDasharray = circumference;
+
+    const masteryCheckboxes = document.querySelectorAll('.mastery-checkbox');
+    masteryCheckboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', function () {
+        const skill = this.dataset.skill;
+        const ratingSelect = document.querySelector(`.skill-rating[data-skill="${skill}"]`);
+        if (this.checked) {
+          ratingSelect.value = "5";
+          ratingSelect.disabled = true;
+        } else {
+          ratingSelect.disabled = false;
+        }
+      });
+    });
+
+    calculateBtn.addEventListener('click', async () => {
+      const ratings = document.querySelectorAll('.skill-rating');
+      const checkboxes = document.querySelectorAll('.mastery-checkbox');
+      let currentUser = null;
+
+      // Prepare inputs for ML model in the exact order expected by the model
+      const mlInputs = [];
+      const skillOrder = [
+        'Attendance', 'Work Habits', 'Behavior', 'Timeliness', 'Advocacy', 'Tech Growth',
+        'Tech Sense', 'Tech Talk', 'Communication & Collaboration', 'Leadership', 'Integrity'
+      ];
+
+      let skillsData = [];
+      let gradeData = {};
+      let totalScore = 0;
+
+      // Collect ratings in the correct order for ML model
+      skillOrder.forEach(skillName => {
+        const ratingSelect = document.querySelector(`.skill-rating[data-skill="${skillName}"]`);
+        const checkbox = document.querySelector(`.mastery-checkbox[data-skill="${skillName}"]`);
+        
+        if (ratingSelect) {
+          const rating = parseInt(ratingSelect.value);
+          mlInputs.push(rating);
+          totalScore += rating;
+          
+          const isMastered = checkbox ? checkbox.checked : false;
+          const ratio = (rating / 5).toFixed(1);
+          
+          skillsData.push({
+            skill: skillName,
+            mastered: isMastered,
+            rating: rating,
+            ratio: ratio
+          });
+          
+          gradeData[skillName] = rating;
+        }
+      });
+
+      try {
+        // Call ML API for grade prediction
+        const mlResponse = await fetch(`${pythonURI}/api/grade/predict`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            inputs: mlInputs
+          })
+        });
+
+        if (!mlResponse.ok) {
+          throw new Error(`ML API error: ${mlResponse.status}`);
+        }
+
+        const mlResult = await mlResponse.json();
+        const percentage = Math.round(mlResult.predicted_percent);
+        const grade = mlResult.predicted_grade;
+
+        // Update UI with ML prediction results
+        const avgRatingValue = (totalScore / ratings.length).toFixed(1);
+        const offset = circumference * (1 - percentage / 100);
+        progressRing.style.strokeDashoffset = offset;
+        percentLabel.textContent = `${percentage}%`;
+        avgRating.textContent = avgRatingValue;
+
+        let feedback = 'Immediate intervention is required to pass this course.';
+        let badgeColor = 'bg-danger';
+
+        if (percentage >= 90) {
+          feedback = 'Excellent work! Keep up the great performance.';
+          badgeColor = 'bg-success';
+        } else if (percentage >= 80) {
+          feedback = 'Good work! Continue focusing on improvement.';
+          badgeColor = 'bg-info';
+        } else if (percentage >= 70) {
+          feedback = 'Satisfactory work. Consider seeking additional support.';
+          badgeColor = 'bg-warning text-dark';
+        } else if (percentage >= 60) {
+          feedback = 'You need to significantly improve to pass this course.';
+          badgeColor = 'bg-danger';
+        }
+
+        letterGrade.textContent = grade;
+        letterGrade.className = `badge ${badgeColor}`;
+        gradeFeedback.textContent = feedback;
+
+        let color = '#dc3545';
+        if (percentage >= 90) color = '#28a745';
+        else if (percentage >= 80) color = '#198754';
+        else if (percentage >= 70) color = '#ffc107';
+        else if (percentage >= 60) color = '#fd7e14';
+        progressRing.style.stroke = color;
+
+        skillsBreakdown.innerHTML = '';
+        skillsData.forEach(skill => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${skill.skill}</td>
+            <td>${skill.mastered ? '✓' : '—'}</td>
+            <td>${skill.rating}</td>
+            <td>${skill.ratio}</td>
+          `;
+          skillsBreakdown.appendChild(row);
+        });
+
+        const avgRow = document.createElement('tr');
+        avgRow.classList.add('fw-bold', 'table-active');
+        avgRow.innerHTML = `
+          <td>Average</td>
+          <td>${skillsData.filter(s => s.mastered).length}/${skillsData.length}</td>
+          <td>${avgRatingValue}</td>
+          <td>${(avgRatingValue / 5).toFixed(1)}</td>
+        `;
+        skillsBreakdown.appendChild(avgRow);
+
+        resultsCard.style.display = 'block';
+        resultsCard.scrollIntoView({ behavior: 'smooth' });
+
+        await fetchCurrentUser();
+        if (!currentUser) return; // Exit if not logged in
+
+        // Prepare full user update payload
+        const updatedUser = {
+          uid: currentUser.uid,
+          name: currentUser.name,
+          pfp: currentUser.pfp || "default.png",
+          car: currentUser.car || "defaultcar.png",
+          role: currentUser.role || "Student",
+          grade_data: {
+            grade: grade,
+            ...gradeData
+          }
+        };
+
+        // PUT request to update user
+        try {
+          const response = await fetch(`${pythonURI}/api/user`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            credentials: "include",
+            body: JSON.stringify(updatedUser)
+          });
+          const result = await response.json();
+          console.log('Update successful:', result);
+        } catch (error) {
+          console.error('Error updating user:', error);
+        }
+
+      } catch (error) {
+        console.error('Error calling ML API:', error);
+        alert('Error calculating grade prediction. Please try again.');
+      }
+
+      async function fetchCurrentUser() {
+          try {
+              const response = await fetch(`${pythonURI}/api/user`, {
+                  method: 'GET',
+                  credentials: 'include',
+              });
+              if (response.ok) {
+                  currentUser = await response.json();
+                  console.log("Fetched current user:", currentUser);
+              } else {
+                  console.warn('Could not fetch current user. Status:', response.status);
+                  alert("You must be logged in to use this feature.");
+              }
+          } catch (error) {
+              console.error('Error fetching current user:', error);
+              alert("An error occurred while fetching user info.");
+          }
+      }
+    });
+
+    resetBtn.addEventListener('click', () => {
+      document.getElementById('grade-predictor-form').reset();
+      document.querySelectorAll('.skill-rating').forEach(r => r.disabled = false);
+      resultsCard.style.display = 'none';
+    });
+  });
+</script>
+</body>

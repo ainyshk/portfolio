@@ -1,0 +1,469 @@
+---
+title: Student Toolkit
+layout: aesthetihawk
+active_tab: toolkit
+---
+
+<script type="module">
+    import { login, pythonURI, javaURI, fetchOptions } from '{{site.baseurl}}/assets/js/api/config.js';
+  
+    async function verifyAuthentication() {
+      const URL = `${javaURI}/api/person/get`;
+      try {
+        const response = await fetch(URL, fetchOptions);
+        if (!response.ok) {
+          throw new Error(`Spring server response: ${response.status}`);
+        }
+        return true; // Successful authentication
+      } catch (error) {
+        return false; // Authentication failed
+      }
+    }
+  
+    window.onload = async function() {
+      const isAuthenticated = await verifyAuthentication();
+      const loadingElement = document.getElementById('loadingElement');
+      
+      if (isAuthenticated) {
+        loadingElement.style.display = "none";  // Hide the loading screen
+      } else {
+        // Show "Please login" message and delay the redirection
+        const message = document.createElement('div');
+        message.style.position = 'absolute';
+        message.style.top = '50%';
+        message.style.left = '50%';
+        message.style.transform = 'translate(-50%, -50%)';
+        message.style.backgroundColor = 'rgba(72, 72, 74, 1)';
+        message.style.padding = '20px';
+        message.style.fontSize = '20px';
+        message.style.color = '#000';
+        message.style.borderRadius = '10px';
+        message.style.backdropFilter = 'blur(30px)';
+        message.innerHTML = 'You need to login first.';
+        
+        // Add the message on top of the loading screen
+        document.body.appendChild(message);
+  
+        // Wait for 2 seconds before redirecting
+        setTimeout(() => {
+          window.location.href = "{{site.baseurl}}/login";  // Redirect to login page
+        }, 2000);  // 2000ms = 2 seconds
+      }
+    }
+</script>
+
+<style>
+    
+  /* Additional styling for the login prompt */
+  .login-message {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #ffcc00;
+        padding: 20px;
+        font-size: 20px;
+        color: #000;
+        border-radius: 10px;
+        z-index: 10000; /* Ensures it appears on top of other elements */
+    }
+    
+    .toolkit-buttons {
+        display: flex;
+        justify-content: space-around;
+        align-items: flex-start;
+        margin: 20px 0;
+        padding: 20px;
+    }
+    
+    .main-info {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto auto auto auto auto auto;
+        gap: 30px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "header"
+            "calendar"
+            "bathroom"
+            "groups"
+            "queue"
+            "submissions"
+            "teamteach"
+            "grades";
+        grid-area: main-info;
+    }
+
+    .header {
+        grid-area: header;
+    }
+
+    .calendar {
+        display: grid;
+        grid-template-columns: 150px 1fr;
+        grid-template-rows: 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "calendar-thumbnail calendar-details";
+        grid-area: calendar;
+    }
+
+    .calendar-details {
+        grid-area: calendar-details;
+        padding: 30px;
+    }
+
+    .calendar-thumbnail {
+        grid-area: calendar-thumbnail;
+        background-color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .bathroom {
+        display: grid;
+        grid-template-columns: 150px 1fr;
+        grid-template-rows: 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "bathroom-thumbnail bathroom-details";
+        grid-area: bathroom;
+    }
+
+    .bathroom-details {
+        grid-area: bathroom-details;
+        padding: 30px;
+    }
+
+    .bathroom-thumbnail {
+        grid-area: bathroom-thumbnail;
+        background-color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .groups {
+        display: grid;
+        grid-template-columns: 150px 1fr;
+        grid-template-rows: 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "groups-thumbnail groups-details";
+        grid-area: groups;
+    }
+
+    .groups-details {
+        grid-area: groups-details;
+        padding: 30px;
+    }
+
+    .groups-thumbnail {
+        grid-area: groups-thumbnail;
+        background-color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .queue {
+        display: grid;
+        grid-template-columns: 150px 1fr;
+        grid-template-rows: 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "queue-thumbnail queue-details";
+        grid-area: queue;
+    }
+
+    .queue-details {
+        grid-area: queue-details;
+        padding: 30px;
+    }
+
+    .queue-thumbnail {
+        grid-area: queue-thumbnail;
+        background-color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .submissions {
+        display: grid;
+        grid-template-columns: 150px 1fr;
+        grid-template-rows: 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "submissions-thumbnail submissions-details";
+        grid-area: submissions;
+    }
+
+    .submissions-details {
+        grid-area: submissions-details;
+        padding: 30px;
+    }
+
+    .submissions-thumbnail {
+        grid-area: submissions-thumbnail;
+        background-color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .teamteach {
+        display: grid;
+        grid-template-columns: 150px 1fr;
+        grid-template-rows: 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "teamteach-thumbnail teamteach-details";
+        grid-area: teamteach;
+    }
+
+    .teamteach-details {
+        grid-area: teamteach-details;
+        padding: 30px;
+    }
+
+    .teamteach-thumbnail {
+        grid-area: teamteach-thumbnail;
+        background-color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .grades {
+        display: grid;
+        grid-template-columns: 150px 1fr;
+        grid-template-rows: 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "grades-thumbnail grades-details";
+        grid-area: grades;
+    }
+
+    .grades-details {
+        grid-area: grades-details;
+        padding: 30px;
+    }
+
+    .grades-thumbnail {
+        grid-area: grades-thumbnail;
+        background-color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .graderview {
+        display: grid;
+        grid-template-columns: 150px 1fr;
+        grid-template-rows: 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "graderview-thumbnail graderview-details";
+        grid-area: graderview;
+    }
+
+    .graderview-details {
+        grid-area: graderview-details;
+        padding: 30px;
+    }
+
+    .graderview-thumbnail {
+        grid-area: graderview-thumbnail;
+        background-color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* CARD STUFF =========================== */
+
+    .card {
+        /* colors */
+        background-image: linear-gradient(120deg, #1e1e1e 45%, #2a2a2a);
+
+        /* border */
+        border-radius: 10px;
+        border: 1px solid hsla(240, 6%, 30%, 0.63);
+
+        /* shadow */
+        filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.3));
+
+        /* sizing */
+        box-sizing: border-box;
+        height: 100%;
+        overflow: hidden;
+        position: relative;
+        width: 100%;
+
+        /* other */
+        cursor: pointer;
+        transition: transform ease-in-out 0.2s;
+    }
+
+    .card:hover {
+        transform: scale(1.02);
+    }
+
+    /* OTHER STUFF ====================== */
+    
+
+    input {
+        /* colors */
+        background-image: linear-gradient(120deg, #1e1e1e 45%, #2a2a2a);
+        color: white;
+
+        /* border */
+        border-radius: 10px;
+        border: 1px solid hsla(240, 6%, 30%, 0.63);
+
+        /* shadow */
+        filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.3));
+
+        /* spacing */
+        padding: 15px;
+        margin: 10px;
+
+        /* other */
+        font-size: large;
+    }
+
+    .close {
+        position: absolute;
+        top: 5px;
+        left: 5px;
+
+        cursor: pointer;
+    }
+
+    /* CHECKBOX STUFF ================================ */
+    /* The container-checkbox */
+    .container-checkbox {
+        display: block;
+        position: relative;
+        padding-left: 35px;
+        cursor: pointer;
+        font-size: 22px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    /* Hide the browser's default checkbox */
+    .container-checkbox input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+    }
+
+    /* Create a custom checkbox */
+    .checkmark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 25px;
+        width: 25px;
+        background-color: #eee;
+        border-radius: 5px;
+    }
+
+    /* On mouse-over, add a grey background color */
+    .container-checkbox:hover input~.checkmark {
+        background-color: #ccc;
+    }
+
+    /* When the checkbox is checked, add a blue background */
+    .container-checkbox input:checked~.checkmark {
+        background-color: #2196F3;
+    }
+
+    /* Create the checkmark/indicator (hidden when not checked) */
+    .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+
+    /* Show the checkmark when checked */
+    .container-checkbox input:checked~.checkmark:after {
+        display: block;
+    }
+
+    /* Style the checkmark/indicator */
+    .container-checkbox .checkmark:after {
+        left: 9px;
+        top: 5px;
+        width: 5px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 3px 3px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+    }
+
+    ul.info {
+        margin-bottom: 0px;
+        padding-bottom: 0px;
+    }
+
+    .thumbnail {
+        width: 150px;
+    }
+
+    a {
+        text-decoration: none;
+        color: white;
+    }
+</style>
+
+<div id="loadingElement" class="loading-container">
+    <div class="spinner"></div>
+</div>  
+
+<div class="main-info">
+    <!-- the info header at the top of the page -->
+    <div class="header">
+        <h1>Student Toolkit (Beta)</h1>
+        <p>Access all student toolkits here.</p>
+    </div>
+
+    {% for link in site.data.toolkit.links %}
+        <a href="{{ site.baseurl }}/{{ link.href }}">
+            <div class="{{ link.id }} card">
+                <div class="{{ link.id }}-details">
+                    <h3>{{ link.label }}</h3>
+                    <p>This tool lets you:</p>
+                    {% if link.description %}
+                        <ul>
+                            {% for bullet in link.description %}
+                                <li>{{ bullet }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+                <div class="{{ link.id }}-thumbnail">
+                    <img src="{{ site.baseurl }}/{{ link.icon }}" alt="{{ link.label }}"
+                        class="thumbnail">
+                </div>
+            </div>
+        </a>
+    {% endfor %}
+</div>

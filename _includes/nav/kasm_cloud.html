@@ -1,0 +1,109 @@
+<table>
+    <tr>
+        <td>
+            <a href="{{site.baseurl}}/kasm/pages/intro">
+                <img src="{{site.baseurl}}/images/kasm/kasmv2.png" height="120" alt="Intro">
+            </a>
+        </td>
+
+        <td><a href="{{site.baseurl}}/kasm/userguide"> User Guide</a></td>        <td class="dropdown">
+            <a class="dropbtn">Multi-Server</a>
+            <div class="dropdown-content">
+                <a href="{{site.baseurl}}/kasm/multiserver/development">Development Guide</a>
+                <a href="{{site.baseurl}}/kasm/multiserver/install">Install Servers</a>
+                <a href="{{site.baseurl}}/kasm/multiserver/autoscale">Autoscale Config</a>
+                <a href="{{site.baseurl}}/kasm/multiserver/persistent">S3 Persistence</a>
+                <a href="{{site.baseurl}}/kasm/multiserver/workspace-registry">Workspace Registry</a>
+                <a href="#">Zones</a>
+            </div>
+        </td>
+        <td class="dropdown">
+            <a class="dropbtn">Workspaces</a>
+            <div class="dropdown-content">
+                <a href="{{site.baseurl}}/kasm/workspaces/container-build">Container Building</a>
+                <a href="{{site.baseurl}}/kasm/workspaces/dockerhub">DockerHub Push</a>
+                <a href="{{site.baseurl}}/kasm/workspaces/registry">Registry</a>
+            </div>
+        </td>
+        <td class="dropdown">
+            <a class="dropbtn">Database</a>
+            <div class="dropdown-content">
+                <a href="{{site.baseurl}}/kasm/database/rds">RDS Setup</a>
+                <a href="{{site.baseurl}}/kasm/database/migration">Database Migration</a>
+                <a href="{{site.baseurl}}/kasm/database/api">Kasm APIs</a>
+            </div>
+        </td>       
+    </tr>
+</table>
+
+<!-- Fixed Position Box -->
+<div class="fixed-links-box">
+    <h3>QUICK ACCESS</h3>
+    <a href="{{site.baseurl}}/duallogin" target="_blanki" rel="noopener">NCS Login/SignUp</a>
+    <a href="http://kasm.nighthawkcodingsociety.com" target="_blank" rel="noopener">KASM Workspaces</a>
+</div>
+<style>
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropbtn {
+        text-decoration: none;
+        color: black;
+        line-height: 8;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 220px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+    }
+
+    .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+
+    .dropdown-content a:hover {
+        background-color: #f1f1f1;
+    }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+    .fixed-links-box {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #333333; 
+        padding: 20px; 
+        box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
+        border-radius: 12px;
+        z-index: 1000;
+        width: 200px; 
+    }
+
+    .fixed-links-box a {
+        display: block;
+        color: #39FF14; 
+        text-decoration: none;
+        margin-bottom: 12px;
+        font-weight: bold;
+    }
+
+    .fixed-links-box a:hover {
+        text-decoration: underline;
+    }
+
+    .fixed-links-box h3 {
+        color: #FFFFFF;
+        margin-bottom: 12px;
+    }
+</style>

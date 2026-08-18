@@ -1,0 +1,11 @@
+cards:
+  - term: What is KASM used for?
+    definition: It streams Linux desktop containers in the browser for coding and development.
+  - term: Which tool is used to provision AWS infrastructure?
+    definition: Terraform
+  - term: Which tool configures the AWS instances into KASM workers?
+    definition: Ansible
+  - term: What backend language was used for business logic?
+    definition: Python/Flask
+  - term: Why is KASM better than traditional PC labs?
+    definition: Cheaper, more scalable, and accessible from any device.

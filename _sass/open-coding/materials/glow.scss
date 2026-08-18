@@ -1,0 +1,60 @@
+.glow {
+    cursor: pointer;
+    position: relative;
+    z-index: 0;
+
+    &:before,
+    &:after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        border-radius: inherit;
+        z-index: -1;
+    }
+
+    &:before {
+        background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+        background-size: 400%;
+        filter: blur(5px);
+        width: calc(100% + 4px);
+        height: calc(100% + 4px);
+        top: -2px;
+        left: -2px;
+        opacity: 0;
+        transition: opacity .3s ease-in-out;
+        animation: glowing 20s linear infinite;
+    }
+
+    &:hover:before {
+        opacity: 1;
+    }
+
+    &:after {
+        background: #1e1e1e;
+    }
+}
+
+.glowOnHover {
+    @extend .glow;
+    border: none;
+    outline: none;
+    color: #fff;
+    background: #1e1e1e;
+    border-radius: $border-size;
+}
+
+// animation key frames
+@keyframes glowing {
+
+    0%,
+    100% {
+        background-position: 0 0;
+    }
+
+    50% {
+        background-position: 400% 0;
+    }
+}

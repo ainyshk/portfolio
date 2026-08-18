@@ -1,0 +1,39 @@
+@import "materials/main.scss";
+
+.search-result-preview {
+    // the text
+
+    color: $gray1 !important;
+    list-style-type: none !important;
+    list-style: none !important;
+    background-color: #1e1e1e !important;
+    border-bottom-left-radius: $border-size;
+    border-bottom-right-radius: $border-size;
+
+    padding-bottom: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.search-result-highlight {
+    color: $lightBlue1 !important;
+    font-weight: bold !important;
+    list-style-type: none !important;
+    list-style: none !important;
+}
+
+.search-results-list-item .search-result-title {
+    // the title
+    color: $white1 !important;
+    list-style-type: none !important;
+    border-top-left-radius: $border-size;
+    border-top-right-radius: $border-size;
+    background-color: #1e1e1e !important;
+
+    padding: 10px;
+}
+
+.search-results-list-item {
+    list-style-type: none !important;
+    margin-bottom: 10px !important;
+}

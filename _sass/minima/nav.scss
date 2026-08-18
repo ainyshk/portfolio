@@ -1,0 +1,39 @@
+// Navigation and logo styles for site header
+
+.site-nav .trigger {
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  right: 0;
+  top: 60px; /* adjust as needed */
+  width: 200px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  z-index: 1000;
+}
+
+.site-nav .nav-trigger:checked ~ label + .trigger,
+.site-nav .nav-trigger:checked + label + .trigger {
+  display: flex;
+}
+
+@media (min-width: 600px) {
+  .site-nav .trigger {
+    display: flex !important;
+    position: static;
+    flex-direction: row;
+    background: none;
+    box-shadow: none;
+    width: auto;
+  }
+}
+
+#loginArea.page-link {
+  /* Add any custom login link styles here */
+  opacity: 1;
+}
+
+#site-logo {
+  height: 40px;
+  vertical-align: middle;
+  margin-right: 10px;
+}

@@ -1,0 +1,57 @@
+@import "materials/main";
+@import "elements/buttons/main";
+
+.hallpass-container {
+    max-width: 500px;
+    margin: 40px auto;
+    padding: 20px;
+    background: $gray6;
+    border-radius: $border-size;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    border: 2px solid $gray3;
+    @extend .glass;
+}
+
+.hallpass-header {
+    font-size: 22px;
+    font-weight: bold;
+    color: white;
+    padding-bottom: 10px;
+    border-bottom: 2px solid $gray4;
+    margin-bottom: 15px;
+}
+
+.hallpass-icon {
+    max-width: 150px;
+    height: auto;
+    margin: 15px auto;
+    display: block;
+}
+
+.hallpass-details {
+    font-size: 16px;
+    color: $gray2;
+    margin-bottom: 10px;
+}
+
+.hallpass-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.hallpass-buttons button {
+    @extend .glowOnHover;
+    @extend .medium;
+    @extend .primary;
+    border-radius: $border-size;
+    font-size: 16px;
+    padding: 12px 20px;
+}
+
+.hallpass-buttons button:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+}

@@ -1,0 +1,86 @@
+_site
+*.pyc
+__pycache__/
+_config.local.yml
+_posts/**/*_IPYNB_2_.md
+_posts/**/*_GithubIssue_.md
+_posts/**/*_GithubIssue.md
+_posts/**/*_GithubPR.md
+_posts/**/*-by_author.json
+nohup.out
+Gemfile.lock
+node_modules
+.DS_Store
+.env
+_posts/2024-06-25-RDS-and-Flask-Setup-
+venv/
+.venv/
+.venv
+port_venv/
+verifyTools.md
+_notebooks/CSP/big-ideas/big-idea-3-part-1-fundamentals/Period3/2024-9-27-fundamentals-3.6.4.ipynb
+.vscode/
+.bundle
+vendor/*
+package-lock.json
+private/
+.jekyll-metadata
+ijava/
+ijava-1.3.0.zip
+ijava.zip
+channel.json
+/IJava
+
+# DOCX conversion intermediate files
+images/docx/*.png
+images/docx/*.jpg
+images/docx/*.jpeg
+images/docx/*.gif
+images/docx/*.bmp
+images/docx/*.tiff
+docx-index.md
+# Converted DOCX posts (auto-generated)
+_posts/**/*_DOCX_.md
+# Temporary DOCX files
+_docx/~$*
+*.tmp
+
+# Auto-generated course-specific files (build-time only)
+_posts/**/*_csp.md
+_posts/**/*_csa.md
+_posts/**/*_csse.md
+
+# Project distributions (auto-generated from _projects/ source)
+_notebooks/projects/
+_posts/projects/
+_sass/projects/
+assets/js/projects/
+assets/css/projects/
+images/projects/
+
+# Auto-generated project Makefiles (copied from _template at build time)
+_projects/*/Makefile
+_projects/*/*/Makefile
+# Except the template itself (single source of truth)
+!_projects/_template/Makefile
+
+# Post generations
+_posts/**/*_cwgu.md
+_posts/**/*_content.md
+
+# Multiple formats of the same content (auto-generated)
+_notebooks/**/*_csp.ipynb
+_notebooks/**/*_csa.ipynb
+_notebooks/**/*_csse.ipynb
+_notebooks/**/*_cwgu.ipynb
+_notebooks/**/*_csp.md
+_notebooks/**/*_csa.md
+_notebooks/**/*_csse.md
+_notebooks/**/*_cwgu.md
+_notebooks/**/*_content.md
+
+# remove all the .scss cache files
+*.scssc
+
+# Claude Code session artifacts
+.claude/

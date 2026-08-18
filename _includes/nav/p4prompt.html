@@ -1,0 +1,39 @@
+<div class="grid-container">
+    <a href="{{site.baseurl}}/csp/big-idea/p4/3-1-1" class="grid-button">Variables</a>
+    <a href="{{site.baseurl}}/csp/big-idea/p4/3-2-1" class="grid-button">Data Abstraction</a>
+    <a href="{{site.baseurl}}/csp/big-idea/p4/3-3-1" class="grid-button">Math Expressions</a>
+    <a href="{{site.baseurl}}/csp/big-idea/p4/3-4-1" class="grid-button">Strings</a>
+    <a href="{{site.baseurl}}/csp/big-idea/p4/3-5-1" class="grid-button">Booleans</a>
+    <a href="{{site.baseurl}}/csp/big-idea/p4/3-6-1" class="grid-button">Conditionals</a>
+    <a href="{{site.baseurl}}/csp/big-idea/p4/3-7-1" class="grid-button">Nested Conditionals</a>
+    <a href="{{site.baseurl}}/csp/big-idea/p4/3-8-1" class="grid-button">Iteration</a>
+    <a href="{{site.baseurl}}/csp/big-idea/p4/3-9-1" class="grid-button">Lists</a>
+</div>
+
+<style>
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    justify-items: center;
+    align-items: center;
+}
+
+.grid-button {
+    padding: 15px 20px;
+    font-size: 16px;
+    background-color: #29AAFA;
+    color: white !important;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    width: 100%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.grid-button:hover {
+    background-color: #1E90FF;
+    transform: translateY(-5px);
+}
+</style>

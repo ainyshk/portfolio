@@ -1,0 +1,38 @@
+Title: "Operating System Guides"
+Description: "Explore development setups tailored for your operating system. Each guide outlines the tools, shell commands, and package managers needed for coding in Python, JavaScript, and beyond."
+Topics:
+  - title: "Windows"
+    image: "Windows11.png"
+    link: "/tools/os/windows"
+    alt: "Windows Development"
+    keyPoints:
+      - "Install Ubuntu 24.04 with WSL"
+      - "Run shell scripts with activate_ubuntu.sh"
+      - "Use apt to install tools"
+      - "Access Linux from PowerShell"
+    subtitle: "WSL + Ubuntu"
+    description: "Windows developers use WSL (Windows Subsystem for Linux) to run a full Ubuntu terminal. This setup enables native Linux commands and compatibility with developer tools like Python and Git."
+
+  - title: "Kasm"
+    image: "Kasm.png"
+    link: "/tools/os/kasm"
+    alt: "Kasm Workspaces"
+    keyPoints:
+      - "Launch Linux containers in browser"
+      - "Access pre-installed tools"
+      - "Run setup script ./scripts/venv.sh"
+      - "Use terminal for all coding"
+    subtitle: "Browser-based Linux"
+    description: "Kasm is a container-based workspace perfect for Chromebooks or locked-down devices. With an Ubuntu terminal, browser-based VSCode, and one-click access to a dev-ready environment, students can code without installing software locally. Run `activate_github.sh` to complete your tool setup."
+
+  - title: "MacOS"
+    image: "MacOS.png"
+    link: "/tools/os/macos"
+    alt: "Mac Development"
+    keyPoints:
+      - "Install Homebrew"
+      - "Use activate_macos.sh"
+      - "Resolve Python symlinks"
+      - "Verify with version checks"
+    subtitle: "Apple Terminal + Brew"
+    description: "MacOS is Unix-based and supports Linux commands natively. After installing Homebrew, you’ll run a setup script to configure Python, Ruby, Jupyter, and more. Custom symlinks are used to ensure tools work properly across Intel and Apple Silicon Macs. You'll use the Terminal for cloning, installing, and verifying your setup."

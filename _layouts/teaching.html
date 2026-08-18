@@ -1,0 +1,573 @@
+---
+layout: opencs
+---
+
+<style>
+    /* Teaching Layout - Styles ONLY markdown content, not Python cells */
+    
+    /* Container wrapper for teaching content */
+
+    .teaching-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    /* Lesson header - only in markdown */
+    .lesson-header {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        backdrop-filter: blur(10px);
+    }
+
+    .lesson-header h1 {
+        color: #2d3748 !important;  /* Changed from #4a5568 to darker color */
+        font-size: 2.5em;
+        margin-bottom: 15px;
+        font-weight: 700;
+        display: block !important;  /* Ensure it's displayed */
+        visibility: visible !important;  /* Ensure it's visible */
+        opacity: 1 !important;  /* Ensure it's not transparent */
+    }
+
+    .lesson-header .subtitle {
+        color: #718096 !important;
+        font-size: 1.2em;
+        margin-bottom: 10px;
+    }
+    
+    .lesson-header .author {
+        color: #a0aec0 !important;
+        font-style: italic;
+    }
+
+    /* Style ONLY markdown-rendered sections */
+    .markdown-section,
+    .section {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+    }
+    
+    /* Force dark text in sections */
+    .section p,
+    .section li,
+    .section h1,
+    .section h2, 
+    .section h3,
+    .section h4,
+    .section strong,
+    .section em,
+    .section span:not(.cell-type):not(.section-icon) {
+        color: #333 !important;
+        background: transparent !important;
+    }
+
+    /* Style markdown headers with section icons */
+    .markdown-section h2,
+    .section h2 {
+        color: #2d3748 !important;
+        font-size: 1.8em;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        font-weight: 600;
+    }
+
+    .section-icon {
+        width: 35px;
+        height: 35px;
+        margin-right: 15px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white !important;
+        font-weight: bold;
+        font-size: 1.1em;
+        flex-shrink: 0;
+    }
+
+    /* Style ONLY code blocks within markdown cells */
+    .section .code-block,
+    .section .code-preview,
+    .section .code-snippet,
+    .markdown-section .code-block,
+    .markdown-section .code-preview,
+    .markdown-section .code-snippet,
+    .teaching-code-display {
+        background: #1a202c !important;
+        color: #e2e8f0 !important;
+        font-family: 'Courier New', monospace;
+        padding: 20px;
+        border-radius: 8px;
+        margin: 15px 0;
+        overflow-x: auto;
+        font-size: 0.9em;
+        line-height: 1.4;
+        border-left: 4px solid #4ecdc4;
+    }
+    
+    /* Ensure text in code blocks stays light */
+    .code-block,
+    .code-preview,
+    .code-snippet {
+        color: #e2e8f0 !important;
+    }
+
+    /* Special markdown cell styling for inline code */
+    .markdown-section code,
+    .section code,
+    .info-box code,
+    .think-box code,
+    .challenge-box code,
+    .checkpoint-box code,
+    .warning-box code,
+    .key-points code {
+        background: #f0f4f8 !important;
+        color: #2d3748 !important;
+        padding: 2px 6px !important;
+        border-radius: 3px !important;
+        font-family: 'Courier New', monospace !important;
+        font-size: 0.9em !important;
+        border: 1px solid #e2e8f0 !important;
+        display: inline !important;
+    }
+    
+    /* Override for code inside pre blocks (code blocks, not inline) */
+    .section pre code,
+    .markdown-section pre code,
+    .code-block code,
+    .code-preview code,
+    .code-snippet code {
+        background: transparent !important;
+        color: #e2e8f0 !important;
+        border: none !important;
+        padding: 0 !important;
+        display: block !important;
+    }
+
+    /* Info boxes - only in markdown */
+    .info-box {
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 0 8px 8px 0;
+        border-left: 4px solid;
+    }
+
+    .challenge-box {
+        background: #e6fffa;
+        border-left-color: #38b2ac;
+    }
+
+    .challenge-box h3,
+    .challenge-box h4 {
+        color: #2c7a7b !important;
+        margin-bottom: 15px;
+    }
+    
+    .challenge-box p,
+    .challenge-box li {
+        color: #333 !important;
+    }
+
+    .think-box {
+        background: #fef5e7;
+        border-left-color: #ed8936;
+    }
+
+    .think-box h3,
+    .think-box h4 {
+        color: #c05621 !important;
+        margin-bottom: 15px;
+    }
+    
+    .think-box p,
+    .think-box li {
+        color: #333 !important;
+    }
+
+    .checkpoint-box,
+    .key-points {
+        background: #ebf8ff;
+        border-left-color: #3182ce;
+    }
+
+    .checkpoint-box h3,
+    .key-points h3 {
+        color: #2b6cb0 !important;
+        margin-bottom: 15px;
+    }
+    
+    .checkpoint-box p,
+    .checkpoint-box li,
+    .key-points p,
+    .key-points li {
+        color: #333 !important;
+    }
+
+    .warning-box {
+        background: #fed7d7;
+        border-left-color: #e53e3e;
+    }
+
+    .warning-box h4 {
+        color: #c53030 !important;
+        margin-bottom: 10px;
+        font-weight: 600 !important;
+    }
+
+    .warning-box p,
+    .warning-box li,
+    .warning-box ul {
+        color: #742a2a !important;
+        font-weight: 500 !important;
+    }
+    
+    /* Special fix for code inside warning boxes */
+    .warning-box code {
+        background: rgba(255, 255, 255, 0.5) !important;
+        color: #7f1d1d !important;
+        padding: 2px 6px !important;
+        border-radius: 3px !important;
+        font-family: 'Courier New', monospace !important;
+        font-size: 0.9em !important;
+        border: 1px solid rgba(229, 62, 62, 0.3) !important;
+        display: inline !important;
+        font-weight: 600 !important;
+    }
+
+    /* Process flow visualization */
+    .process-flow {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 30px 0;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .flow-item {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white !important;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        flex: 1;
+        min-width: 200px;
+    }
+
+    .flow-item h4,
+    .flow-item p {
+        color: white !important;
+    }
+
+    .flow-arrow {
+        font-size: 2em;
+        color: #4a5568 !important;
+    }
+
+    /* Notebook demo visualization */
+    .notebook-demo {
+        border: 2px solid #e2e8f0;
+        border-radius: 10px;
+        overflow: hidden;
+        margin: 20px 0;
+    }
+
+    .cell-demo,
+    .cell {
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .cell-demo:last-child,
+    .cell:last-child {
+        border-bottom: none;
+    }
+
+    .cell-header {
+        background: #f7fafc;
+        padding: 10px 15px;
+        font-size: 0.9em;
+        color: #4a5568 !important;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+    }
+
+    .cell-type {
+        background: #4299e1;
+        color: white !important;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.8em;
+        margin-right: 10px;
+    }
+
+    .markdown-cell .cell-type {
+        background: #38b2ac;
+    }
+
+    .cell-content {
+        padding: 15px;
+        background: white;
+    }
+    
+    .cell-content p,
+    .cell-content strong {
+        color: #333 !important;
+    }
+
+    /* Frontmatter display */
+    .frontmatter {
+        background: #2d3748;
+        color: #e2e8f0 !important;
+        font-family: 'Courier New', monospace;
+        padding: 20px;
+        border-radius: 8px;
+        margin: 15px 0;
+        white-space: pre-wrap;
+    }
+
+    /* File path display */
+    .file-path {
+        background: rgba(0, 0, 0, 0.2);
+        color: #4ecdc4 !important;
+        font-family: 'Courier New', monospace;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-weight: bold;
+        display: inline-block;
+    }
+
+    /* Workflow steps */
+    .workflow-steps {
+        background: #f7fafc;
+        padding: 20px;
+        border-radius: 10px;
+        margin: 20px 0;
+    }
+
+    .workflow-steps h3 {
+        color: #2d3748 !important;
+        margin-bottom: 15px;
+    }
+
+    .workflow-steps ol,
+    .workflow-steps li {
+        color: #4a5568 !important;
+    }
+
+    .workflow-steps li {
+        margin-bottom: 10px;
+    }
+    
+    .workflow-steps li strong {
+        color: #4a5568 !important;
+    }
+
+    /* Special list styling for key points */
+    .key-points ul {
+        list-style-type: none;
+        padding-left: 0;
+    }
+
+    .key-points li {
+        margin-bottom: 10px;
+        padding-left: 25px;
+        position: relative;
+        color: #333 !important;
+    }
+
+    .key-points li::before {
+        content: "✓";
+        color: #38a169;
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+    }
+    
+    .key-points li strong {
+        color: #333 !important;
+        font-weight: 700 !important;
+    }
+
+    /* Step-based content */
+    .step {
+        background: rgba(102, 126, 234, 0.1);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 20px;
+        border: 1px solid rgba(102, 126, 234, 0.2);
+    }
+
+    .step-number {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white !important;
+        border-radius: 50%;
+        font-size: 1.2em;
+        font-weight: bold;
+        margin-right: 15px;
+    }
+
+    .step-title {
+        display: flex;
+        align-items: center;
+        font-size: 1.3em;
+        font-weight: bold;
+        margin-bottom: 15px;
+        color: #2d3748 !important;
+    }
+
+    .step-content {
+        margin-left: 55px;
+        line-height: 1.6;
+    }
+
+    /* DO NOT style these Jupyter-specific elements */
+    /* These are handled by the Jupyter/SASS overrides */
+    .jp-Cell,
+    .jp-CodeCell,
+    .jp-InputArea,
+    .jp-OutputArea,
+    .jp-InputPrompt,
+    .jp-OutputPrompt,
+    .highlight,
+    .highlight pre,
+    .input_area,
+    .output_area,
+    .code_cell,
+    .CodeMirror,
+    .rendered_html pre,
+    .rendered_html code,
+    .language-python,
+    .highlighter-rouge {
+        /* Let Jupyter's styles handle these */
+    }
+
+    /* Only style code blocks that are explicitly marked as teaching examples */
+    .teaching-example-code {
+        background: #1a202c !important;
+        color: #e2e8f0 !important;
+        padding: 20px !important;
+        border-radius: 8px !important;
+        border-left: 4px solid #4ecdc4 !important;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+        .teaching-container {
+            padding: 15px;
+        }
+        
+        .lesson-header h1 {
+            font-size: 2em;
+        }
+        
+        .markdown-section,
+        .section {
+            padding: 20px;
+        }
+        
+        .step-content {
+            margin-left: 0;
+            margin-top: 15px;
+        }
+        
+        .process-flow {
+            flex-direction: column;
+        }
+        
+        .flow-arrow {
+            transform: rotate(90deg);
+        }
+    }
+</style>
+
+<!-- Main wrapper with gradient background -->
+<div class="teaching-wrapper">
+    <div class="teaching-container">
+        <!-- Optional lesson header -->
+        {% if page.title or page.description %}
+        <div class="lesson-header">
+            {% if page.title %}
+            <h1>{{ page.title }}</h1>
+            {% endif %}
+            {% if page.description %}
+            <p class="subtitle">{{ page.description }}</p>
+            {% endif %}
+            {% if page.author %}
+            <p class="author">by {{ page.author }}</p>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <!-- Main content -->
+        <div class="teaching-content">
+            {{ content }}
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add copy buttons only to teaching code examples, not Python cells
+    const teachingCodeBlocks = document.querySelectorAll('.code-block, .code-preview, .code-snippet');
+    teachingCodeBlocks.forEach(block => {
+        // Skip if it's inside a Jupyter code cell
+        if (block.closest('.jp-CodeCell') || block.closest('.code_cell') || block.closest('.highlight')) {
+            return;
+        }
+
+        const copyButton = document.createElement('button');
+        copyButton.textContent = '📋 Copy';
+        copyButton.style.cssText = `
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        `;
+        
+        block.style.position = 'relative';
+        block.appendChild(copyButton);
+        
+        copyButton.addEventListener('click', function() {
+            const codeText = block.textContent.replace('📋 Copy', '').trim();
+            navigator.clipboard.writeText(codeText);
+            copyButton.textContent = '✅ Copied!';
+            setTimeout(() => copyButton.textContent = '📋 Copy', 2000);
+        });
+    });
+
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+});
+</script>
