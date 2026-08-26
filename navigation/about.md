@@ -7,7 +7,7 @@ comments: true
 
 ## As a conversation Starter
 
-Here are some places I have lived.
+Here are some places I \(or my family\) have lived.
 
 <comment>
 Flags are made using Wikipedia images
@@ -62,6 +62,7 @@ Flags are made using Wikipedia images
     var living_in_the_world = [
         {"flag": "0/01/Flag_of_California.svg", "greeting": "Hey", "description": "California - forever"},
         {"flag": "f/f7/Flag_of_Texas.svg", "greeting": "Hi", "description": "Texas - 1 year"},
+        {"flag": "4/41/Flag_of_India.svg", "greeting": "नमस्ते", "description": "Texas - My parents live here"},
     ];
 
     // 3a. Consider how to update style count for size of container
@@ -105,8 +106,6 @@ Here is what I did at those places
 
 ### Culture, Family, and Fun
 
-Everything for me, as for many others, revolves around family and faith.
-
 - I have 4 people in my immediate family.
 - The gallery of pics of things I like.
 
@@ -114,6 +113,7 @@ Everything for me, as for many others, revolves around family and faith.
 Gallery of Pics, scroll to the right for more ...
 </comment>
 <div class="image-gallery">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/0/01/Flag_of_California.svg" alt="California Image">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/f/f7/Flag_of_Texas.svg" alt="Texas Image">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/0/01/Flag_of_California.svg" alt="California Flag">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/f/f7/Flag_of_Texas.svg" alt="Texas Flag">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Flag_of_India.svg" alt="India Flag">
 </div>
