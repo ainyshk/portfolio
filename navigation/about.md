@@ -64,7 +64,7 @@ Flags are made using Wikipedia images
         {"flag": "f/f7/Flag_of_Texas.svg", "greeting": "Howdy", "description": "Texas - 1 year"},
         {"flag": "4/41/Flag_of_India.svg", "greeting": "नमस्ते", "description": "India - My parents live here"},
         {"flag": "c/cf/Flag_of_Canada.svg", "greeting": "Hi", "description": "Canada - My dad's sister live here"},
-        {"flag": "a/ae/Flag_of_the_United_Kingdom.svg": "Hi", "description": "United Kingdom - My mom's brother lives here"},
+        {"flag": "8/83/Flag_of_the_United_Kingdom_%283-5%29.svg", "greeting" : "Hi", "description": "United Kingdom - My mom's brother lives here"},
     ];
 
     // 3a. Consider how to update style count for size of container
