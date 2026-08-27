@@ -65,7 +65,6 @@ Flags are made using Wikipedia images
         {"flag": "4/41/Flag_of_India.svg", "greeting": "नमस्ते", "description": "India - My parents live here"},
         {"flag": "c/cf/Flag_of_Canada.svg", "greeting": "Hi", "description": "Canada - My dad's sister live here"},
         {"flag": "a/ae/Flag_of_the_United_Kingdom.svg": "Hi", "description": "United Kingdom - My mom's brother lives here"},
-        {"flag": "c/c0/Matrix_digital_rain_anime.gif", "greeting": "Hello World", "description": "Coding time"},
     ];
 
     // 3a. Consider how to update style count for size of container
@@ -117,6 +116,5 @@ Gallery of Pics, scroll to the right for more ...
 </comment>
 <div class="image-gallery">
   <img src="https://upload.wikimedia.org/wikipedia/commons/0/01/Flag_of_California.svg" alt="California Flag">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/f/f7/Flag_of_Texas.svg" alt="Texas Flag">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Flag_of_India.svg" alt="India Flag">
+  <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800" alt="Code Image">
 </div>
