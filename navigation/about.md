@@ -63,7 +63,7 @@ Flags are made using Wikipedia images
         {"flag": "0/01/Flag_of_California.svg", "greeting": "Hey", "description": "California - forever"},
         {"flag": "f/f7/Flag_of_Texas.svg", "greeting": "Howdy", "description": "Texas - 1 year"},
         {"flag": "4/41/Flag_of_India.svg", "greeting": "नमस्ते", "description": "India - My parents live here"},
-        {"flag": "c/cf/Flag_of_Canada.svg", "greeting": "Hi", "description": "Canada - My dad's sister live here"},
+        {"flag": "c/cf/Flag_of_Canada.svg", "greeting": "Hi", "description": "Canada - My dad's sister lives here"},
         {"flag": "8/83/Flag_of_the_United_Kingdom_%283-5%29.svg", "greeting" : "Hi", "description": "United Kingdom - My mom's brother lives here"},
     ];
 
@@ -115,6 +115,6 @@ Here is what I did at those places
 Gallery of Pics, scroll to the right for more ...
 </comment>
 <div class="image-gallery">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/0/01/Flag_of_California.svg" alt="California Flag">
   <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800" alt="Code Image">
+  <img src="https://images.unsplash.com/photo-1509228468518-180dd4864904?w=800" alt="Math Image">
 </div>
