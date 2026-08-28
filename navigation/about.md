@@ -7,7 +7,7 @@ comments: true
 
 ## As a conversation Starter
 
-Here are some places I \(or my family\) have had permanent residence.
+Here are some places I (or my family) have had permanent residence for at least a year.
 
 <comment>
 Flags are made using Wikipedia images
