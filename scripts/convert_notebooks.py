@@ -54,6 +54,12 @@ Real pair example (Cookie Clicker):
 - <!-- UI_RUNNER: How to Play panel | panel: cookie_intro_game, slot: left, layout: row, ratio: 20-80, gap: 1rem -->
 - // GAME_RUNNER: Cookie Clicker Mini Game with large cookie | hide_edit: true, panel: cookie_intro_game, slot: right, layout: row, ratio: 20-80, gap: 1rem, width: 100%, height: 520px
 
+Runner options:
+- autostart: true|false  Auto-runs the game when the runner initializes. Default: false.
+
+Game-runner specific options:
+- hide_edit, width, height, editor_height
+
 Notes on CodeFence and MermaidGraph:
 - Plain markdown code fences and Mermaid markdown are not panel-aware by default.
 - To place those side-by-side, wrap desired content in a panel-aware runner cell
@@ -76,6 +82,9 @@ UI_RUNNER_PATTERN = r'^<!--\s*UI_RUNNER:\s*(.+)\s*-->$'
 
 # GAME_RUNNER pattern for GameEngine cells (JavaScript only)
 GAME_RUNNER_PATTERN = r'^//\s*GAME_RUNNER:\s*(.+)$'
+
+# PSEUDOCODE_RUNNER pattern for Pseudocode examples (raw or code cells)
+PSEUDOCODE_RUNNER_PATTERN = r'^//\s*PSEUDOCODE_RUNNER:\s*(.+)$'
 
 
 #########################################
@@ -246,7 +255,7 @@ class CodeRunner:
 
     def liquid_lines(self, code_fence_lines: list[str], code_runner_count: int) -> list[str]:
         """Render Jekyll Liquid captures/includes for embedding the code runner widget."""
-        return [
+        lines = [
             '',
             '{% capture challenge' + str(code_runner_count) + ' %}',
             self.challenge,
@@ -266,9 +275,13 @@ class CodeRunner:
             '   challenge=challenge' + str(code_runner_count),
             '   code=code' + str(code_runner_count),
             '   source=source' + str(code_runner_count),
-            '%}',
-            '',
         ]
+
+        if self.options.get('autostart') or self.options.get('auto_start'):
+            lines.append('   autostart="true"')
+
+        lines.extend(['%}', ''])
+        return lines
 
 
 @dataclass
@@ -540,6 +553,8 @@ class GameRunner:
 
         if self.options.get('hide_edit'):
             lines.append('   hide_edit="true"')
+        if self.options.get('autostart') or self.options.get('auto_start'):
+            lines.append('   autostart="true"')
         if self.options.get('width'):
             lines.append(f'   width="{self.options["width"]}"')
         if self.options.get('height'):
@@ -549,6 +564,140 @@ class GameRunner:
 
         lines.extend(['%}', ''])
         return lines
+
+
+@dataclass
+class PseudocodeRunner:
+    challenge: str
+    runner_id: str
+    code: str
+    options: dict[str, Any]
+    custom_cell_id: str
+
+    @staticmethod
+    def extract_challenge_and_options(cell_source: str) -> Optional[tuple[str, dict[str, Any]]]:
+        """Parse PSEUDOCODE_RUNNER challenge text and optional key/value options."""
+        for line in cell_source.split('\n'):
+            match = re.match(PSEUDOCODE_RUNNER_PATTERN, line.strip(), re.IGNORECASE)
+            if not match:
+                continue
+
+            content = match.group(1).strip()
+            if '|' not in content:
+                return (content, {})
+
+            challenge, options_str = content.split('|', 1)
+            options: dict[str, Any] = {}
+            for option in options_str.strip().split(','):
+                if ':' not in option:
+                    continue
+                key, value = option.split(':', 1)
+                key = key.strip()
+                value = value.strip().lower()
+                if value == 'true':
+                    options[key] = True
+                elif value == 'false':
+                    options[key] = False
+                else:
+                    options[key] = value
+
+            return (challenge.strip(), options)
+
+        return None
+
+    @staticmethod
+    def clean_code(cell_source: str) -> str:
+        """Remove pseudocode runner directives and code fences from content."""
+        lines = cell_source.split('\n')
+        cleaned_lines = []
+        in_code_fence = False
+        fence_started = False
+        
+        for line in lines:
+            # Skip PSEUDOCODE_RUNNER directive
+            if re.match(PSEUDOCODE_RUNNER_PATTERN, line.strip(), re.IGNORECASE):
+                continue
+            
+            # Detect code fence start/end
+            if line.strip().startswith('```'):
+                if not fence_started:
+                    fence_started = True
+                    in_code_fence = True
+                    continue  # Skip opening fence
+                else:
+                    in_code_fence = False
+                    continue  # Skip closing fence
+            
+            # Only include lines inside code fence (or all if no fence)
+            if fence_started:
+                if in_code_fence:
+                    cleaned_lines.append(line)
+            else:
+                cleaned_lines.append(line)
+
+        result = '\n'.join(cleaned_lines).rstrip()
+        while result.startswith('\n'):
+            result = result[1:]
+        return result
+
+    @classmethod
+    def from_cell(cls, cell, permalink: str, runner_index: int) -> Optional["PseudocodeRunner"]:
+        """Build a PseudocodeRunner instance when the cell includes a PSEUDOCODE_RUNNER marker."""
+        source = cell.get('source', '')
+        
+        result = cls.extract_challenge_and_options(source)
+        if not result:
+            return None
+
+        challenge, options = result
+        return cls(
+            challenge=challenge,
+            runner_id=generate_runner_id(permalink, runner_index),
+            code=cls.clean_code(source),
+            options=options,
+            custom_cell_id=get_custom_cell_id(cell),
+        )
+
+    def to_metadata(self) -> dict[str, Any]:
+        """Serialize pseudocode runner data for notebook cell metadata storage."""
+        return asdict(self)
+
+    @classmethod
+    def from_metadata(cls, metadata: dict[str, Any]) -> "PseudocodeRunner":
+        """Rehydrate a PseudocodeRunner from previously stored metadata."""
+        return cls(
+            challenge=metadata['challenge'],
+            runner_id=metadata['runner_id'],
+            code=metadata['code'],
+            options=metadata.get('options', {}),
+            custom_cell_id=metadata.get('custom_cell_id', ''),
+        )
+
+    def liquid_lines(self, code_runner_count: int) -> list[str]:
+        """Render Jekyll Liquid captures/includes for embedding the pseudocode runner widget."""
+        lines = [
+            '',
+            '{% capture challenge' + str(code_runner_count) + ' %}',
+            self.challenge,
+            '{% endcapture %}',
+            '',
+            '{% capture code' + str(code_runner_count) + ' %}',
+            self.code,
+            '{% endcapture %}',
+            '',
+            '{% include code-runner.html',
+            '   runner_id="' + self.runner_id + '"',
+            '   language="pseudocode"',
+            '   challenge=challenge' + str(code_runner_count),
+            '   code=code' + str(code_runner_count),
+        ]
+
+        if self.options.get('height'):
+            lines.append(f'   height="{self.options["height"]}"')
+
+        lines.extend(['%}', ''])
+        return lines
+
 
 @dataclass
 class CodeFence:
@@ -657,7 +806,7 @@ def fix_js_code_blocks(markdown):
 
 
 def classify_custom_cell_type(cell) -> Optional[str]:
-    """Classify a notebook cell as code/ui/game custom type, or None."""
+    """Classify a notebook cell as code/ui/game/pseudocode custom type, or None."""
     if cell.cell_type == 'code':
         source = cell.get('source', '')
         if source.strip().startswith('%%js') and GameRunner.extract_challenge_and_options(source):
@@ -670,8 +819,15 @@ def classify_custom_cell_type(cell) -> Optional[str]:
         if source.strip().startswith('%%html') and UiRunner.extract_description(source):
             return 'ui_runner'
 
-    if cell.cell_type == 'raw' and UiRunner.extract_description(cell.get('source', '')):
-        return 'ui_runner'
+    if cell.cell_type == 'raw':
+        source = cell.get('source', '')
+        if UiRunner.extract_description(source):
+            return 'ui_runner'
+    
+    if cell.cell_type == 'markdown':
+        source = cell.get('source', '')
+        if PseudocodeRunner.extract_challenge_and_options(source):
+            return 'pseudocode_runner'
 
     return None
 
@@ -776,6 +932,29 @@ def process_game_runner_cells(notebook, permalink):
     return notebook
 
 
+def process_pseudocode_runner_cells(notebook, permalink):
+    """Process notebook cells and add pseudocode-runner metadata"""
+    runner_index = 0
+    processed_cells = []
+    
+    for cell in notebook.cells:
+        if cell.cell_type == 'markdown':
+            runner = PseudocodeRunner.from_cell(cell, permalink, runner_index)
+
+            if runner:
+                # Store metadata for later use
+                cell['metadata']['pseudocode_runner'] = runner.to_metadata()
+                runner_index += 1
+                
+                # Replace markdown cell content with a placeholder marker for injection later
+                cell['source'] = f'<!-- PSEUDOCODE_RUNNER_PLACEHOLDER_{runner_index-1} -->'
+        
+        processed_cells.append(cell)
+    
+    notebook.cells = processed_cells
+    return notebook
+
+
 def inject_code_runners(markdown, notebook, front_matter=None):
     """Inject code-runner includes after code blocks with metadata
     
@@ -791,6 +970,19 @@ def inject_code_runners(markdown, notebook, front_matter=None):
 
     ui_runner_cells, ui_runner_ids = UiRunner.collect_cells_and_source_ids(notebook)
     code_cells = [cell for cell in notebook.cells if cell.cell_type == 'code']
+    raw_cells = [cell for cell in notebook.cells if cell.cell_type == 'raw']
+    
+    # Create a mapping of cell order for proper injection
+    cell_order_map = {}
+    code_index = 0
+    raw_index = 0
+    for i, cell in enumerate(notebook.cells):
+        if cell.cell_type == 'code':
+            cell_order_map[i] = ('code', code_index)
+            code_index += 1
+        elif cell.cell_type == 'raw':
+            cell_order_map[i] = ('raw', raw_index)
+            raw_index += 1
     
     lines = markdown.split('\n')
     result = []
@@ -804,6 +996,7 @@ def inject_code_runners(markdown, notebook, front_matter=None):
     emitted_ui_cells: set[str] = set()
     in_ui_runner_output = False
     ui_runner_depth = 0
+    raw_cell_injected: set[int] = set()
     
     i = 0
 
@@ -916,8 +1109,30 @@ def inject_code_runners(markdown, notebook, front_matter=None):
             return queue_panel_runner(config, lines_to_queue)
         return lines_to_queue
 
+    # Collect pseudocode runners for injection
+    pseudocode_runners = []
+    for cell in notebook.cells:
+        if 'pseudocode_runner' in cell.get('metadata', {}):
+            pseudocode_runners.append(PseudocodeRunner.from_metadata(cell['metadata']['pseudocode_runner']))
+    
     while i < len(lines):
         line = lines[i]
+        
+        # Check for PSEUDOCODE_RUNNER placeholder
+        placeholder_match = re.match(r'<!-- PSEUDOCODE_RUNNER_PLACEHOLDER_(\d+) -->', line.strip())
+        if placeholder_match:
+            runner_index = int(placeholder_match.group(1))
+            if runner_index < len(pseudocode_runners):
+                pseudocode_runner = pseudocode_runners[runner_index]
+                pseudo_lines = pseudocode_runner.liquid_lines(code_runner_count)
+                config = panel_config(pseudocode_runner.options, 'left')
+                if config:
+                    result.extend(queue_panel_runner(config, pseudo_lines))
+                else:
+                    result.extend(pseudo_lines)
+                code_runner_count += 1
+            i += 1
+            continue
         
         # Check if we're starting a UI_RUNNER output section
         if not in_ui_runner_output and ui_runner_count < len(ui_runner_cells):
@@ -1037,6 +1252,7 @@ def process_custom_cells(notebook, permalink):
     notebook = process_code_runner_cells(notebook, permalink)
     notebook = process_ui_runner_cells(notebook, permalink)
     notebook = process_game_runner_cells(notebook, permalink)
+    notebook = process_pseudocode_runner_cells(notebook, permalink)
     return notebook
 
 

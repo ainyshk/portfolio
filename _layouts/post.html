@@ -1467,17 +1467,6 @@ Check if this is a course lesson and determine which course context to use
   {%- endif -%}
   <a class="u-url" href="{{ page.url | relative_url }}" hidden></a>
 
-  <!-- Enhanced Analytics Tracking -->
-  <script type="module">
-    import { pythonURI, javaURI, fetchOptions } from '{{ site.baseurl }}/assets/js/api/config.js';
-    window.pythonURI = pythonURI;
-    window.javaURI = javaURI;
-    window.fetchOptions = fetchOptions;
-  </script>
-  <script src="{{ site.baseurl }}/assets/js/ocs-analytics-enhanced.js"></script>
-  <script src="{{ site.baseurl }}/assets/js/code-runner-analytics.js"></script>
-  <script src="{{ site.baseurl }}/assets/js/lesson-completion.js"></script>
-  <script src="{{ site.baseurl }}/assets/js/lesson-completion-bigsix.js"></script>
 </article>
 
 {% endif %}
