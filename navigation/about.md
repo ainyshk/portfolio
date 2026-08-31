@@ -115,7 +115,7 @@ Here is what I did at those places
 Gallery of Pics, scroll to the right for more ...
 </comment>
 <div class="image-gallery">
+  <img src="{{ site.baseurl }}/images/image_of_me.jpeg" alt="Image of Me">
   <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800" alt="Code Image">
   <img src="https://images.unsplash.com/photo-1509228468518-180dd4864904?w=800" alt="Math Image">
-  <img src="{{ site.baseurl }}/images/IMG_3914.jpeg" alt="Image of me">
 </div>
