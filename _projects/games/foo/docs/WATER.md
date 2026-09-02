@@ -1,10 +1,10 @@
 ---
 layout: post
 title: Adventure Game - Sample Level Documentation
-description: Example of how to document a level while building a team gamify project
-category: Gamify
+description: Example of how to document a level while building a team foo project
+category: Foo
 breadcrumb: true
-permalink: /gamify/gamelevelwater
+permalink: /foo/gamelevelwater
 ---
 
 ## Why Document Your Work
@@ -32,10 +32,10 @@ Build a water-themed level that teaches students how a level is assembled from b
 
 ### Files Added 
 
-- `_projects/gamify/levels/GameLevelWater.js`
-- `_projects/gamify/images/water/deepseadungeon.jpeg`
-- `_projects/gamify/images/water/octopus.png`
-- `_projects/gamify/images/water/shark.png`
+- `_projects/foo/levels/GameLevelWater.js`
+- `_projects/foo/images/water/deepseadungeon.jpeg`
+- `_projects/foo/images/water/octopus.png`
+- `_projects/foo/images/water/shark.png`
 
 ### What We Implemented
 
@@ -43,12 +43,12 @@ Build a water-themed level that teaches students how a level is assembled from b
 - Configured Octopus as the main player
 - Added Shark as an enemy object
 - Added NPC interactions and movement setup
-- Kept all assets inside the `_projects/gamify` structure
+- Kept all assets inside the `_projects/foo` structure
 
 ### How We Tested
 
 - Ran `make dev`
-- Opened the local site and loaded the gamify project
+- Opened the local site and loaded the foo project
 - Checked that the background loaded correctly
 - Verified the player sprite rendered and moved
 - Confirmed enemy/NPC objects appeared in the level

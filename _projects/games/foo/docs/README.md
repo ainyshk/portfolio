@@ -2,14 +2,14 @@
 layout: post
 title: Adventure Game - Overview
 description: README starting documentation for the adventure game 
-category: Gamify
+category: Foo
 breadcrumb: true
-permalink: /gamify/overview
+permalink: /foo/overview
 ---
 
 ## Directory Structure
 
-Project-friendly project organization for the introductory gamify experience.
+Project-friendly project organization for the introductory foo experience.
 
 ```text
 _projects/foo/
@@ -93,8 +93,8 @@ GitHub Actions uses the same registered targets:
 
 Expected Actions log lines for project-level visibility:
 
-- 📦 Building project: gamify
-- 📚 Building docs for: gamify
+- 📦 Building project: foo
+- 📚 Building docs for: foo
 
 If docs verification is enabled in workflow, expect summary lines similar to:
 
@@ -105,7 +105,7 @@ These logs are the quickest way to confirm _projects registration and distributi
 
 ## Edit/Save Workflow
 
-1. Edit files in _projects/gamify/
+1. Edit files in _projects/foo/
 2. Save file and let auto-distribution run.
 3. Jekyll regenerates affected pages.
 4. Refresh browser and validate changes.
@@ -138,7 +138,7 @@ Track source files in _projects. Treat distributed files as generated artifacts.
 
 ```gitignore
 # Track source
-!_projects/gamify/**
+!_projects/foo/**
 
 # Ignore generated distribution
 _notebooks/projects/foo/
@@ -153,4 +153,4 @@ This README is the baseline introduction to the build system concepts. Real-worl
 
 For an example of lightweight team documentation, see the sample GameLevelWater write-up:
 
-- [Sample Level Documentation](/gamify/gamelevelwater)
+- [Sample Level Documentation](/foo/gamelevelwater)
