@@ -69,21 +69,34 @@ class GameLevelWater {
         *  It pauses the main game, creates a new GameControl instance with the StarWars level,
         */
         interact: function() {
-          // Set a primary game reference from the game environment
           let primaryGame = gameEnv.gameControl;
-          // Define the game in game level
-          let levelArray = [GameLevelStarWars];
-          // Define a new GameControl instance with the StarWars level
-          let gameInGame = new GameControl(path,levelArray);
-          // Pause the primary game 
-          primaryGame.pause();
-          // Start the game in game
-          gameInGame.start();
-          // Setup "callback" function to allow transition from game in gaame to the underlying game
-          gameInGame.gameOver = function() {
-            // Call .resume on primary game
-            primaryGame.resume();
-          }
+          this.dialogueSystem.showDialogue(
+            this.spriteData.greeting,
+            this.spriteData.id,
+            this.spriteData.src,
+            this.spriteData
+          );
+          this.dialogueSystem.addButtons([
+            {
+              text: "Go to Star Wars",
+              primary: true,
+              action: () => {
+                this.dialogueSystem.closeDialogue();
+                primaryGame.pause();
+
+                const levelArray = [GameLevelStarWars];
+                const gameInGame = new GameControl(
+                  gameEnv.game,
+                  levelArray,
+                  { parentControl: primaryGame }
+                );
+                gameInGame.gameOver = function() {
+                  primaryGame.resume();
+                };
+                gameInGame.start();
+              }
+            }
+          ]);
         }
       };
 
