@@ -711,6 +711,28 @@ class GameLevelDesert {
             }, 5000);
         };
 
+        const sprite_src_steve = path + '/images/projects/gamify/steve.png';
+        const sprite_greet_steve = 'Hi. I\'m Steve, a Minecraft character.';
+        const sprite_data_steve = {
+            id: 'Steve',
+            greeting: sprite_greet_steve,
+            src: sprite_src_steve,
+            SCALE_FACTOR: 7,
+            ANIMATION_RATE: 25,
+            pixels: { height: 256, width: 128 },
+            INIT_POSITION: { x: 0.8, y: 0.35 },
+            orientation: { rows: 8, columns: 4 },
+            down: { row: 1, start: 0, columns: 4 },
+            downRight: { row: 7, start: 0, columns: 4, rotate: Math.PI / 8 },
+            downLeft: { row: 5, start: 0, columns: 4, rotate: -Math.PI / 8 },
+            left: { row: 5, start: 0, columns: 4 },
+            right: { row: 7, start: 0, columns: 4 },
+            up: { row: 3, start: 0, columns: 4 },
+            upLeft: { row: 5, start: 0, columns: 4, rotate: Math.PI / 8 },
+            upRight: { row: 7, start: 0, columns: 4, rotate: -Math.PI / 8 },
+            hitbox: { widthPercentage: 0.45, heightPercentage: 0.2 }
+        };
+
 
 
         // List of objects defnitions for this level
@@ -725,6 +747,7 @@ class GameLevelDesert {
             { class: Npc, data: sprite_data_stocks },
             { class: Npc, data: sprite_data_crypto },
             { class: Npc, data: sprite_data_chickenj },
+            { class: Npc, data: sprite_data_steve },
             { class: Clicker, data: sprite_data_historian },
         ];
 
