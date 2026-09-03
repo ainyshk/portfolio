@@ -8,9 +8,7 @@ import AiNpc from '@assets/js/GameEnginev1.1/essentials/AiNpc.js';
 import Clicker from '@assets/js/GameEnginev1.1/essentials/Clicker.js';
 import Coin from '@assets/js/GameEnginev1.1/Coin.js';
 import GameLevelStarWars from './GameLevelStarWars.js';
-import PlatformerMini from './PlatformerMini.js';
-
-// Import PlatformerMini (game-in-game)
+import GeoDash from './GeoDash.js';
 
 class GameLevelDesert {
     constructor(gameEnv) {
@@ -229,11 +227,12 @@ class GameLevelDesert {
                         primary: true,
                         action: () => {
                             this.dialogueSystem.closeDialogue();
-                            pauseRpg();
-                            platformerMini.onExit = () => {
-                                resumeRpg();
-                            };
-                            platformerMini.start();
+                            const primaryGame = gameEnv.gameControl;
+                            primaryGame.pause();
+                            const geoDashGame = new GameControl(gameEnv.game, [GeoDash], {
+                                parentControl: primaryGame
+                            });
+                            geoDashGame.start();
                         }
                     },
                     {
@@ -682,34 +681,6 @@ class GameLevelDesert {
         };
 
 
-
-        // ===== PLATFORMER MINI GAME SETUP =====
-        // PlatformerMini is a game-in-game launched by Chicken Jockey NPC
-        const platformerMini = new PlatformerMini(gameEnv);
-
-        let isRpgPaused = false;
-        let desertMovementInterval, desertAnimationInterval;
-
-        const pauseRpg = () => {
-            if (isRpgPaused) return;
-            isRpgPaused = true;
-
-            clearInterval(desertMovementInterval);
-            clearInterval(desertAnimationInterval);
-        };
-
-        const resumeRpg = () => {
-            if (!isRpgPaused) return;
-            isRpgPaused = false;
-
-            desertMovementInterval = setInterval(() => {
-            // Resume any movement logic if needed
-            }, 100);
-
-            desertAnimationInterval = setInterval(() => {
-            // Resume any animation logic if needed
-            }, 5000);
-        };
 
         const sprite_src_steve = path + '/images/projects/gamify/end_steve.png';
         const sprite_greet_steve = 'Hi. I\'m Steve, a Minecraft character.';
