@@ -711,7 +711,7 @@ class GameLevelDesert {
             }, 5000);
         };
 
-        const sprite_src_steve = path + '/images/projects/gamify/steve.png';
+        const sprite_src_steve = path + '/images/projects/gamify/end_steve.png';
         const sprite_greet_steve = 'Hi. I\'m Steve, a Minecraft character.';
         const sprite_data_steve = {
             id: 'Steve',
