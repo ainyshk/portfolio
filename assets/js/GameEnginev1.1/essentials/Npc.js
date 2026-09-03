@@ -28,7 +28,8 @@ class Npc extends Character {
         if (data?.dialogues) {
             this.dialogueSystem = new DialogueSystem({
                 dialogues: data.dialogues,
-                id: this.uniqueId
+                id: this.uniqueId,
+                gameControl: gameEnv?.gameControl
             });
         } else {
             // Create a default dialogue system with a greeting based on NPC data
@@ -40,7 +41,8 @@ class Npc extends Character {
                     "I've been standing here for quite some time."
                 ],
                 // Pass unique ID to prevent conflicts
-                id: this.uniqueId
+                id: this.uniqueId,
+                gameControl: gameEnv?.gameControl
             });
         }
 
@@ -139,6 +141,17 @@ class Npc extends Character {
                 this.alertTimeout = null;
             }
         }
+    }
+
+    handleClick(event) {
+        if (typeof this.interact !== 'function' || this.isInteracting) return;
+        if (this.gameEnv?.gameControl?.isPaused) return;
+
+        this.isInteracting = true;
+        this.interact.call(this, event);
+        setTimeout(() => {
+            this.isInteracting = false;
+        }, 500);
     }
 
     handleKeyInteract() {
