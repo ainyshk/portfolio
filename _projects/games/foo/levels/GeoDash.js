@@ -19,17 +19,19 @@ class GeoDashRunner {
         this.keys = new Set();
         this.player = { x: 120, y: 0, width: 58, height: 58, velocityY: 0 };
         this.groundY = this.canvas.height - 100;
-        this.gravity = 0.85;
-        this.jumpVelocity = -16;
-        this.speed = 6;
+        this.gravity = 0.95;
+        this.jumpVelocity = -15.5;
+        this.speed = 8;
         this.distance = 0;
         this.frame = 0;
         this.gameOver = false;
         this.obstacles = [
-            { x: 620, width: 42, height: 58 },
-            { x: 980, width: 52, height: 82 },
-            { x: 1400, width: 42, height: 110 },
-            { x: 1770, width: 60, height: 64 }
+            { x: 520, width: 36, height: 58, type: 'spike' },
+            { x: 760, width: 72, height: 58, type: 'double-spike' },
+            { x: 1080, width: 48, height: 102, type: 'block' },
+            { x: 1330, width: 108, height: 58, type: 'triple-spike' },
+            { x: 1660, width: 48, height: 128, type: 'block' },
+            { x: 1910, width: 72, height: 58, type: 'double-spike' }
         ];
 
         this.handleKeyDown = (event) => {
@@ -71,12 +73,19 @@ class GeoDashRunner {
         }
 
         for (const obstacle of this.obstacles) obstacle.x -= this.speed;
+        this.speed = Math.min(11, 8 + Math.floor(this.distance / 1800));
         const lastObstacle = this.obstacles[this.obstacles.length - 1];
-        if (lastObstacle.x < this.canvas.width - 180) {
+        if (lastObstacle.x < this.canvas.width - 240) {
+            const patterns = [
+                { width: 36, height: 58, type: 'spike' },
+                { width: 72, height: 58, type: 'double-spike' },
+                { width: 48, height: 105, type: 'block' },
+                { width: 108, height: 58, type: 'triple-spike' }
+            ];
+            const pattern = patterns[Math.floor(Math.random() * patterns.length)];
             this.obstacles.push({
-                x: lastObstacle.x + 300 + Math.random() * 180,
-                width: 40 + Math.random() * 28,
-                height: 45 + Math.random() * 75
+                ...pattern,
+                x: lastObstacle.x + 230 + Math.random() * 100
             });
         }
         this.obstacles = this.obstacles.filter(obstacle => obstacle.x + obstacle.width > -40);
@@ -116,10 +125,22 @@ class GeoDashRunner {
 
         for (const obstacle of this.obstacles) {
             const y = this.groundY - obstacle.height;
-            ctx.fillStyle = '#ff5d73';
-            ctx.fillRect(obstacle.x, y, obstacle.width, obstacle.height);
-            ctx.fillStyle = '#ffd166';
-            ctx.fillRect(obstacle.x + 7, y + 7, obstacle.width - 14, 7);
+            ctx.fillStyle = obstacle.type === 'block' ? '#ff5d73' : '#ff4f78';
+            if (obstacle.type === 'block') {
+                ctx.fillRect(obstacle.x, y, obstacle.width, obstacle.height);
+                ctx.fillStyle = '#ffd166';
+                ctx.fillRect(obstacle.x + 7, y + 7, obstacle.width - 14, 7);
+            } else {
+                const spikeCount = obstacle.type === 'triple-spike' ? 3 : obstacle.type === 'double-spike' ? 2 : 1;
+                const spikeWidth = obstacle.width / spikeCount;
+                for (let spike = 0; spike < spikeCount; spike++) {
+                    ctx.beginPath();
+                    ctx.moveTo(obstacle.x + spike * spikeWidth, this.groundY);
+                    ctx.lineTo(obstacle.x + (spike + 0.5) * spikeWidth, y);
+                    ctx.lineTo(obstacle.x + (spike + 1) * spikeWidth, this.groundY);
+                    ctx.fill();
+                }
+            }
         }
 
         if (this.steve.complete && this.steve.naturalWidth) {

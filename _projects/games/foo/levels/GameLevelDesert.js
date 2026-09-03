@@ -9,6 +9,7 @@ import Clicker from '@assets/js/GameEnginev1.1/essentials/Clicker.js';
 import Coin from '@assets/js/GameEnginev1.1/Coin.js';
 import GameLevelStarWars from './GameLevelStarWars.js';
 import GeoDash from './GeoDash.js';
+import PlatformerMini from './PlatformerMini.js';
 
 class GameLevelDesert {
     constructor(gameEnv) {
@@ -227,12 +228,11 @@ class GameLevelDesert {
                         primary: true,
                         action: () => {
                             this.dialogueSystem.closeDialogue();
-                            const primaryGame = gameEnv.gameControl;
-                            primaryGame.pause();
-                            const geoDashGame = new GameControl(gameEnv.game, [GeoDash], {
-                                parentControl: primaryGame
-                            });
-                            geoDashGame.start();
+                            pauseRpg();
+                            platformerMini.onExit = () => {
+                                resumeRpg();
+                            };
+                            platformerMini.start();
                         }
                     },
                     {
@@ -681,9 +681,27 @@ class GameLevelDesert {
         };
 
 
+        const platformerMini = new PlatformerMini(gameEnv);
+        let isRpgPaused = false;
+        let desertMovementInterval;
+        let desertAnimationInterval;
+
+        const pauseRpg = () => {
+            if (isRpgPaused) return;
+            isRpgPaused = true;
+            clearInterval(desertMovementInterval);
+            clearInterval(desertAnimationInterval);
+        };
+
+        const resumeRpg = () => {
+            if (!isRpgPaused) return;
+            isRpgPaused = false;
+            desertMovementInterval = setInterval(() => {}, 100);
+            desertAnimationInterval = setInterval(() => {}, 5000);
+        };
 
         const sprite_src_steve = path + '/images/projects/gamify/end_steve.png';
-        const sprite_greet_steve = 'Hi. I\'m Steve, a Minecraft character.';
+        const sprite_greet_steve = 'Hi. I\'m Steve. Press E to enter Steve Dash.';
         const sprite_data_steve = {
             id: 'Steve',
             greeting: sprite_greet_steve,
@@ -701,7 +719,15 @@ class GameLevelDesert {
             up: { row: 3, start: 0, columns: 4 },
             upLeft: { row: 5, start: 0, columns: 4, rotate: Math.PI / 8 },
             upRight: { row: 7, start: 0, columns: 4, rotate: -Math.PI / 8 },
-            hitbox: { widthPercentage: 0.45, heightPercentage: 0.2 }
+            hitbox: { widthPercentage: 0.45, heightPercentage: 0.2 },
+            interact: function() {
+                const primaryGame = gameEnv.gameControl;
+                primaryGame.pause();
+                const geoDashGame = new GameControl(gameEnv.game, [GeoDash], {
+                    parentControl: primaryGame
+                });
+                geoDashGame.start();
+            }
         };
 
 
