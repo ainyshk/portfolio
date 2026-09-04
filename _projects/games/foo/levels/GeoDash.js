@@ -23,16 +23,29 @@ class GeoDashRunner {
         this.jumpVelocity = -15.5;
         this.speed = 8;
         this.distance = 0;
+        this.levelLength = 5000;
         this.frame = 0;
         this.gameOver = false;
-        this.obstacles = [
-            { x: 520, width: 36, height: 58, type: 'spike' },
-            { x: 760, width: 72, height: 58, type: 'double-spike' },
-            { x: 1080, width: 48, height: 102, type: 'block' },
-            { x: 1330, width: 108, height: 58, type: 'triple-spike' },
-            { x: 1660, width: 48, height: 128, type: 'block' },
-            { x: 1910, width: 72, height: 58, type: 'double-spike' }
+        
+        // Fixed level sequence inspired by classic Geometry Dash
+        this.levelMap = [
+            { pos: 400, width: 32, height: 58, type: 'spike', deadly: true },
+            { pos: 650, width: 60, height: 80, type: 'block', deadly: false },
+            { pos: 950, width: 32, height: 58, type: 'spike', deadly: true },
+            { pos: 1200, width: 48, height: 90, type: 'block', deadly: false },
+            { pos: 1400, width: 64, height: 58, type: 'double-spike', deadly: true },
+            { pos: 1700, width: 72, height: 100, type: 'block', deadly: false },
+            { pos: 1950, width: 48, height: 120, type: 'block', deadly: false },
+            { pos: 2200, width: 96, height: 58, type: 'triple-spike', deadly: true },
+            { pos: 2500, width: 80, height: 110, type: 'block', deadly: false },
+            { pos: 2750, width: 32, height: 58, type: 'spike', deadly: true },
+            { pos: 3000, width: 64, height: 58, type: 'double-spike', deadly: true },
+            { pos: 3300, width: 100, height: 80, type: 'block', deadly: false },
+            { pos: 3600, width: 96, height: 58, type: 'triple-spike', deadly: true },
+            { pos: 3900, width: 48, height: 120, type: 'block', deadly: false },
+            { pos: 4200, width: 128, height: 58, type: 'triple-spike', deadly: true }
         ];
+        this.obstacles = this.levelMap.map(obs => ({ ...obs }));
 
         this.handleKeyDown = (event) => {
             this.keys.add(event.code);
@@ -74,26 +87,18 @@ class GeoDashRunner {
 
         for (const obstacle of this.obstacles) obstacle.x -= this.speed;
         this.speed = Math.min(11, 8 + Math.floor(this.distance / 1800));
-        const lastObstacle = this.obstacles[this.obstacles.length - 1];
-        if (lastObstacle.x < this.canvas.width - 240) {
-            const patterns = [
-                { width: 36, height: 58, type: 'spike' },
-                { width: 72, height: 58, type: 'double-spike' },
-                { width: 48, height: 105, type: 'block' },
-                { width: 108, height: 58, type: 'triple-spike' }
-            ];
-            const pattern = patterns[Math.floor(Math.random() * patterns.length)];
-            this.obstacles.push({
-                ...pattern,
-                x: lastObstacle.x + 230 + Math.random() * 100
-            });
-        }
         this.obstacles = this.obstacles.filter(obstacle => obstacle.x + obstacle.width > -40);
         this.distance += this.speed;
         this.frame = (this.frame + 1) % 4;
 
-        if (this.obstacles.some(obstacle => this.intersects(obstacle))) {
+        // Only check collision with deadly obstacles
+        if (this.obstacles.some(obstacle => obstacle.deadly && this.intersects(obstacle))) {
             this.endGame();
+        }
+        
+        // Check if level is complete
+        if (this.distance >= this.levelLength) {
+            this.levelComplete();
         }
         this.draw();
     }
@@ -123,14 +128,18 @@ class GeoDashRunner {
         ctx.fillStyle = '#44e0c1';
         ctx.fillRect(0, this.groundY, canvas.width, 8);
 
+        // Draw progress bar
+        const progress = Math.min(100, Math.floor((this.distance / this.levelLength) * 100));
+        ctx.fillStyle = '#44e0c1';
+        ctx.fillRect(24, canvas.height - 30, (canvas.width - 48) * (progress / 100), 10);
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(24, canvas.height - 30, canvas.width - 48, 10);
+
         for (const obstacle of this.obstacles) {
             const y = this.groundY - obstacle.height;
-            ctx.fillStyle = obstacle.type === 'block' ? '#ff5d73' : '#ff4f78';
-            if (obstacle.type === 'block') {
-                ctx.fillRect(obstacle.x, y, obstacle.width, obstacle.height);
-                ctx.fillStyle = '#ffd166';
-                ctx.fillRect(obstacle.x + 7, y + 7, obstacle.width - 14, 7);
-            } else {
+            if (obstacle.deadly) {
+                ctx.fillStyle = '#ff4f78';
                 const spikeCount = obstacle.type === 'triple-spike' ? 3 : obstacle.type === 'double-spike' ? 2 : 1;
                 const spikeWidth = obstacle.width / spikeCount;
                 for (let spike = 0; spike < spikeCount; spike++) {
@@ -140,6 +149,11 @@ class GeoDashRunner {
                     ctx.lineTo(obstacle.x + (spike + 1) * spikeWidth, this.groundY);
                     ctx.fill();
                 }
+            } else {
+                ctx.fillStyle = '#5d5d9f';
+                ctx.fillRect(obstacle.x, y, obstacle.width, obstacle.height);
+                ctx.fillStyle = '#7d7daf';
+                ctx.fillRect(obstacle.x + 4, y + 4, obstacle.width - 8, obstacle.height - 8);
             }
         }
 
@@ -152,7 +166,7 @@ class GeoDashRunner {
 
         ctx.fillStyle = '#ffffff';
         ctx.font = 'bold 18px monospace';
-        ctx.fillText(`STEVE DASH   ${Math.floor(this.distance / 10)}m`, 24, 34);
+        ctx.fillText(`STEVE DASH   ${progress}%`, 24, 34);
         if (!this.gameOver && this.message && performance.now() < this.messageUntil) {
             ctx.textAlign = 'center';
             ctx.fillText(this.message, canvas.width / 2, 70);
@@ -168,7 +182,13 @@ class GeoDashRunner {
 
     endGame() {
         this.gameOver = true;
-        this.message = 'STEVE HIT AN OBSTACLE';
+        this.message = 'STEVE HIT A SPIKE!';
+        this.showReturnButton();
+    }
+
+    levelComplete() {
+        this.gameOver = true;
+        this.message = 'LEVEL COMPLETE!';
         this.showReturnButton();
     }
 
