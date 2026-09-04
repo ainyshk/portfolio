@@ -62,7 +62,7 @@ class GeoDashRunner {
         this.jumpVelocity = -15.5;
         this.speed = 8;
         this.distance = 0;
-        this.levelLength = 4500;
+        this.levelLength = 9000;
         this.frame = 0;
         this.gameOver = false;
         this.winner = null;
@@ -89,7 +89,9 @@ class GeoDashRunner {
             { pos: 3700, width: 48, height: 110, type: 'block', deadly: false },
             { pos: 3900, width: 128, height: 60, type: 'triple-spike', deadly: true }
         ];
-        this.obstacles = this.levelMap.map(obs => ({ ...obs }));
+        this.obstacles = this.levelMap.map(obs => ({ ...obs, x: obs.pos }));
+        this.nextObstaclePosition = 4200;
+        this.dynamicPatternIndex = 0;
 
         this.handleKeyDown = (event) => {
             this.keys.add(event.code);
@@ -110,6 +112,33 @@ class GeoDashRunner {
     showStartScreen() {
         this.message = 'STEVE DASH  |  SPACE / W / UP TO JUMP';
         this.messageUntil = performance.now() + 2500;
+    }
+
+    spawnUpcomingObstacles() {
+        const patterns = [
+            [{ width: 32, height: 60, type: 'spike', deadly: true }],
+            [{ width: 48, height: 70, type: 'block', deadly: false }, { width: 64, height: 90, type: 'block', deadly: false }],
+            [{ width: 32, height: 60, type: 'spike', deadly: true }],
+            [{ width: 64, height: 60, type: 'double-spike', deadly: true }],
+            [{ width: 60, height: 80, type: 'block', deadly: false }, { width: 32, height: 60, type: 'spike', deadly: true }]
+        ];
+        const pattern = patterns[this.dynamicPatternIndex % patterns.length];
+        const gap = pattern.length === 2 ? 270 : 300;
+        pattern.forEach((obstacle, index) => {
+            this.obstacles.push({
+                ...obstacle,
+                pos: this.nextObstaclePosition + index * 80,
+                x: this.nextObstaclePosition + index * 80
+            });
+        });
+        this.nextObstaclePosition += gap;
+        this.dynamicPatternIndex += 1;
+    }
+
+    ensureUpcomingObstacles() {
+        while (this.nextObstaclePosition < this.distance + this.canvas.width + 500 && this.nextObstaclePosition < this.levelLength) {
+            this.spawnUpcomingObstacles();
+        }
     }
 
     update() {
@@ -150,6 +179,7 @@ class GeoDashRunner {
         }
 
         for (const obstacle of this.obstacles) obstacle.x -= this.speed;
+        this.ensureUpcomingObstacles();
         this.speed = Math.min(11, 8 + Math.floor(this.distance / 1800));
         this.obstacles = this.obstacles.filter(obstacle => obstacle.x + obstacle.width > -40);
         this.distance += this.speed;
