@@ -1,6 +1,7 @@
 class GeoDashRunner {
     constructor(data, gameEnv) {
         this.gameEnv = gameEnv;
+        this.parentControl = gameEnv && gameEnv.gameControl ? gameEnv.gameControl : null;
         this.canvas = document.createElement('canvas');
         this.canvas.id = 'geoDashCanvas';
         this.canvas.width = gameEnv.innerWidth;
@@ -330,7 +331,13 @@ class GeoDashRunner {
             cursor: 'pointer',
             font: 'bold 16px monospace'
         });
-        this.returnButton.addEventListener('click', () => this.gameEnv.gameControl.endLevel());
+        this.returnButton.addEventListener('click', () => {
+            if (this.parentControl && this.parentControl.isNested) {
+                this.parentControl.endLevel();
+            } else if (this.gameEnv && this.gameEnv.gameControl) {
+                this.gameEnv.gameControl.endLevel();
+            }
+        });
         document.body.appendChild(this.returnButton);
     }
 
