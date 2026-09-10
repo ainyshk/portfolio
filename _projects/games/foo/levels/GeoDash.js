@@ -2,17 +2,26 @@ class GeoDashRunner {
     constructor(data, gameEnv) {
         this.gameEnv = gameEnv;
         this.parentControl = gameEnv && gameEnv.gameControl ? gameEnv.gameControl : null;
+        this.container = (gameEnv && gameEnv.container) || document.body;
+        if (this.container) {
+            this.container.style.position = this.container.style.position || 'relative';
+        }
+
         this.canvas = document.createElement('canvas');
         this.canvas.id = 'geoDashCanvas';
         this.canvas.width = gameEnv.innerWidth;
         this.canvas.height = gameEnv.innerHeight;
         Object.assign(this.canvas.style, {
-            position: 'fixed',
-            inset: '0',
-            zIndex: '10000',
+            position: 'absolute',
+            left: '0px',
+            top: '0px',
+            width: `${gameEnv.innerWidth}px`,
+            height: `${gameEnv.innerHeight}px`,
+            zIndex: '5',
+            display: 'block',
             imageRendering: 'pixelated'
         });
-        gameEnv.container.appendChild(this.canvas);
+        this.container.appendChild(this.canvas);
         this.ctx = this.canvas.getContext('2d');
 
         this.steve = new Image();
@@ -224,11 +233,11 @@ class GeoDashRunner {
         this.returnButton = document.createElement('button');
         this.returnButton.textContent = 'Return to Desert';
         Object.assign(this.returnButton.style, {
-            position: 'fixed',
+            position: 'absolute',
             left: '50%',
             top: '58%',
             transform: 'translate(-50%, -50%)',
-            zIndex: '10002',
+            zIndex: '10',
             padding: '12px 20px',
             background: '#44e0c1',
             color: '#11142e',
@@ -243,7 +252,7 @@ class GeoDashRunner {
                 this.gameEnv.gameControl.endLevel();
             }
         });
-        document.body.appendChild(this.returnButton);
+        this.container.appendChild(this.returnButton);
     }
 
     destroy() {
