@@ -722,10 +722,13 @@ class GameLevelDesert {
             hitbox: { widthPercentage: 0.45, heightPercentage: 0.2 },
             interact: function() {
                 const primaryGame = gameEnv.gameControl;
-                primaryGame.pause();
                 const geoDashGame = new GameControl(gameEnv.game, [GeoDash], {
                     parentControl: primaryGame
                 });
+                primaryGame.pause();
+                geoDashGame.gameOver = function() {
+                    primaryGame.resume();
+                };
                 geoDashGame.start();
             }
         };
