@@ -42,15 +42,15 @@ export class GeoDashRunner {
         this.groundY = this.canvas.height - 100;
         this.gravity = 0.95;
         this.jumpVelocity = -15.5;
-        this.speed = 8; // Strictly locked speed
+        this.speed = 8;
         this.distance = 0;
         this.levelLength = 9000;
         this.frame = 0;
         this.gameOver = false;
 
-        // Player Definitions (Steve & Alex)
-        this.player1 = { name: 'Steve', x: 130, y: 0, width: 58, height: 58, velocityY: 0, rotation: 0 };
-        this.player2 = { name: 'Alex', x: 70, y: 0, width: 58, height: 58, velocityY: 0, rotation: 0 };
+        // Player Definitions
+        this.player1 = { name: 'Steve', x: 130, y: 0, width: 58, height: 58, velocityY: 0, rotation: 0, onGround: false };
+        this.player2 = { name: 'Alex', x: 70, y: 0, width: 58, height: 58, velocityY: 0, rotation: 0, onGround: false };
 
         // Structured Map Obstacles
         this.levelMap = [
@@ -122,22 +122,44 @@ export class GeoDashRunner {
     }
 
     updatePlayerPhysics(player, jumpPressed) {
-        const onGround = Math.abs((player.y + player.height) - this.groundY) <= 2 || 
-                         player.y >= this.groundY - player.height;
-
-        if (jumpPressed && onGround) {
-            player.velocityY = this.jumpVelocity;
-        }
-
         player.velocityY += this.gravity;
         player.y += player.velocityY;
 
-        if (player.y >= this.groundY - player.height) {
-            player.y = this.groundY - player.height;
+        // Check platform and ground landings
+        let currentGround = this.groundY;
+
+        for (const obstacle of this.obstacles) {
+            if (!obstacle.deadly) {
+                const blockTop = this.groundY - obstacle.height;
+                const playerBottom = player.y + player.height;
+                const prevBottom = playerBottom - player.velocityY;
+
+                // Land on top of block
+                if (
+                    player.x + player.width > obstacle.x &&
+                    player.x < obstacle.x + obstacle.width &&
+                    prevBottom <= blockTop + 10 &&
+                    playerBottom >= blockTop
+                ) {
+                    currentGround = Math.min(currentGround, blockTop);
+                }
+            }
+        }
+
+        // Clamp to ground or top of block
+        if (player.y >= currentGround - player.height) {
+            player.y = currentGround - player.height;
             player.velocityY = 0;
             player.rotation = 0;
+            player.onGround = true;
         } else {
+            player.onGround = false;
             player.rotation += 0.15;
+        }
+
+        if (jumpPressed && player.onGround) {
+            player.velocityY = this.jumpVelocity;
+            player.onGround = false;
         }
     }
 
@@ -161,13 +183,13 @@ export class GeoDashRunner {
         }
 
         this.ensureUpcomingObstacles();
-        this.speed = 8; // Preserved constant speed
+        this.speed = 8;
         this.obstacles = this.obstacles.filter(obs => obs.x + obs.width > -50);
         this.distance += this.speed;
         this.frame = (this.frame + 1) % 4;
 
-        // Collision Checking
-        if (this.obstacles.some(obstacle => this.intersects(this.player1, obstacle) || this.intersects(this.player2, obstacle))) {
+        // Check ONLY deadly hazards (spikes) for collisions
+        if (this.obstacles.some(obstacle => obstacle.deadly && (this.intersects(this.player1, obstacle) || this.intersects(this.player2, obstacle)))) {
             this.endGame();
         }
 
@@ -235,7 +257,7 @@ export class GeoDashRunner {
         ctx.lineWidth = 1;
         ctx.strokeRect(24, canvas.height - 25, canvas.width - 48, 8);
 
-        // Obstacles
+        // Obstacles & Safe Blocks
         for (const obstacle of this.obstacles) {
             const y = this.groundY - obstacle.height;
             if (obstacle.deadly) {
