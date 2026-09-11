@@ -29,24 +29,22 @@ export class GeoDashRunner {
         this.container.appendChild(this.canvas);
         this.ctx = this.canvas.getContext('2d');
 
-        // Asset Initialization
+        // Assets
         this.steveImage = new Image();
         this.steveImage.src = `${gameEnv.path || ''}/images/projects/gamify/end_steve.png`;
 
         this.alexImage = new Image();
         this.alexImage.src = `${gameEnv.path || ''}/images/projects/gamify/Alex.png`;
 
-        // Input & Physics Config (Balanced for smooth gameplay)
+        // Inputs & Physics Config matching your exact parameters
         this.keys = new Set();
         this.mouseHeld = false;
         this.groundY = this.canvas.height - 100;
         
-        // Physics tuned for predictable, standard Geometry Dash leaps
-        this.gravity = 0.65;
-        this.jumpVelocity = -12.8;
+        this.gravity = 0.95;
+        this.jumpVelocity = -15.5;
+        this.speed = 8; // Locked constant movement speed (no acceleration)
         
-        // Locked constant speed (no acceleration spikes)
-        this.speed = 5.5;
         this.distance = 0;
         this.levelLength = 9000;
         this.frame = 0;
@@ -55,13 +53,13 @@ export class GeoDashRunner {
         // Player 1: Steve
         this.steve = {
             name: 'Steve',
-            x: 120,
+            x: 80,
             y: 0,
-            width: 50,
-            height: 50,
+            width: 58,
+            height: 58,
             velocityY: 0,
             rotation: 0,
-            color: '#ffc000',
+            color: '#55a7ff',
             image: this.steveImage,
             isDead: false,
             onGround: false
@@ -70,13 +68,13 @@ export class GeoDashRunner {
         // Player 2: Alex
         this.alex = {
             name: 'Alex',
-            x: 180,
+            x: 160,
             y: 0,
-            width: 50,
-            height: 50,
+            width: 58,
+            height: 58,
             velocityY: 0,
             rotation: 0,
-            color: '#00ffcc',
+            color: '#ff7f50',
             image: this.alexImage,
             isDead: false,
             onGround: false
@@ -84,24 +82,25 @@ export class GeoDashRunner {
 
         this.players = [this.steve, this.alex];
 
-        // Hand-balanced Level Map with safe landing landing/jumping gaps
+        // Hand-calibrated level layout for guaranteed jump playability
         this.levelMap = [
-            { pos: 450, width: 36, height: 50, type: 'spike', deadly: true },
-            { pos: 750, width: 80, height: 60, type: 'block', deadly: false },
-            { pos: 1100, width: 36, height: 50, type: 'spike', deadly: true },
-            { pos: 1400, width: 72, height: 50, type: 'double-spike', deadly: true },
-            { pos: 1750, width: 90, height: 70, type: 'block', deadly: false },
-            { pos: 2150, width: 36, height: 50, type: 'spike', deadly: true },
-            { pos: 2500, width: 108, height: 50, type: 'triple-spike', deadly: true },
-            { pos: 2900, width: 100, height: 80, type: 'block', deadly: false },
-            { pos: 3300, width: 72, height: 50, type: 'double-spike', deadly: true }
+            { pos: 400, width: 32, height: 60, type: 'spike', deadly: true },
+            { pos: 650, width: 80, height: 80, type: 'block', deadly: false },
+            { pos: 950, width: 32, height: 60, type: 'spike', deadly: true },
+            { pos: 1250, width: 64, height: 60, type: 'double-spike', deadly: true },
+            { pos: 1600, width: 90, height: 80, type: 'block', deadly: false },
+            { pos: 1950, width: 32, height: 60, type: 'spike', deadly: true },
+            { pos: 2300, width: 96, height: 60, type: 'triple-spike', deadly: true },
+            { pos: 2700, width: 100, height: 90, type: 'block', deadly: false },
+            { pos: 3100, width: 64, height: 60, type: 'double-spike', deadly: true },
+            { pos: 3500, width: 96, height: 60, type: 'triple-spike', deadly: true }
         ];
 
         this.obstacles = this.levelMap.map(obs => ({ ...obs, x: obs.pos }));
-        this.nextObstaclePosition = 3700;
+        this.nextObstaclePosition = 3900;
         this.dynamicPatternIndex = 0;
 
-        // Key Listeners
+        // Controls
         this.handleKeyDown = (event) => {
             this.keys.add(event.code);
             if (['Space', 'ArrowUp', 'KeyW', 'KeyI'].includes(event.code)) {
@@ -110,7 +109,6 @@ export class GeoDashRunner {
         };
         this.handleKeyUp = (event) => this.keys.delete(event.code);
 
-        // Pointer / Touch Listeners
         this.handleMouseDown = () => { this.mouseHeld = true; };
         this.handleMouseUp = () => { this.mouseHeld = false; };
 
@@ -125,7 +123,7 @@ export class GeoDashRunner {
             p.y = this.groundY - p.height;
         });
 
-        this.message = 'P1 (STEVE): SPACE/W/CLICK | P2 (ALEX): I KEY';
+        this.message = 'P1 (STEVE): SPACE / W / CLICK | P2 (ALEX): ARROW UP / I KEY';
         this.messageUntil = performance.now() + 4000;
 
         this.loop = () => {
@@ -138,16 +136,16 @@ export class GeoDashRunner {
     }
 
     spawnUpcomingObstacles() {
-        // Fairly spaced obstacle patterns designed for high playability
         const patterns = [
-            [{ width: 36, height: 50, type: 'spike', deadly: true }],
-            [{ width: 80, height: 60, type: 'block', deadly: false }],
-            [{ width: 72, height: 50, type: 'double-spike', deadly: true }],
-            [{ width: 90, height: 70, type: 'block', deadly: false }]
+            [{ width: 32, height: 60, type: 'spike', deadly: true }],
+            [{ width: 80, height: 80, type: 'block', deadly: false }],
+            [{ width: 64, height: 60, type: 'double-spike', deadly: true }],
+            [{ width: 90, height: 90, type: 'block', deadly: false }],
+            [{ width: 96, height: 60, type: 'triple-spike', deadly: true }]
         ];
 
         const pattern = patterns[this.dynamicPatternIndex % patterns.length];
-        const gap = 420; // Wide gap ensuring player can always react and execute jumps
+        const gap = 450;
 
         pattern.forEach((obstacle, index) => {
             this.obstacles.push({
@@ -174,11 +172,11 @@ export class GeoDashRunner {
         }
 
         const steveJump = this.keys.has('Space') || 
-                          this.keys.has('ArrowUp') || 
                           this.keys.has('KeyW') || 
                           this.mouseHeld;
 
-        const alexJump = this.keys.has('KeyI');
+        const alexJump = this.keys.has('ArrowUp') || 
+                         this.keys.has('KeyI');
 
         this.players.forEach(player => {
             if (player.isDead) return;
@@ -186,21 +184,21 @@ export class GeoDashRunner {
             const isSteve = player === this.steve;
             const isJumpPressed = isSteve ? steveJump : alexJump;
 
-            // Physics calculation
+            // Apply gravity
             player.velocityY += this.gravity;
             let nextY = player.y + player.velocityY;
 
             player.onGround = false;
 
-            // Ground floor check
+            // Floor collision
             if (nextY >= this.groundY - player.height) {
                 nextY = this.groundY - player.height;
                 player.velocityY = 0;
-                player.rotation = Math.round(player.rotation / (Math.PI / 2)) * (Math.PI / 2);
+                player.rotation = 0;
                 player.onGround = true;
             }
 
-            // Clean platform landing check
+            // Block Platform Landing Check
             for (const obstacle of this.obstacles) {
                 if (!obstacle.deadly) {
                     const blockTop = this.groundY - obstacle.height;
@@ -210,13 +208,13 @@ export class GeoDashRunner {
                     const playerRight = player.x + player.width;
                     const playerLeft = player.x;
 
-                    // Horizontal overlap check with buffer
+                    // Check horizontal overlap
                     if (playerRight > blockLeft + 6 && playerLeft < blockRight - 6) {
-                        // Vertical landing check
-                        if (player.y + player.height <= blockTop + 14 && nextY + player.height >= blockTop) {
+                        // Check vertical top boundary landing
+                        if (player.y + player.height <= blockTop + 16 && nextY + player.height >= blockTop) {
                             nextY = blockTop - player.height;
                             player.velocityY = 0;
-                            player.rotation = Math.round(player.rotation / (Math.PI / 2)) * (Math.PI / 2);
+                            player.rotation = 0;
                             player.onGround = true;
                         }
                     }
@@ -225,19 +223,19 @@ export class GeoDashRunner {
 
             player.y = nextY;
 
-            // Execute jump if on ground or top of block
+            // Jump handling
             if (isJumpPressed && player.onGround) {
                 player.velocityY = this.jumpVelocity;
                 player.onGround = false;
             }
 
-            // Air rotation
+            // Air rotation effect
             if (!player.onGround) {
-                player.rotation += 0.08;
+                player.rotation += 0.15;
             }
         });
 
-        // Move active obstacles
+        // Constant speed world movement
         for (const obstacle of this.obstacles) {
             obstacle.x -= this.speed;
         }
@@ -247,7 +245,7 @@ export class GeoDashRunner {
         this.distance += this.speed;
         this.frame = (this.frame + 1) % 4;
 
-        // Precise Hitbox & Collision Checks
+        // Collision detection
         for (const player of this.players) {
             if (player.isDead) continue;
 
@@ -256,7 +254,7 @@ export class GeoDashRunner {
                 if (obstacle.deadly && this.intersects(player, obstacle)) {
                     player.isDead = true;
                 }
-                // Wall impact collision (running into side of block)
+                // Wall side-impact collision into blocks
                 else if (!obstacle.deadly) {
                     const blockTop = this.groundY - obstacle.height;
                     const blockLeft = obstacle.x;
@@ -283,7 +281,7 @@ export class GeoDashRunner {
 
     intersects(player, obstacle) {
         const obstacleY = this.groundY - obstacle.height;
-        const padding = 10; // Extra inner padding so hits feel precise and fair
+        const padding = 8;
 
         return (
             player.x + padding < obstacle.x + obstacle.width &&
@@ -296,32 +294,32 @@ export class GeoDashRunner {
     draw() {
         const { ctx, canvas } = this;
 
-        // Background
+        // Gradient Background
         const sky = ctx.createLinearGradient(0, 0, 0, canvas.height);
-        sky.addColorStop(0, '#0d1117');
-        sky.addColorStop(1, '#161b22');
+        sky.addColorStop(0, '#18204b');
+        sky.addColorStop(1, '#34234f');
         ctx.fillStyle = sky;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // Ground
-        ctx.fillStyle = '#090d16';
+        // Ground Floor
+        ctx.fillStyle = '#11142e';
         ctx.fillRect(0, this.groundY, canvas.width, canvas.height - this.groundY);
-        ctx.fillStyle = '#00f0ff';
-        ctx.fillRect(0, this.groundY, canvas.width, 6);
+        ctx.fillStyle = '#44e0c1';
+        ctx.fillRect(0, this.groundY, canvas.width, 8);
 
         // Progress Bar
         const progress = Math.min(100, Math.floor((this.distance / this.levelLength) * 100));
-        ctx.fillStyle = '#00f0ff';
-        ctx.fillRect(24, canvas.height - 25, (canvas.width - 48) * (progress / 100), 8);
+        ctx.fillStyle = '#44e0c1';
+        ctx.fillRect(24, canvas.height - 30, (canvas.width - 48) * (progress / 100), 10);
         ctx.strokeStyle = '#ffffff';
-        ctx.lineWidth = 1;
-        ctx.strokeRect(24, canvas.height - 25, canvas.width - 48, 8);
+        ctx.lineWidth = 2;
+        ctx.strokeRect(24, canvas.height - 30, canvas.width - 48, 10);
 
-        // Render Obstacles
+        // Draw Spikes and Blocks
         for (const obstacle of this.obstacles) {
             const y = this.groundY - obstacle.height;
             if (obstacle.deadly) {
-                ctx.fillStyle = '#ff2a6d';
+                ctx.fillStyle = '#ff4f78';
                 const spikeCount = obstacle.type === 'triple-spike' ? 3 : obstacle.type === 'double-spike' ? 2 : 1;
                 const spikeWidth = obstacle.width / spikeCount;
 
@@ -334,11 +332,10 @@ export class GeoDashRunner {
                     ctx.fill();
                 }
             } else {
-                ctx.fillStyle = '#05d9e8';
+                ctx.fillStyle = '#5d5d9f';
                 ctx.fillRect(obstacle.x, y, obstacle.width, obstacle.height);
-                ctx.strokeStyle = '#ffffff';
-                ctx.lineWidth = 2;
-                ctx.strokeRect(obstacle.x + 2, y + 2, obstacle.width - 4, obstacle.height - 4);
+                ctx.fillStyle = '#7d7daf';
+                ctx.fillRect(obstacle.x + 4, y + 4, obstacle.width - 8, obstacle.height - 8);
             }
         }
 
@@ -364,9 +361,9 @@ export class GeoDashRunner {
             ctx.restore();
         });
 
-        // UI Text
+        // Interface Elements
         ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 18px sans-serif';
+        ctx.font = 'bold 18px monospace';
         ctx.fillText(`PROGRESS: ${progress}%`, 24, 34);
 
         if (!this.gameOver && this.message && performance.now() < this.messageUntil) {
@@ -377,7 +374,7 @@ export class GeoDashRunner {
 
         if (this.gameOver) {
             ctx.textAlign = 'center';
-            ctx.font = 'bold 28px sans-serif';
+            ctx.font = 'bold 28px monospace';
             ctx.fillText(this.message, canvas.width / 2, canvas.height / 2 - 40);
             ctx.textAlign = 'left';
         }
@@ -409,12 +406,12 @@ export class GeoDashRunner {
             transform: 'translate(-50%, -50%)',
             zIndex: '10',
             padding: '12px 24px',
-            background: '#00f0ff',
-            color: '#090d16',
+            background: '#44e0c1',
+            color: '#11142e',
             border: 'none',
             borderRadius: '4px',
             cursor: 'pointer',
-            font: 'bold 16px sans-serif'
+            font: 'bold 16px monospace'
         });
 
         this.returnButton.addEventListener('click', () => {
