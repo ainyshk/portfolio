@@ -10,7 +10,7 @@ export class GeoDashRunner {
             this.container.style.position = this.container.style.position || 'relative';
         }
 
-        // Setup primary rendering canvas
+        // Canvas Setup
         this.canvas = document.createElement('canvas');
         this.canvas.id = 'geoDashCanvas';
         this.canvas.width = gameEnv.innerWidth || window.innerWidth;
@@ -29,7 +29,7 @@ export class GeoDashRunner {
         this.container.appendChild(this.canvas);
         this.ctx = this.canvas.getContext('2d');
 
-        // Asset Initialization
+        // Assets
         const path = gameEnv.path || '';
         this.steve = new Image();
         this.steve.src = `${path}/images/projects/gamify/end_steve.png`;
@@ -37,7 +37,7 @@ export class GeoDashRunner {
         this.alex = new Image();
         this.alex.src = `${path}/images/projects/gamify/Alex.png`;
 
-        // Input and Physics
+        // Physics Settings
         this.keys = new Set();
         this.groundY = this.canvas.height - 100;
         this.gravity = 0.95;
@@ -48,11 +48,11 @@ export class GeoDashRunner {
         this.frame = 0;
         this.gameOver = false;
 
-        // Player Definitions
-        this.player1 = { name: 'Steve', x: 130, y: 0, width: 58, height: 58, velocityY: 0, rotation: 0, onGround: false };
-        this.player2 = { name: 'Alex', x: 70, y: 0, width: 58, height: 58, velocityY: 0, rotation: 0, onGround: false };
+        // Players
+        this.player1 = { name: 'Steve', defaultX: 130, x: 130, y: 0, width: 58, height: 58, velocityY: 0, rotation: 0, onGround: false };
+        this.player2 = { name: 'Alex', defaultX: 70, x: 70, y: 0, width: 58, height: 58, velocityY: 0, rotation: 0, onGround: false };
 
-        // Structured Map Obstacles
+        // Level Map
         this.levelMap = [
             { pos: 400, width: 36, height: 60, type: 'spike', deadly: true },
             { pos: 650, width: 50, height: 80, type: 'block', deadly: false },
@@ -72,7 +72,7 @@ export class GeoDashRunner {
         this.nextObstaclePosition = 3900;
         this.dynamicPatternIndex = 0;
 
-        // Key Listeners
+        // Listeners
         this.handleKeyDown = (event) => {
             this.keys.add(event.code);
             if (['Space', 'ArrowUp', 'KeyW', 'KeyI', 'KeyO', 'KeyP'].includes(event.code)) {
@@ -125,30 +125,33 @@ export class GeoDashRunner {
         player.velocityY += this.gravity;
         player.y += player.velocityY;
 
-        // Check platform and ground landings
-        let currentGround = this.groundY;
+        let standingY = this.groundY;
+        let blockedBySide = false;
 
         for (const obstacle of this.obstacles) {
             if (!obstacle.deadly) {
                 const blockTop = this.groundY - obstacle.height;
                 const playerBottom = player.y + player.height;
-                const prevBottom = playerBottom - player.velocityY;
 
-                // Land on top of block
-                if (
-                    player.x + player.width > obstacle.x &&
-                    player.x < obstacle.x + obstacle.width &&
-                    prevBottom <= blockTop + 10 &&
-                    playerBottom >= blockTop
-                ) {
-                    currentGround = Math.min(currentGround, blockTop);
+                // Check horizontal overlap
+                const overlapsX = player.x + player.width > obstacle.x && player.x < obstacle.x + obstacle.width;
+
+                if (overlapsX) {
+                    // Check if player lands/stands on top of the block
+                    if (playerBottom >= blockTop && (player.y + player.height - player.velocityY) <= blockTop + 12) {
+                        standingY = Math.min(standingY, blockTop);
+                    } 
+                    // Side collision response (pushed back safely instead of dying)
+                    else if (playerBottom > blockTop + 12) {
+                        blockedBySide = true;
+                    }
                 }
             }
         }
 
-        // Clamp to ground or top of block
-        if (player.y >= currentGround - player.height) {
-            player.y = currentGround - player.height;
+        // Apply standing height or ground
+        if (player.y >= standingY - player.height) {
+            player.y = standingY - player.height;
             player.velocityY = 0;
             player.rotation = 0;
             player.onGround = true;
@@ -157,6 +160,14 @@ export class GeoDashRunner {
             player.rotation += 0.15;
         }
 
+        // Handle side block collision
+        if (blockedBySide && !player.onGround) {
+            player.x = Math.max(0, player.x - this.speed);
+        } else if (player.x < player.defaultX) {
+            player.x = Math.min(player.defaultX, player.x + 2);
+        }
+
+        // Jump Execution
         if (jumpPressed && player.onGround) {
             player.velocityY = this.jumpVelocity;
             player.onGround = false;
@@ -169,7 +180,7 @@ export class GeoDashRunner {
             return;
         }
 
-        // Jump Inputs
+        // Inputs
         const p1Jump = this.keys.has('Space') || this.keys.has('ArrowUp') || this.keys.has('KeyW');
         const p2Jump = this.keys.has('KeyI') || this.keys.has('KeyO') || this.keys.has('KeyP');
 
@@ -188,7 +199,7 @@ export class GeoDashRunner {
         this.distance += this.speed;
         this.frame = (this.frame + 1) % 4;
 
-        // Check ONLY deadly hazards (spikes) for collisions
+        // Spike collisions only
         if (this.obstacles.some(obstacle => obstacle.deadly && (this.intersects(this.player1, obstacle) || this.intersects(this.player2, obstacle)))) {
             this.endGame();
         }
@@ -257,7 +268,7 @@ export class GeoDashRunner {
         ctx.lineWidth = 1;
         ctx.strokeRect(24, canvas.height - 25, canvas.width - 48, 8);
 
-        // Obstacles & Safe Blocks
+        // Obstacles & Blocks
         for (const obstacle of this.obstacles) {
             const y = this.groundY - obstacle.height;
             if (obstacle.deadly) {
