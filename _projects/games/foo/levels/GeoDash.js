@@ -42,7 +42,7 @@ export class GeoDashRunner {
         this.groundY = this.canvas.height - 100;
         this.gravity = 0.95;
         this.jumpVelocity = -15.5;
-        this.speed = 3;
+        this.speed = 300;
         this.distance = 0;
         this.levelLength = 9000;
         this.frame = 0;
