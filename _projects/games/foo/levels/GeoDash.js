@@ -30,13 +30,15 @@ export class GeoDashRunner {
         this.ctx = this.canvas.getContext('2d');
 
         // Asset Initialization
-        this.steve = new Image();
-        this.steve.src = `${gameEnv.path || ''}/images/projects/gamify/end_steve.png`;
-        
-        // Input and Physics
+        this.steveImage = new Image();
+        this.steveImage.src = `${gameEnv.path || ''}/images/projects/gamify/end_steve.png`;
+
+        this.alexImage = new Image();
+        this.alexImage.src = `${gameEnv.path || ''}/images/projects/gamify/Alex.png`;
+
+        // Input & Physics Config
         this.keys = new Set();
         this.mouseHeld = false;
-        this.player = { x: 120, y: 0, width: 58, height: 58, velocityY: 0, rotation: 0 };
         this.groundY = this.canvas.height - 100;
         this.gravity = 0.95;
         this.jumpVelocity = -15.5;
@@ -45,6 +47,36 @@ export class GeoDashRunner {
         this.levelLength = 9000;
         this.frame = 0;
         this.gameOver = false;
+
+        // Player 1: Steve (Controls: Space, ArrowUp, KeyW, or Mouse/Touch)
+        this.steve = {
+            name: 'Steve',
+            x: 120,
+            y: 0,
+            width: 58,
+            height: 58,
+            velocityY: 0,
+            rotation: 0,
+            color: '#ffc000',
+            image: this.steveImage,
+            isDead: false
+        };
+
+        // Player 2: Alex (Controls: KeyI, KeyJ, KeyK, KeyL)
+        this.alex = {
+            name: 'Alex',
+            x: 180, // Slightly behind or in front of Steve visually
+            y: 0,
+            width: 58,
+            height: 58,
+            velocityY: 0,
+            rotation: 0,
+            color: '#00ffcc',
+            image: this.alexImage,
+            isDead: false
+        };
+
+        this.players = [this.steve, this.alex];
 
         // Structured Map Obstacles
         this.levelMap = [
@@ -69,16 +101,16 @@ export class GeoDashRunner {
         // Key Listeners
         this.handleKeyDown = (event) => {
             this.keys.add(event.code);
-            if (['Space', 'ArrowUp', 'KeyW'].includes(event.code)) {
+            if (['Space', 'ArrowUp', 'KeyW', 'KeyI'].includes(event.code)) {
                 event.preventDefault();
             }
         };
         this.handleKeyUp = (event) => this.keys.delete(event.code);
 
-        // Pointer / Touch Listeners
+        // Pointer / Touch Listeners (Assigned to Steve)
         this.handleMouseDown = () => { this.mouseHeld = true; };
         this.handleMouseUp = () => { this.mouseHeld = false; };
-        
+
         window.addEventListener('keydown', this.handleKeyDown);
         window.addEventListener('keyup', this.handleKeyUp);
         this.canvas.addEventListener('mousedown', this.handleMouseDown);
@@ -86,11 +118,15 @@ export class GeoDashRunner {
         this.canvas.addEventListener('touchstart', (e) => { e.preventDefault(); this.mouseHeld = true; });
         this.canvas.addEventListener('touchend', (e) => { e.preventDefault(); this.mouseHeld = false; });
 
-        this.player.y = this.groundY - this.player.height;
-        this.message = 'GEOMETRY DASH | PRESS SPACE / CLICK TO JUMP';
-        this.messageUntil = performance.now() + 3000;
+        // Initial ground placement
+        this.players.forEach(p => {
+            p.y = this.groundY - p.height;
+        });
 
-        // Auto-run engine animation frame loop
+        this.message = 'P1 (STEVE): SPACE/W/CLICK | P2 (ALEX): I KEY';
+        this.messageUntil = performance.now() + 4000;
+
+        // Main game loop
         this.loop = () => {
             this.update();
             if (!this.gameOver) {
@@ -108,7 +144,7 @@ export class GeoDashRunner {
             [{ width: 60, height: 100, type: 'block', deadly: false }, { width: 72, height: 60, type: 'double-spike', deadly: true }],
             [{ width: 108, height: 60, type: 'triple-spike', deadly: true }]
         ];
-        
+
         const pattern = patterns[this.dynamicPatternIndex % patterns.length];
         const gap = 320;
 
@@ -136,36 +172,43 @@ export class GeoDashRunner {
             return;
         }
 
-        // Jump Detection (Keyboard OR Mouse/Touch)
-        const jumpPressed = this.keys.has('Space') || 
-                            this.keys.has('ArrowUp') || 
-                            this.keys.has('KeyW') ||
-                            this.mouseHeld;
+        // --- Steve Control Detection ---
+        const steveJump = this.keys.has('Space') || 
+                          this.keys.has('ArrowUp') || 
+                          this.keys.has('KeyW') || 
+                          this.mouseHeld;
 
-        // Exact ground check
-        const playerBottom = this.player.y + this.player.height;
-        const onGround = playerBottom >= this.groundY - 1;
+        // --- Alex Control Detection ---
+        const alexJump = this.keys.has('KeyI');
 
-        // Jump Execution
-        if (jumpPressed && onGround) {
-            this.player.velocityY = this.jumpVelocity;
-        }
+        // Physics logic for each player
+        this.players.forEach(player => {
+            if (player.isDead) return;
 
-        // Physics Execution
-        this.player.velocityY += this.gravity;
-        this.player.y += this.player.velocityY;
+            const isSteve = player === this.steve;
+            const isJumpPressed = isSteve ? steveJump : alexJump;
 
-        // Floor Collision Snap
-        if (this.player.y >= this.groundY - this.player.height) {
-            this.player.y = this.groundY - this.player.height;
-            this.player.velocityY = 0;
-            this.player.rotation = 0;
-        } else {
-            // Rotate character while in air
-            this.player.rotation += 0.15;
-        }
+            const playerBottom = player.y + player.height;
+            const onGround = playerBottom >= this.groundY - 1;
 
-        // Move Obstacles
+            if (isJumpPressed && onGround) {
+                player.velocityY = this.jumpVelocity;
+            }
+
+            player.velocityY += this.gravity;
+            player.y += player.velocityY;
+
+            // Floor check
+            if (player.y >= this.groundY - player.height) {
+                player.y = this.groundY - player.height;
+                player.velocityY = 0;
+                player.rotation = 0;
+            } else {
+                player.rotation += 0.15;
+            }
+        });
+
+        // Advance environment
         for (const obstacle of this.obstacles) {
             obstacle.x -= this.speed;
         }
@@ -176,12 +219,19 @@ export class GeoDashRunner {
         this.distance += this.speed;
         this.frame = (this.frame + 1) % 4;
 
-        // Collision Check
-        if (this.obstacles.some(obstacle => this.intersects(obstacle))) {
+        // Collision detection for both players
+        for (const player of this.players) {
+            if (!player.isDead && this.obstacles.some(obstacle => this.intersects(player, obstacle))) {
+                player.isDead = true;
+            }
+        }
+
+        // Game Over if both players are eliminated
+        if (this.players.every(p => p.isDead)) {
             this.endGame();
         }
 
-        // Win Condition
+        // Level completion
         if (this.distance >= this.levelLength) {
             this.levelComplete();
         }
@@ -189,15 +239,15 @@ export class GeoDashRunner {
         this.draw();
     }
 
-    intersects(obstacle) {
+    intersects(player, obstacle) {
         const obstacleY = this.groundY - obstacle.height;
         const padding = 6;
 
         return (
-            this.player.x + padding < obstacle.x + obstacle.width &&
-            this.player.x + this.player.width - padding > obstacle.x &&
-            this.player.y + padding < obstacleY + obstacle.height &&
-            this.player.y + this.player.height - padding > obstacleY
+            player.x + padding < obstacle.x + obstacle.width &&
+            player.x + player.width - padding > obstacle.x &&
+            player.y + padding < obstacleY + obstacle.height &&
+            player.y + player.height - padding > obstacleY
         );
     }
 
@@ -249,23 +299,27 @@ export class GeoDashRunner {
             }
         }
 
-        // Player
-        ctx.save();
-        ctx.translate(this.player.x + this.player.width / 2, this.player.y + this.player.height / 2);
-        ctx.rotate(this.player.rotation);
+        // Draw Players
+        this.players.forEach(player => {
+            if (player.isDead) return;
 
-        if (this.steve.complete && this.steve.naturalWidth) {
-            ctx.drawImage(
-                this.steve, 
-                this.frame * 32, 32, 32, 32, 
-                -this.player.width / 2, -this.player.height / 2, 
-                this.player.width, this.player.height
-            );
-        } else {
-            ctx.fillStyle = '#ffc000';
-            ctx.fillRect(-this.player.width / 2, -this.player.height / 2, this.player.width, this.player.height);
-        }
-        ctx.restore();
+            ctx.save();
+            ctx.translate(player.x + player.width / 2, player.y + player.height / 2);
+            ctx.rotate(player.rotation);
+
+            if (player.image.complete && player.image.naturalWidth) {
+                ctx.drawImage(
+                    player.image,
+                    this.frame * 32, 32, 32, 32,
+                    -player.width / 2, -player.height / 2,
+                    player.width, player.height
+                );
+            } else {
+                ctx.fillStyle = player.color;
+                ctx.fillRect(-player.width / 2, -player.height / 2, player.width, player.height);
+            }
+            ctx.restore();
+        });
 
         // UI Text
         ctx.fillStyle = '#ffffff';
@@ -288,7 +342,7 @@ export class GeoDashRunner {
 
     endGame() {
         this.gameOver = true;
-        this.message = 'GAME OVER - ATTEMPT FAILED!';
+        this.message = 'GAME OVER - BOTH PLAYERS ELIMINATED!';
         cancelAnimationFrame(this.animationFrameId);
         this.showReturnButton();
     }
