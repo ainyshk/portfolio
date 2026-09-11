@@ -36,16 +36,17 @@ export class GeoDashRunner {
         this.alexImage = new Image();
         this.alexImage.src = `${gameEnv.path || ''}/images/projects/gamify/Alex.png`;
 
-        // Input & Physics Config
+        // Input & Physics Config (Balanced for smooth gameplay)
         this.keys = new Set();
         this.mouseHeld = false;
         this.groundY = this.canvas.height - 100;
-        this.gravity = 0.8;
-        this.jumpVelocity = -14;
         
-        // Classic Original Speed
-        this.baseSpeed = 6;
-        this.speed = this.baseSpeed;
+        // Physics tuned for predictable, standard Geometry Dash leaps
+        this.gravity = 0.65;
+        this.jumpVelocity = -12.8;
+        
+        // Locked constant speed (no acceleration spikes)
+        this.speed = 5.5;
         this.distance = 0;
         this.levelLength = 9000;
         this.frame = 0;
@@ -56,8 +57,8 @@ export class GeoDashRunner {
             name: 'Steve',
             x: 120,
             y: 0,
-            width: 58,
-            height: 58,
+            width: 50,
+            height: 50,
             velocityY: 0,
             rotation: 0,
             color: '#ffc000',
@@ -71,8 +72,8 @@ export class GeoDashRunner {
             name: 'Alex',
             x: 180,
             y: 0,
-            width: 58,
-            height: 58,
+            width: 50,
+            height: 50,
             velocityY: 0,
             rotation: 0,
             color: '#00ffcc',
@@ -83,24 +84,21 @@ export class GeoDashRunner {
 
         this.players = [this.steve, this.alex];
 
-        // Structured Map Obstacles & Platforms
+        // Hand-balanced Level Map with safe landing landing/jumping gaps
         this.levelMap = [
-            { pos: 400, width: 36, height: 60, type: 'spike', deadly: true },
-            { pos: 650, width: 80, height: 80, type: 'block', deadly: false },
-            { pos: 900, width: 36, height: 60, type: 'spike', deadly: true },
-            { pos: 1150, width: 72, height: 60, type: 'double-spike', deadly: true },
-            { pos: 1450, width: 90, height: 90, type: 'block', deadly: false },
-            { pos: 1700, width: 36, height: 60, type: 'spike', deadly: true },
-            { pos: 1950, width: 108, height: 60, type: 'triple-spike', deadly: true },
-            { pos: 2300, width: 100, height: 110, type: 'block', deadly: false },
-            { pos: 2600, width: 72, height: 60, type: 'double-spike', deadly: true },
-            { pos: 2900, width: 108, height: 60, type: 'triple-spike', deadly: true },
-            { pos: 3250, width: 80, height: 100, type: 'block', deadly: false },
-            { pos: 3550, width: 108, height: 60, type: 'triple-spike', deadly: true }
+            { pos: 450, width: 36, height: 50, type: 'spike', deadly: true },
+            { pos: 750, width: 80, height: 60, type: 'block', deadly: false },
+            { pos: 1100, width: 36, height: 50, type: 'spike', deadly: true },
+            { pos: 1400, width: 72, height: 50, type: 'double-spike', deadly: true },
+            { pos: 1750, width: 90, height: 70, type: 'block', deadly: false },
+            { pos: 2150, width: 36, height: 50, type: 'spike', deadly: true },
+            { pos: 2500, width: 108, height: 50, type: 'triple-spike', deadly: true },
+            { pos: 2900, width: 100, height: 80, type: 'block', deadly: false },
+            { pos: 3300, width: 72, height: 50, type: 'double-spike', deadly: true }
         ];
 
         this.obstacles = this.levelMap.map(obs => ({ ...obs, x: obs.pos }));
-        this.nextObstaclePosition = 3900;
+        this.nextObstaclePosition = 3700;
         this.dynamicPatternIndex = 0;
 
         // Key Listeners
@@ -140,16 +138,16 @@ export class GeoDashRunner {
     }
 
     spawnUpcomingObstacles() {
+        // Fairly spaced obstacle patterns designed for high playability
         const patterns = [
-            [{ width: 36, height: 60, type: 'spike', deadly: true }],
-            [{ width: 80, height: 80, type: 'block', deadly: false }, { width: 36, height: 60, type: 'spike', deadly: true }],
-            [{ width: 72, height: 60, type: 'double-spike', deadly: true }],
-            [{ width: 90, height: 100, type: 'block', deadly: false }, { width: 72, height: 60, type: 'double-spike', deadly: true }],
-            [{ width: 108, height: 60, type: 'triple-spike', deadly: true }]
+            [{ width: 36, height: 50, type: 'spike', deadly: true }],
+            [{ width: 80, height: 60, type: 'block', deadly: false }],
+            [{ width: 72, height: 50, type: 'double-spike', deadly: true }],
+            [{ width: 90, height: 70, type: 'block', deadly: false }]
         ];
 
         const pattern = patterns[this.dynamicPatternIndex % patterns.length];
-        const gap = 360;
+        const gap = 420; // Wide gap ensuring player can always react and execute jumps
 
         pattern.forEach((obstacle, index) => {
             this.obstacles.push({
@@ -188,21 +186,21 @@ export class GeoDashRunner {
             const isSteve = player === this.steve;
             const isJumpPressed = isSteve ? steveJump : alexJump;
 
-            // Apply gravity
+            // Physics calculation
             player.velocityY += this.gravity;
             let nextY = player.y + player.velocityY;
 
             player.onGround = false;
 
-            // Floor collision
+            // Ground floor check
             if (nextY >= this.groundY - player.height) {
                 nextY = this.groundY - player.height;
                 player.velocityY = 0;
-                player.rotation = 0;
+                player.rotation = Math.round(player.rotation / (Math.PI / 2)) * (Math.PI / 2);
                 player.onGround = true;
             }
 
-            // Platform block collisions (landing on top)
+            // Clean platform landing check
             for (const obstacle of this.obstacles) {
                 if (!obstacle.deadly) {
                     const blockTop = this.groundY - obstacle.height;
@@ -212,13 +210,13 @@ export class GeoDashRunner {
                     const playerRight = player.x + player.width;
                     const playerLeft = player.x;
 
-                    // Check horizontal overlap
-                    if (playerRight > blockLeft + 4 && playerLeft < blockRight - 4) {
-                        // Landing on top of block
-                        if (player.y + player.height <= blockTop + 12 && nextY + player.height >= blockTop) {
+                    // Horizontal overlap check with buffer
+                    if (playerRight > blockLeft + 6 && playerLeft < blockRight - 6) {
+                        // Vertical landing check
+                        if (player.y + player.height <= blockTop + 14 && nextY + player.height >= blockTop) {
                             nextY = blockTop - player.height;
                             player.velocityY = 0;
-                            player.rotation = 0;
+                            player.rotation = Math.round(player.rotation / (Math.PI / 2)) * (Math.PI / 2);
                             player.onGround = true;
                         }
                     }
@@ -227,7 +225,7 @@ export class GeoDashRunner {
 
             player.y = nextY;
 
-            // Execute Jump
+            // Execute jump if on ground or top of block
             if (isJumpPressed && player.onGround) {
                 player.velocityY = this.jumpVelocity;
                 player.onGround = false;
@@ -235,11 +233,11 @@ export class GeoDashRunner {
 
             // Air rotation
             if (!player.onGround) {
-                player.rotation += 0.12;
+                player.rotation += 0.08;
             }
         });
 
-        // Move world obstacles
+        // Move active obstacles
         for (const obstacle of this.obstacles) {
             obstacle.x -= this.speed;
         }
@@ -249,24 +247,24 @@ export class GeoDashRunner {
         this.distance += this.speed;
         this.frame = (this.frame + 1) % 4;
 
-        // Collision Checks
+        // Precise Hitbox & Collision Checks
         for (const player of this.players) {
             if (player.isDead) continue;
 
             for (const obstacle of this.obstacles) {
-                // Deadly spikes
+                // Spike collision
                 if (obstacle.deadly && this.intersects(player, obstacle)) {
                     player.isDead = true;
                 }
-                // Running directly into the side of a block
+                // Wall impact collision (running into side of block)
                 else if (!obstacle.deadly) {
                     const blockTop = this.groundY - obstacle.height;
                     const blockLeft = obstacle.x;
                     
-                    if (player.x + player.width > blockLeft && 
-                        player.x < blockLeft + 10 && 
-                        player.y + player.height > blockTop + 8) {
-                        player.isDead = true; // Side impact destroys the player
+                    if (player.x + player.width > blockLeft + 4 && 
+                        player.x < blockLeft + 12 && 
+                        player.y + player.height > blockTop + 12) {
+                        player.isDead = true;
                     }
                 }
             }
@@ -285,7 +283,7 @@ export class GeoDashRunner {
 
     intersects(player, obstacle) {
         const obstacleY = this.groundY - obstacle.height;
-        const padding = 8;
+        const padding = 10; // Extra inner padding so hits feel precise and fair
 
         return (
             player.x + padding < obstacle.x + obstacle.width &&
@@ -319,7 +317,7 @@ export class GeoDashRunner {
         ctx.lineWidth = 1;
         ctx.strokeRect(24, canvas.height - 25, canvas.width - 48, 8);
 
-        // Draw Obstacles & Blocks
+        // Render Obstacles
         for (const obstacle of this.obstacles) {
             const y = this.groundY - obstacle.height;
             if (obstacle.deadly) {
@@ -336,7 +334,6 @@ export class GeoDashRunner {
                     ctx.fill();
                 }
             } else {
-                // Landing Blocks
                 ctx.fillStyle = '#05d9e8';
                 ctx.fillRect(obstacle.x, y, obstacle.width, obstacle.height);
                 ctx.strokeStyle = '#ffffff';
@@ -345,7 +342,7 @@ export class GeoDashRunner {
             }
         }
 
-        // Draw Players
+        // Render Players
         this.players.forEach(player => {
             if (player.isDead) return;
 
