@@ -36,17 +36,17 @@ export class GeoDashRunner {
         this.alexImage = new Image();
         this.alexImage.src = `${gameEnv.path || ''}/images/projects/gamify/Alex.png`;
 
-        // Inputs & Physics Config matching your exact parameters
+        // Inputs & Physics Config (Slower, floaty physics for ultra-easy reaction time)
         this.keys = new Set();
         this.mouseHeld = false;
         this.groundY = this.canvas.height - 100;
         
-        this.gravity = 0.95;
-        this.jumpVelocity = -15.5;
-        this.speed = 8; // Locked constant movement speed (no acceleration)
+        this.gravity = 0.3;          // Reduced gravity for a gentle descent
+        this.jumpVelocity = -8.5;    // Balanced low jump force matching gravity
+        this.speed = 2;              // Extremely slow speed (virtually unlosable reaction windows)
         
         this.distance = 0;
-        this.levelLength = 9000;
+        this.levelLength = 3000;     // Shorter level length to match slower pace
         this.frame = 0;
         this.gameOver = false;
 
@@ -82,22 +82,17 @@ export class GeoDashRunner {
 
         this.players = [this.steve, this.alex];
 
-        // Hand-calibrated level layout for guaranteed jump playability
+        // Hand-calibrated level layout with massive spacing
         this.levelMap = [
-            { pos: 400, width: 32, height: 60, type: 'spike', deadly: true },
-            { pos: 650, width: 80, height: 80, type: 'block', deadly: false },
-            { pos: 950, width: 32, height: 60, type: 'spike', deadly: true },
-            { pos: 1250, width: 64, height: 60, type: 'double-spike', deadly: true },
-            { pos: 1600, width: 90, height: 80, type: 'block', deadly: false },
-            { pos: 1950, width: 32, height: 60, type: 'spike', deadly: true },
-            { pos: 2300, width: 96, height: 60, type: 'triple-spike', deadly: true },
-            { pos: 2700, width: 100, height: 90, type: 'block', deadly: false },
-            { pos: 3100, width: 64, height: 60, type: 'double-spike', deadly: true },
-            { pos: 3500, width: 96, height: 60, type: 'triple-spike', deadly: true }
+            { pos: 600, width: 32, height: 40, type: 'spike', deadly: true },
+            { pos: 1100, width: 80, height: 60, type: 'block', deadly: false },
+            { pos: 1600, width: 32, height: 40, type: 'spike', deadly: true },
+            { pos: 2100, width: 90, height: 60, type: 'block', deadly: false },
+            { pos: 2600, width: 32, height: 40, type: 'spike', deadly: true }
         ];
 
         this.obstacles = this.levelMap.map(obs => ({ ...obs, x: obs.pos }));
-        this.nextObstaclePosition = 3900;
+        this.nextObstaclePosition = 3100;
         this.dynamicPatternIndex = 0;
 
         // Controls
@@ -123,8 +118,8 @@ export class GeoDashRunner {
             p.y = this.groundY - p.height;
         });
 
-        this.message = 'P1 (STEVE): SPACE / W / CLICK | P2 (ALEX): ARROW UP / I KEY';
-        this.messageUntil = performance.now() + 4000;
+        this.message = 'P1: SPACE/W/CLICK | P2: UP/I KEY (ULTRA SLOW MODE)';
+        this.messageUntil = performance.now() + 5000;
 
         this.loop = () => {
             this.update();
@@ -137,15 +132,12 @@ export class GeoDashRunner {
 
     spawnUpcomingObstacles() {
         const patterns = [
-            [{ width: 32, height: 60, type: 'spike', deadly: true }],
-            [{ width: 80, height: 80, type: 'block', deadly: false }],
-            [{ width: 64, height: 60, type: 'double-spike', deadly: true }],
-            [{ width: 90, height: 90, type: 'block', deadly: false }],
-            [{ width: 96, height: 60, type: 'triple-spike', deadly: true }]
+            [{ width: 32, height: 40, type: 'spike', deadly: true }],
+            [{ width: 80, height: 60, type: 'block', deadly: false }]
         ];
 
         const pattern = patterns[this.dynamicPatternIndex % patterns.length];
-        const gap = 450;
+        const gap = 500;
 
         pattern.forEach((obstacle, index) => {
             this.obstacles.push({
@@ -229,13 +221,13 @@ export class GeoDashRunner {
                 player.onGround = false;
             }
 
-            // Air rotation effect
+            // Gentle air rotation
             if (!player.onGround) {
-                player.rotation += 0.15;
+                player.rotation += 0.05;
             }
         });
 
-        // Constant speed world movement
+        // Fixed ultra-slow movement speed (no acceleration)
         for (const obstacle of this.obstacles) {
             obstacle.x -= this.speed;
         }
@@ -245,7 +237,7 @@ export class GeoDashRunner {
         this.distance += this.speed;
         this.frame = (this.frame + 1) % 4;
 
-        // Collision detection
+        // Collision detection with forgiving hitboxes
         for (const player of this.players) {
             if (player.isDead) continue;
 
@@ -281,7 +273,7 @@ export class GeoDashRunner {
 
     intersects(player, obstacle) {
         const obstacleY = this.groundY - obstacle.height;
-        const padding = 8;
+        const padding = 12; // Extra padding makes hazards forgiving
 
         return (
             player.x + padding < obstacle.x + obstacle.width &&
@@ -320,7 +312,7 @@ export class GeoDashRunner {
             const y = this.groundY - obstacle.height;
             if (obstacle.deadly) {
                 ctx.fillStyle = '#ff4f78';
-                const spikeCount = obstacle.type === 'triple-spike' ? 3 : obstacle.type === 'double-spike' ? 2 : 1;
+                const spikeCount = 1;
                 const spikeWidth = obstacle.width / spikeCount;
 
                 for (let spike = 0; spike < spikeCount; spike++) {
