@@ -30,24 +30,25 @@ export class GeoDashRunner {
         this.ctx = this.canvas.getContext('2d');
 
         // Asset Initialization
+        const path = gameEnv.path || '';
         this.steve = new Image();
-        this.steve.src = `${gameEnv.path || ''}/images/projects/gamify/end_steve.png`;
+        this.steve.src = `${path}/images/projects/gamify/end_steve.png`;
         
         this.alex = new Image();
-        this.alex.src = `${gameEnv.path || ''}/images/projects/gamify/alex.png`;
+        this.alex.src = `${path}/images/projects/gamify/Alex.png`;
 
         // Input and Physics
         this.keys = new Set();
         this.groundY = this.canvas.height - 100;
         this.gravity = 0.95;
         this.jumpVelocity = -15.5;
-        this.speed = 8; // Strictly constant speed
+        this.speed = 8; // Strictly locked speed
         this.distance = 0;
         this.levelLength = 9000;
         this.frame = 0;
         this.gameOver = false;
 
-        // Player 1 (Steve) & Player 2 (Alex)
+        // Player Definitions (Steve & Alex)
         this.player1 = { name: 'Steve', x: 130, y: 0, width: 58, height: 58, velocityY: 0, rotation: 0 };
         this.player2 = { name: 'Alex', x: 70, y: 0, width: 58, height: 58, velocityY: 0, rotation: 0 };
 
@@ -86,7 +87,7 @@ export class GeoDashRunner {
         this.player1.y = this.groundY - this.player1.height;
         this.player2.y = this.groundY - this.player2.height;
 
-        this.message = 'P1: SPACE / W / UP | P2: I / O / P';
+        this.message = 'STEVE: SPACE / W / UP  |  ALEX: I / O / P';
         this.messageUntil = performance.now() + 4000;
     }
 
@@ -146,13 +147,11 @@ export class GeoDashRunner {
             return;
         }
 
-        // Steve Input Check (Space, Up, W)
+        // Jump Inputs
         const p1Jump = this.keys.has('Space') || this.keys.has('ArrowUp') || this.keys.has('KeyW');
-        
-        // Alex Input Check (I, O, P)
         const p2Jump = this.keys.has('KeyI') || this.keys.has('KeyO') || this.keys.has('KeyP');
 
-        // Update Physics for both Players
+        // Physics Updates
         this.updatePlayerPhysics(this.player1, p1Jump);
         this.updatePlayerPhysics(this.player2, p2Jump);
 
@@ -162,12 +161,12 @@ export class GeoDashRunner {
         }
 
         this.ensureUpcomingObstacles();
-        this.speed = 8; // Locked constant speed
+        this.speed = 8; // Preserved constant speed
         this.obstacles = this.obstacles.filter(obs => obs.x + obs.width > -50);
         this.distance += this.speed;
         this.frame = (this.frame + 1) % 4;
 
-        // Collision Check for both players
+        // Collision Checking
         if (this.obstacles.some(obstacle => this.intersects(this.player1, obstacle) || this.intersects(this.player2, obstacle))) {
             this.endGame();
         }
@@ -260,7 +259,7 @@ export class GeoDashRunner {
             }
         }
 
-        // Render both Players
+        // Render Steve and Alex
         this.drawPlayer(this.player2, this.alex);
         this.drawPlayer(this.player1, this.steve);
 
