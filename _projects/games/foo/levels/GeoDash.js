@@ -44,7 +44,6 @@ export class GeoDashRunner {
         this.levelLength = 9000;
         this.frame = 0;
         this.gameOver = false;
-        this.jumpWasPressed = false;
 
         // Structured Map Obstacles
         this.levelMap = [
@@ -119,26 +118,32 @@ export class GeoDashRunner {
             return;
         }
 
-        // Jump Handling
-        const jumpPressed = this.keys.has('Space') || this.keys.has('ArrowUp') || this.keys.has('KeyW');
-        const onGround = this.player.y >= this.groundY - this.player.height - 1;
+        // Check if jump key is currently down
+        const jumpPressed = this.keys.has('Space') || 
+                            this.keys.has('ArrowUp') || 
+                            this.keys.has('KeyW') ||
+                            this.keys.has('Spacebar');
 
-        if (jumpPressed && onGround && !this.jumpWasPressed) {
+        // Forgiving ground check tolerance
+        const onGround = Math.abs((this.player.y + this.player.height) - this.groundY) <= 2 || 
+                         this.player.y >= this.groundY - this.player.height;
+
+        // Trigger jump velocity on press while grounded
+        if (jumpPressed && onGround) {
             this.player.velocityY = this.jumpVelocity;
         }
-        this.jumpWasPressed = jumpPressed;
 
-        // Apply Physics
+        // Physics update
         this.player.velocityY += this.gravity;
         this.player.y += this.player.velocityY;
 
-        // Rotate Player during jump
-        if (!onGround) {
-            this.player.rotation += 0.15;
-        } else {
+        // Ground landing check & rotation
+        if (this.player.y >= this.groundY - this.player.height) {
             this.player.y = this.groundY - this.player.height;
             this.player.velocityY = 0;
             this.player.rotation = 0;
+        } else {
+            this.player.rotation += 0.15;
         }
 
         // Move Obstacles
@@ -167,7 +172,7 @@ export class GeoDashRunner {
 
     intersects(obstacle) {
         const obstacleY = this.groundY - obstacle.height;
-        const padding = 6; // Hitbox tolerance
+        const padding = 6;
 
         return (
             this.player.x + padding < obstacle.x + obstacle.width &&
@@ -180,7 +185,7 @@ export class GeoDashRunner {
     draw() {
         const { ctx, canvas } = this;
 
-        // Sky Background
+        // Background
         const sky = ctx.createLinearGradient(0, 0, 0, canvas.height);
         sky.addColorStop(0, '#0d1117');
         sky.addColorStop(1, '#161b22');
@@ -201,7 +206,7 @@ export class GeoDashRunner {
         ctx.lineWidth = 1;
         ctx.strokeRect(24, canvas.height - 25, canvas.width - 48, 8);
 
-        // Draw Obstacles
+        // Obstacles
         for (const obstacle of this.obstacles) {
             const y = this.groundY - obstacle.height;
             if (obstacle.deadly) {
@@ -225,7 +230,7 @@ export class GeoDashRunner {
             }
         }
 
-        // Draw Player (Steve / Cube)
+        // Player
         ctx.save();
         ctx.translate(this.player.x + this.player.width / 2, this.player.y + this.player.height / 2);
         ctx.rotate(this.player.rotation);
@@ -243,7 +248,7 @@ export class GeoDashRunner {
         }
         ctx.restore();
 
-        // UI Text
+        // UI
         ctx.fillStyle = '#ffffff';
         ctx.font = 'bold 18px sans-serif';
         ctx.fillText(`PROGRESS: ${progress}%`, 24, 34);
