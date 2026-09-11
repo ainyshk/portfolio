@@ -35,7 +35,6 @@ export class GeoDashRunner {
         
         // Input and Physics
         this.keys = new Set();
-        this.mouseHeld = false;
         this.player = { x: 120, y: 0, width: 58, height: 58, velocityY: 0, rotation: 0 };
         this.groundY = this.canvas.height - 100;
         this.gravity = 0.95;
@@ -74,30 +73,13 @@ export class GeoDashRunner {
             }
         };
         this.handleKeyUp = (event) => this.keys.delete(event.code);
-
-        // Pointer / Touch Listeners
-        this.handleMouseDown = () => { this.mouseHeld = true; };
-        this.handleMouseUp = () => { this.mouseHeld = false; };
         
         window.addEventListener('keydown', this.handleKeyDown);
         window.addEventListener('keyup', this.handleKeyUp);
-        this.canvas.addEventListener('mousedown', this.handleMouseDown);
-        this.canvas.addEventListener('mouseup', this.handleMouseUp);
-        this.canvas.addEventListener('touchstart', (e) => { e.preventDefault(); this.mouseHeld = true; });
-        this.canvas.addEventListener('touchend', (e) => { e.preventDefault(); this.mouseHeld = false; });
 
         this.player.y = this.groundY - this.player.height;
-        this.message = 'GEOMETRY DASH | PRESS SPACE / CLICK TO JUMP';
+        this.message = 'GEOMETRY DASH  |  PRESS SPACE / W / UP TO JUMP';
         this.messageUntil = performance.now() + 3000;
-
-        // Auto-run engine animation frame loop
-        this.loop = () => {
-            this.update();
-            if (!this.gameOver) {
-                this.animationFrameId = requestAnimationFrame(this.loop);
-            }
-        };
-        this.animationFrameId = requestAnimationFrame(this.loop);
     }
 
     spawnUpcomingObstacles() {
@@ -136,32 +118,31 @@ export class GeoDashRunner {
             return;
         }
 
-        // Jump Detection (Keyboard OR Mouse/Touch)
+        // Check if jump key is currently down
         const jumpPressed = this.keys.has('Space') || 
                             this.keys.has('ArrowUp') || 
                             this.keys.has('KeyW') ||
-                            this.mouseHeld;
+                            this.keys.has('Spacebar');
 
-        // Exact ground check
-        const playerBottom = this.player.y + this.player.height;
-        const onGround = playerBottom >= this.groundY - 1;
+        // Forgiving ground check tolerance
+        const onGround = Math.abs((this.player.y + this.player.height) - this.groundY) <= 2 || 
+                         this.player.y >= this.groundY - this.player.height;
 
-        // Jump Execution
+        // Trigger jump velocity on press while grounded
         if (jumpPressed && onGround) {
             this.player.velocityY = this.jumpVelocity;
         }
 
-        // Physics Execution
+        // Physics update
         this.player.velocityY += this.gravity;
         this.player.y += this.player.velocityY;
 
-        // Floor Collision Snap
+        // Ground landing check & rotation
         if (this.player.y >= this.groundY - this.player.height) {
             this.player.y = this.groundY - this.player.height;
             this.player.velocityY = 0;
             this.player.rotation = 0;
         } else {
-            // Rotate character while in air
             this.player.rotation += 0.15;
         }
 
@@ -267,7 +248,7 @@ export class GeoDashRunner {
         }
         ctx.restore();
 
-        // UI Text
+        // UI
         ctx.fillStyle = '#ffffff';
         ctx.font = 'bold 18px sans-serif';
         ctx.fillText(`PROGRESS: ${progress}%`, 24, 34);
@@ -289,14 +270,12 @@ export class GeoDashRunner {
     endGame() {
         this.gameOver = true;
         this.message = 'GAME OVER - ATTEMPT FAILED!';
-        cancelAnimationFrame(this.animationFrameId);
         this.showReturnButton();
     }
 
     levelComplete() {
         this.gameOver = true;
         this.message = 'LEVEL COMPLETE!';
-        cancelAnimationFrame(this.animationFrameId);
         this.showReturnButton();
     }
 
@@ -332,11 +311,8 @@ export class GeoDashRunner {
     }
 
     destroy() {
-        cancelAnimationFrame(this.animationFrameId);
         window.removeEventListener('keydown', this.handleKeyDown);
         window.removeEventListener('keyup', this.handleKeyUp);
-        this.canvas?.removeEventListener('mousedown', this.handleMouseDown);
-        this.canvas?.removeEventListener('mouseup', this.handleMouseUp);
         this.returnButton?.remove();
         this.canvas?.remove();
     }
