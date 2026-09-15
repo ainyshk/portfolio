@@ -10,7 +10,6 @@ export class GeoDashRunner {
             this.container.style.position = this.container.style.position || 'relative';
         }
 
-        // Canvas Setup
         this.canvas = document.createElement('canvas');
         this.canvas.id = 'geoDashCanvas';
         this.canvas.width = gameEnv.innerWidth || window.innerWidth;
@@ -29,7 +28,6 @@ export class GeoDashRunner {
         this.container.appendChild(this.canvas);
         this.ctx = this.canvas.getContext('2d');
 
-        // Assets
         const path = gameEnv.path || '';
         this.steve = new Image();
         this.steve.src = `${path}/images/projects/gamify/end_steve.png`;
@@ -37,7 +35,6 @@ export class GeoDashRunner {
         this.alex = new Image();
         this.alex.src = `${path}/images/projects/gamify/Alex.png`;
 
-        // Physics Settings
         this.keys = new Set();
         this.groundY = this.canvas.height - 100;
         this.gravity = 0.95;
@@ -48,11 +45,9 @@ export class GeoDashRunner {
         this.frame = 0;
         this.gameOver = false;
 
-        // Players
         this.player1 = { name: 'Steve', defaultX: 130, x: 130, y: 0, width: 58, height: 58, velocityY: 0, rotation: 0, onGround: false };
         this.player2 = { name: 'Alex', defaultX: 70, x: 70, y: 0, width: 58, height: 58, velocityY: 0, rotation: 0, onGround: false };
 
-        // Level Map
         this.levelMap = [
             { pos: 400, width: 36, height: 60, type: 'spike', deadly: true },
             { pos: 650, width: 50, height: 80, type: 'block', deadly: false },
@@ -72,7 +67,6 @@ export class GeoDashRunner {
         this.nextObstaclePosition = 3900;
         this.dynamicPatternIndex = 0;
 
-        // Listeners
         this.handleKeyDown = (event) => {
             this.keys.add(event.code);
             if (['Space', 'ArrowUp', 'KeyW', 'KeyI', 'KeyO', 'KeyP'].includes(event.code)) {
@@ -133,15 +127,12 @@ export class GeoDashRunner {
                 const blockTop = this.groundY - obstacle.height;
                 const playerBottom = player.y + player.height;
 
-                // Check horizontal overlap
                 const overlapsX = player.x + player.width > obstacle.x && player.x < obstacle.x + obstacle.width;
 
                 if (overlapsX) {
-                    // Check if player lands/stands on top of the block
                     if (playerBottom >= blockTop && (player.y + player.height - player.velocityY) <= blockTop + 12) {
                         standingY = Math.min(standingY, blockTop);
                     } 
-                    // Side collision response (pushed back safely instead of dying)
                     else if (playerBottom > blockTop + 12) {
                         blockedBySide = true;
                     }
@@ -149,7 +140,6 @@ export class GeoDashRunner {
             }
         }
 
-        // Apply standing height or ground
         if (player.y >= standingY - player.height) {
             player.y = standingY - player.height;
             player.velocityY = 0;
@@ -160,14 +150,12 @@ export class GeoDashRunner {
             player.rotation += 0.15;
         }
 
-        // Handle side block collision
         if (blockedBySide && !player.onGround) {
             player.x = Math.max(0, player.x - this.speed);
         } else if (player.x < player.defaultX) {
             player.x = Math.min(player.defaultX, player.x + 2);
         }
 
-        // Jump Execution
         if (jumpPressed && player.onGround) {
             player.velocityY = this.jumpVelocity;
             player.onGround = false;
@@ -180,15 +168,12 @@ export class GeoDashRunner {
             return;
         }
 
-        // Inputs
         const p1Jump = this.keys.has('Space') || this.keys.has('ArrowUp') || this.keys.has('KeyW');
         const p2Jump = this.keys.has('KeyI') || this.keys.has('KeyO') || this.keys.has('KeyP');
 
-        // Physics Updates
         this.updatePlayerPhysics(this.player1, p1Jump);
         this.updatePlayerPhysics(this.player2, p2Jump);
 
-        // Move Obstacles
         for (const obstacle of this.obstacles) {
             obstacle.x -= this.speed;
         }
@@ -199,12 +184,10 @@ export class GeoDashRunner {
         this.distance += this.speed;
         this.frame = (this.frame + 1) % 4;
 
-        // Spike collisions only
         if (this.obstacles.some(obstacle => obstacle.deadly && (this.intersects(this.player1, obstacle) || this.intersects(this.player2, obstacle)))) {
             this.endGame();
         }
 
-        // Win Condition
         if (this.distance >= this.levelLength) {
             this.levelComplete();
         }
@@ -247,20 +230,17 @@ export class GeoDashRunner {
     draw() {
         const { ctx, canvas } = this;
 
-        // Background
         const sky = ctx.createLinearGradient(0, 0, 0, canvas.height);
         sky.addColorStop(0, '#0d1117');
         sky.addColorStop(1, '#161b22');
         ctx.fillStyle = sky;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // Ground
         ctx.fillStyle = '#090d16';
         ctx.fillRect(0, this.groundY, canvas.width, canvas.height - this.groundY);
         ctx.fillStyle = '#00f0ff';
         ctx.fillRect(0, this.groundY, canvas.width, 6);
 
-        // Progress Bar
         const progress = Math.min(100, Math.floor((this.distance / this.levelLength) * 100));
         ctx.fillStyle = '#00f0ff';
         ctx.fillRect(24, canvas.height - 25, (canvas.width - 48) * (progress / 100), 8);
@@ -268,7 +248,6 @@ export class GeoDashRunner {
         ctx.lineWidth = 1;
         ctx.strokeRect(24, canvas.height - 25, canvas.width - 48, 8);
 
-        // Obstacles & Blocks
         for (const obstacle of this.obstacles) {
             const y = this.groundY - obstacle.height;
             if (obstacle.deadly) {
@@ -292,11 +271,9 @@ export class GeoDashRunner {
             }
         }
 
-        // Render Steve and Alex
         this.drawPlayer(this.player2, this.alex);
         this.drawPlayer(this.player1, this.steve);
 
-        // UI Text
         ctx.fillStyle = '#ffffff';
         ctx.font = 'bold 18px sans-serif';
         ctx.fillText(`PROGRESS: ${progress}%`, 24, 34);
