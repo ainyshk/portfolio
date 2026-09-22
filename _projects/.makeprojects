@@ -12,7 +12,7 @@
 # Games
 games/cs-pathway:dev
 games/gamify:dev
-games/foo:dev
+games/GeometryDashGame:dev
 
 # Systems
 #systems/student-management-groups
